@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vital Sport - Donne ton avis !</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Styles de base pour toutes les pages */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        .kiosk-container {
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            background-color: #005f9e;
+            text-align: center;
+        }
+
+        /* En-tête de page secondaire */
+        .page-header {
+            padding: 4vh 4vw;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .page-header .back-button {
+            font-size: 5vh;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .page-header .back-button:hover {
+            transform: scale(1.1);
+        }
+        .page-header h1 {
+            font-size: 7vh;
+            font-weight: 900;
+            flex-grow: 1;
+            text-align: center;
+            margin-left: -5vh; /* Ajustement pour centrer le titre */
+        }
+
+        /* Contenu principal de la page */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5vh;
+            flex-direction: column;
+            padding: 2vh 5vw;
+        }
+
+        /* Styles du formulaire */
+        .survey-form {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 2vh;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 3vh;
+            margin-bottom: 1vh;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1.5vh;
+            font-size: 2.5vh;
+            border-radius: 10px;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        .submit-button {
+            background-color: #8dc63f;
+            color: white;
+            border: none;
+            padding: 2vh 4vh;
+            font-size: 3.5vh;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            width: 100%;
+            margin-top: 3vh;
+        }
+        .submit-button:hover {
+            background-color: #72a334;
+            transform: translateY(-5px);
+        }
+
+        /* Pied de page */
+        .kiosk-footer {
+            padding: 2vh;
+            font-size: 1.8vh;
+            background-color: rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="kiosk-container">
+
+        <!-- ===== EN-TÊTE DE PAGE SECONDAIRE ===== -->
+        <header class="page-header">
+            <a href="accueil.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1>Donne ton avis !</h1>
+        </header>
+
+        <!-- ===== CONTENU PRINCIPAL ===== -->
+        <main class="main-content">
+            <form class="survey-form">
+                <div class="form-group">
+                    <label for="name">Votre nom (facultatif)</label>
+                    <input type="text" id="name" name="name" placeholder="Votre nom">
+                </div>
+                <div class="form-group">
+                    <label for="email">Votre email (facultatif)</label>
+                    <input type="email" id="email" name="email" placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="comment">Votre commentaire</label>
+                    <textarea id="comment" name="comment" rows="5" placeholder="Écrivez votre avis ici..."></textarea>
+                </div>
+                <button type="submit" class="submit-button">Envoyer mon avis</button>
+            </form>
+        </main>
+
+        <!-- ===== PIED DE PAGE ===== -->
+        <footer class="kiosk-footer">
+            &copy; 2025 Decathlon - Tous droits réservés
+        </footer>
+
+    </div>
+
+</body>
+</html>
