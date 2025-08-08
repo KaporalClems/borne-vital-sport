@@ -76,10 +76,13 @@
         }
 
         .zoomable-image {
-            width: 100%;
+            /* Mise à jour du style pour que l'image tienne dans le conteneur sans être coupée */
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
             height: auto;
             transform-origin: 0 0;
-            transition: transform 0.1s ease-out; /* Ajoute une transition pour le zoom fluide */
+            transition: none; /* Désactive la transition pour un déplacement plus fluide */
         }
 
         /* Pied de page */
@@ -107,7 +110,6 @@
         <main class="main-content">
             <!-- Conteneur pour l'image zoomable -->
             <div id="map-container" class="map-container">
-                <!-- L'URL de l'image a été mise à jour vers votre fichier -->
                 <img id="zoomable-image" class="zoomable-image" src="Plan_site.png" alt="Plan de l'événement Vital Sport">
             </div>
         </main>
@@ -141,19 +143,16 @@
                 const scaleFactor = 1.1;
                 const newScale = e.deltaY > 0 ? scale / scaleFactor : scale * scaleFactor;
                 
-                // Limite le zoom entre 1 et 4
                 if (newScale >= 1 && newScale <= 4) {
-                    scale = newScale;
-
-                    // Calcule le nouveau point d'origine pour que le zoom soit centré sur la souris
                     const rect = mapContainer.getBoundingClientRect();
                     const mouseX = e.clientX - rect.left;
                     const mouseY = e.clientY - rect.top;
 
-                    // Ajuste l'origine en fonction du zoom
+                    // Ajuste l'origine en fonction du zoom pour centrer sur la souris
                     originX = mouseX - (mouseX - originX) * (newScale / scale);
                     originY = mouseY - (mouseY - originY) * (newScale / scale);
                     
+                    scale = newScale;
                     updateTransform();
                 }
             });
@@ -177,6 +176,9 @@
                 isDragging = false;
                 mapContainer.classList.remove('grabbing');
             });
+            
+            // Initialisation de la position et du zoom
+            zoomableImage.style.transform = 'translate(0, 0) scale(1)';
         };
     </script>
 
