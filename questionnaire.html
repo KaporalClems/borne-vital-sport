@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vital Sport - Donne ton avis !</title>
+    <title>Vital Sport - Ton avis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -17,13 +17,13 @@
             height: 100%;
             font-family: 'Inter', sans-serif;
             color: white;
-            overflow: hidden;
+            overflow: auto; /* Permet le défilement si le formulaire est long */
         }
         .kiosk-container {
             display: flex;
             flex-direction: column;
             width: 100vw;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #005f9e;
             text-align: center;
         }
@@ -57,66 +57,207 @@
         .main-content {
             flex-grow: 1;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 5vh;
-            flex-direction: column;
             padding: 2vh 5vw;
         }
 
-        /* Styles du formulaire */
-        .survey-form {
+        /* Style pour le formulaire de satisfaction */
+        .satisfaction-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5vh;
             width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 80vh;
+            margin-bottom: 4vh;
+        }
+
+        .form-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 3vh;
+            border-radius: 20px;
             text-align: left;
         }
 
-        .form-group {
+        .form-section h3 {
+            font-size: 3.5vh;
+            margin-top: 0;
             margin-bottom: 2vh;
+            border-bottom: 2px solid white;
+            padding-bottom: 1vh;
         }
 
-        .form-group label {
-            display: block;
-            font-size: 3vh;
-            margin-bottom: 1vh;
-            font-weight: 700;
+        .form-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+        }
+        
+        .form-options.horizontal {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 2vh;
+        }
+        
+        .form-options.grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2vh;
         }
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 1.5vh;
+        .checkbox-label, .radio-label {
+            display: flex;
+            align-items: center;
             font-size: 2.5vh;
-            border-radius: 10px;
-            border: none;
-            box-sizing: border-box;
+            cursor: pointer;
+        }
+        
+        .checkbox-label input, .radio-label input {
+            margin-right: 1.5vh;
+            width: 3vh;
+            height: 3vh;
+            cursor: pointer;
         }
 
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1vh;
+            margin-top: 2vh;
+        }
+
+        .input-group label {
+            font-size: 2.5vh;
+            font-weight: 400;
+        }
+
+        .input-group input[type="text"],
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 2vh;
+            font-size: 2.5vh;
+            border: none;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        .input-group input::placeholder,
+        .input-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
         .submit-button {
+            width: 100%;
+            padding: 3vh;
             background-color: #8dc63f;
             color: white;
-            border: none;
-            padding: 2vh 4vh;
             font-size: 3.5vh;
             font-weight: 700;
-            border-radius: 15px;
+            border: none;
+            border-radius: 20px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease;
-            width: 100%;
-            margin-top: 3vh;
-        }
-        .submit-button:hover {
-            background-color: #72a334;
-            transform: translateY(-5px);
+            margin-top: 4vh;
         }
 
+        .submit-button:hover {
+            background-color: #7ab336;
+        }
+
+        .submit-button:active {
+            transform: scale(0.98);
+        }
+        
         /* Pied de page */
         .kiosk-footer {
             padding: 2vh;
             font-size: 1.8vh;
             background-color: rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
+        }
+        
+        /* Styles pour le système d'étoiles */
+        .star-rating {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 2vh;
+            padding-top: 2vh;
+        }
+        .star-rating i {
+            font-size: 5vh;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.3); /* Etoiles non-sélectionnées */
+            transition: color 0.2s;
+        }
+        .star-rating i.active {
+            color: #ffc107; /* Etoiles sélectionnées */
+        }
+        
+        /* Modal pour le message de confirmation */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #0072c6;
+            padding: 5vh;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 80%;
+            max-width: 60vh;
+        }
+
+        .modal-content h2 {
+            font-size: 5vh;
+            font-weight: 900;
+            margin-bottom: 2vh;
+        }
+
+        .modal-content p {
+            font-size: 3vh;
+            margin-bottom: 4vh;
+        }
+
+        .modal-close-btn {
+            background-color: #8dc63f;
+            color: white;
+            border: none;
+            padding: 2vh 4vh;
+            font-size: 3vh;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .modal-close-btn:hover {
+            background-color: #7ab336;
         }
     </style>
 </head>
@@ -126,7 +267,7 @@
 
         <!-- ===== EN-TÊTE DE PAGE SECONDAIRE ===== -->
         <header class="page-header">
-            <a href="accueil.html" class="back-button">
+            <a href="index.html" class="back-button">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h1>Donne ton avis !</h1>
@@ -134,20 +275,197 @@
 
         <!-- ===== CONTENU PRINCIPAL ===== -->
         <main class="main-content">
-            <form class="survey-form">
-                <div class="form-group">
-                    <label for="name">Votre nom (facultatif)</label>
-                    <input type="text" id="name" name="name" placeholder="Votre nom">
+            <p class="form-title">Votre avis est important pour nous.</p>
+            <form id="satisfaction-form" class="satisfaction-form">
+                
+                <!-- Question: Quels sports avez-vous fait ? -->
+                <div class="form-section">
+                    <h3>Quels sports avez-vous fait ? <br>(plusieurs choix possibles)</h3>
+                    <div class="form-options grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Football"> Football
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Basketball"> Basketball
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Tennis"> Tennis
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Handball"> Handball
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Rugby"> Rugby
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Athlétisme"> Athlétisme
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Judo"> Judo
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="sports" value="Boxe"> Boxe
+                        </label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Votre email (facultatif)</label>
-                    <input type="email" id="email" name="email" placeholder="votre@email.com">
+
+                <!-- Question: Que pensez-vous du stand de l'accueil? -->
+                <div class="form-section">
+                    <h3>Que pensez-vous du stand de l'accueil?</h3>
+                    <div class="form-options horizontal">
+                        <label class="radio-label">
+                            <input type="radio" name="stand_accueil" value="Super 😊" required> Super 😊
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="stand_accueil" value="Rien à redire 😉"> Rien à redire 😉
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="stand_accueil" value="Moyen 🤔"> Moyen 🤔
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="stand_accueil" value="À revoir 😒"> À revoir 😒
+                        </label>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="comment">Votre commentaire</label>
-                    <textarea id="comment" name="comment" rows="5" placeholder="Écrivez votre avis ici..."></textarea>
+                
+                <!-- Question: Avez-vous participer à d'autres activités -->
+                <div class="form-section">
+                    <h3>Avez-vous participé à d'autres activités ?</h3>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="autres_activites" value="Area Hunter 'Chasse aux trésors'"> 🏴‍☠️ Area Hunter "Chasse aux trésors"
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="autres_activites" value="Puzzle sur la borne de l'accueil"> 🧩 Puzzle sur la borne de l'accueil
+                        </label>
+                    </div>
                 </div>
-                <button type="submit" class="submit-button">Envoyer mon avis</button>
+
+                <!-- Question: Que pensez-vous de l'activité réalisée? -->
+                <div class="form-section">
+                    <h3>Que pensez-vous de l'activité réalisée?</h3>
+                    <div class="form-options horizontal">
+                        <label class="radio-label">
+                            <input type="radio" name="avis_activite" value="Exceptionnelle 😊" required> Exceptionnelle 😊
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="avis_activite" value="Belle découverte 😉"> Belle découverte 😉
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="avis_activite" value="À refaire 🤔"> À refaire 🤔
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="avis_activite" value="Sans intérêt 😒"> Sans intérêt 😒
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Question: Que pensez vous de l'organisation générale de l'événement -->
+                <div class="form-section">
+                    <h3>Que pensez-vous de l'organisation générale de l'événement?</h3>
+                    <div class="form-options horizontal">
+                        <label class="radio-label">
+                            <input type="radio" name="organisation" value="Super 😊" required> Super 😊
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="organisation" value="Rien à redire 😉"> Rien à redire 😉
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="organisation" value="Moyen 🤔"> Moyen 🤔
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="organisation" value="À revoir 😒"> À revoir 😒
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question: Avez-vous rencontré des difficultés? -->
+                <div class="form-section">
+                    <h3>Avez-vous rencontré des difficultés?</h3>
+                    <div class="form-options grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="difficultes" value="Accès Parking"> Accès Parking
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="difficultes" value="Inscription aux activités"> Inscription aux activités
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="difficultes" value="Temps d'attente"> Temps d'attente
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="difficultes" value="Rien à signaler"> Rien à signaler
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label for="difficultes_autre">Autre :</label>
+                        <input type="text" id="difficultes_autre" name="difficultes_autre" placeholder="Précisez ici si besoin">
+                    </div>
+                </div>
+                
+                <!-- Question: Comment avez-vous connu l'événement -->
+                <div class="form-section">
+                    <h3>Comment avez-vous connu l'événement? <br>(plusieurs choix possibles)</h3>
+                    <div class="form-options grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="connu_evenement" value="Réseaux Sociaux"> Réseaux Sociaux
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="connu_evenement" value="Par un tiers"> Par un tiers
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="connu_evenement" value="Affiches publicitaires"> Affiches publicitaires
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="connu_evenement" value="Par l'Office de Tourisme"> Par l'Office de Tourisme
+                        </label>
+                    </div>
+                    <div class="input-group">
+                        <label for="connu_evenement_autre">Autre :</label>
+                        <input type="text" id="connu_evenement_autre" name="connu_evenement_autre" placeholder="Précisez ici si besoin">
+                    </div>
+                </div>
+                
+                <!-- Question: Comment évalueriez-vous l'ambiance et l'animation de l'événement ? -->
+                <div class="form-section">
+                    <h3>Comment évalueriez-vous l'ambiance et l'animation de l'événement ?</h3>
+                    <div class="star-rating" id="ambiance-rating">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" name="evaluation_ambiance" id="evaluation_ambiance" required>
+                </div>
+
+                <!-- Question: Votre code postal -->
+                <div class="form-section">
+                    <h3>Votre code postal</h3>
+                    <div class="input-group">
+                        <input type="text" id="code_postal" name="code_postal" placeholder="Ex: 75001" required>
+                    </div>
+                </div>
+                
+                <!-- Question: Vos suggestions -->
+                <div class="form-section">
+                    <h3>Vos suggestions</h3>
+                    <div class="input-group">
+                        <textarea id="suggestions" name="suggestions" rows="4" placeholder="Partagez vos impressions et idées pour améliorer l'événement..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Question: Newsletter -->
+                <div class="form-section">
+                    <h3>📩 Souhaitez-vous recevoir notre newsletter ?</h3>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="newsletter" name="newsletter" value="Oui"> Oui, je souhaite m’abonner à la newsletter.
+                        </label>
+                        <p style="font-size: 1.8vh; margin-top: 1vh;">En cochant cette case, vous acceptez de recevoir nos emails d’information. Vous pouvez vous désabonner à tout moment via le lien présent dans chaque message.</p>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-button">Envoyer</button>
             </form>
         </main>
 
@@ -157,6 +475,110 @@
         </footer>
 
     </div>
+    
+    <!-- Modal de confirmation -->
+    <div id="confirmation-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Merci !</h2>
+            <p>Votre avis a bien été pris en compte.</p>
+            <button id="modal-close-btn" class="modal-close-btn">Retour à l'accueil</button>
+        </div>
+    </div>
 
+    <script>
+        window.onload = function() {
+            const form = document.getElementById('satisfaction-form');
+            const modal = document.getElementById('confirmation-modal');
+            const closeModalBtn = document.getElementById('modal-close-btn');
+            const starContainer = document.getElementById('ambiance-rating');
+            const stars = starContainer.querySelectorAll('i');
+            const hiddenRatingInput = document.getElementById('evaluation_ambiance');
+
+            let currentRating = 0;
+
+            function updateStars(rating) {
+                // Met à jour l'affichage des étoiles en fonction de la note
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.remove('far'); // Etoile vide
+                        star.classList.add('fas', 'active'); // Etoile pleine et active
+                    } else {
+                        star.classList.remove('fas', 'active');
+                        star.classList.add('far');
+                    }
+                });
+            }
+
+            // Gère le survol des étoiles
+            starContainer.addEventListener('mouseover', (e) => {
+                const hoveredStar = e.target.closest('i');
+                if (hoveredStar) {
+                    const rating = parseInt(hoveredStar.dataset.rating);
+                    updateStars(rating);
+                }
+            });
+
+            // Gère la sortie du survol
+            starContainer.addEventListener('mouseout', () => {
+                updateStars(currentRating); // On revient à la note sélectionnée
+            });
+
+            // Gère le clic sur les étoiles
+            starContainer.addEventListener('click', (e) => {
+                const clickedStar = e.target.closest('i');
+                if (clickedStar) {
+                    currentRating = parseInt(clickedStar.dataset.rating);
+                    hiddenRatingInput.value = currentRating;
+                    updateStars(currentRating);
+                }
+            });
+
+            // URL de votre Google Apps Script (À REMPLACER)
+            const SCRIPT_URL = 'VOTRE_URL_GOOGLE_APPS_SCRIPT';
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {};
+                
+                // Collecte les données de chaque champ du formulaire
+                formData.forEach((value, key) => {
+                    // Pour les cases à cocher, on crée un tableau de valeurs
+                    if (data[key]) {
+                        if (!Array.isArray(data[key])) {
+                            data[key] = [data[key]];
+                        }
+                        data[key].push(value);
+                    } else {
+                        data[key] = value;
+                    }
+                });
+                
+                // Envoi des données au Google Apps Script
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Important pour les scripts Apps Script
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(() => {
+                    form.style.display = 'none';
+                    modal.style.display = 'flex';
+                })
+                .catch(error => {
+                    console.error('Erreur lors de l\'envoi du formulaire :', error);
+                    alert("Une erreur est survenue. Veuillez réessayer.");
+                });
+            });
+            
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                window.location.href = 'index.html';
+            });
+        };
+    </script>
 </body>
 </html>
