@@ -50,9 +50,12 @@
             font-weight: 900;
             flex-grow: 1;
             text-align: center;
-            margin-left: -5vh; /* Ajustement pour centrer le titre */
+            margin: 0; /* Règle la marge pour centrer le titre */
         }
-
+        .page-header .header-logo {
+            height: 12vh; /* Taille du logo agrandie pour plus de visibilité */
+        }
+        
         /* Contenu principal de la page */
         .main-content {
             flex-grow: 1;
@@ -271,6 +274,7 @@
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h1>Donne ton avis !</h1>
+            <img src="https://image.over-blog.com/ouUrfqzLHhSoqiXpPRUr7NtQxSg=/filters:no_upscale()/image%2F2961648%2F20230901%2Fob_fe2277_logo-vitalsport.png" alt="Logo Vital Sport" class="header-logo">
         </header>
 
         <!-- ===== CONTENU PRINCIPAL ===== -->
@@ -280,32 +284,9 @@
                 
                 <!-- Question: Quels sports avez-vous fait ? -->
                 <div class="form-section">
-                    <h3>Quels sports avez-vous fait ? <br>(plusieurs choix possibles)</h3>
-                    <div class="form-options grid">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Football"> Football
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Basketball"> Basketball
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Tennis"> Tennis
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Handball"> Handball
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Rugby"> Rugby
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Athlétisme"> Athlétisme
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Judo"> Judo
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="sports" value="Boxe"> Boxe
-                        </label>
+                    <h3>Quels sports avez-vous pratiqués lors de l'événement ?</h3>
+                    <div class="input-group">
+                        <textarea id="sports_pratiques" name="sports_pratiques" rows="4" placeholder="Saisissez ici les sports que vous avez pratiqués, par exemple : football, tennis, judo..."></textarea>
                     </div>
                 </div>
 
@@ -544,7 +525,7 @@
                 
                 // Collecte les données de chaque champ du formulaire
                 formData.forEach((value, key) => {
-                    // Pour les cases à cocher, on crée un tableau de valeurs
+                    // Pour les champs multiples, on crée un tableau de valeurs
                     if (data[key]) {
                         if (!Array.isArray(data[key])) {
                             data[key] = [data[key]];
