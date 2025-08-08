@@ -61,9 +61,25 @@
             align-items: center;
             font-size: 5vh;
         }
-        .main-content h2 {
-            font-size: 10vh;
-            font-weight: 900;
+        
+        /* Conteneur pour l'image du plan avec gestion du zoom et du déplacement */
+        .map-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+        }
+
+        .map-container.grabbing {
+            cursor: grabbing;
+        }
+
+        .zoomable-image {
+            width: 100%;
+            height: auto;
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out; /* Ajoute une transition pour le zoom fluide */
         }
 
         /* Pied de page */
@@ -81,7 +97,7 @@
 
         <!-- ===== EN-TÊTE DE PAGE SECONDAIRE ===== -->
         <header class="page-header">
-            <a href="accueil.html" class="back-button">
+            <a href="index.html" class="back-button">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h1>Plan du Vital Sport</h1>
@@ -89,7 +105,11 @@
 
         <!-- ===== CONTENU PRINCIPAL ===== -->
         <main class="main-content">
-            <p>Ici se trouvera le plan de l'événement.</p>
+            <!-- Conteneur pour l'image zoomable -->
+            <div id="map-container" class="map-container">
+                <!-- L'URL de l'image a été mise à jour vers votre fichier -->
+                <img id="zoomable-image" class="zoomable-image" src="Plan_site.png" alt="Plan de l'événement Vital Sport">
+            </div>
         </main>
 
         <!-- ===== PIED DE PAGE ===== -->
@@ -98,6 +118,67 @@
         </footer>
 
     </div>
+
+    <script>
+        window.onload = function() {
+            const mapContainer = document.getElementById('map-container');
+            const zoomableImage = document.getElementById('zoomable-image');
+
+            let scale = 1;
+            let originX = 0;
+            let originY = 0;
+            let isDragging = false;
+            let startX = 0;
+            let startY = 0;
+
+            function updateTransform() {
+                zoomableImage.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+            }
+
+            // Gestion du zoom avec la molette de la souris
+            mapContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const scaleFactor = 1.1;
+                const newScale = e.deltaY > 0 ? scale / scaleFactor : scale * scaleFactor;
+                
+                // Limite le zoom entre 1 et 4
+                if (newScale >= 1 && newScale <= 4) {
+                    scale = newScale;
+
+                    // Calcule le nouveau point d'origine pour que le zoom soit centré sur la souris
+                    const rect = mapContainer.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    // Ajuste l'origine en fonction du zoom
+                    originX = mouseX - (mouseX - originX) * (newScale / scale);
+                    originY = mouseY - (mouseY - originY) * (newScale / scale);
+                    
+                    updateTransform();
+                }
+            });
+
+            // Gestion du déplacement (drag)
+            mapContainer.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                mapContainer.classList.add('grabbing');
+                startX = e.clientX - originX;
+                startY = e.clientY - originY;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                originX = e.clientX - startX;
+                originY = e.clientY - startY;
+                updateTransform();
+            });
+
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+                mapContainer.classList.remove('grabbing');
+            });
+        };
+    </script>
 
 </body>
 </html>
