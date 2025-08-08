@@ -60,6 +60,7 @@
             justify-content: center;
             align-items: center;
             font-size: 5vh;
+            position: relative; /* Pour positionner les boutons de zoom */
         }
         
         /* Conteneur pour l'image du plan avec gestion du zoom et du déplacement */
@@ -76,13 +77,48 @@
         }
 
         .zoomable-image {
-            /* Mise à jour du style pour que l'image tienne dans le conteneur sans être coupée */
             max-width: 100%;
             max-height: 100%;
             width: auto;
             height: auto;
             transform-origin: 0 0;
-            transition: none; /* Désactive la transition pour un déplacement plus fluide */
+            transition: none;
+        }
+
+        /* Styles pour les boutons de zoom */
+        .zoom-controls {
+            position: absolute;
+            bottom: 4vh;
+            right: 4vw;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+            z-index: 10;
+        }
+
+        .zoom-button {
+            width: 8vh;
+            height: 8vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 4vh;
+            font-weight: 900;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .zoom-button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .zoom-button:active {
+            transform: scale(0.95);
         }
 
         /* Pied de page */
@@ -112,6 +148,12 @@
             <div id="map-container" class="map-container">
                 <img id="zoomable-image" class="zoomable-image" src="Plan_site.png" alt="Plan de l'événement Vital Sport">
             </div>
+
+            <!-- ===== BOUTONS DE ZOOM ===== -->
+            <div class="zoom-controls">
+                <button id="zoom-in-btn" class="zoom-button">+</button>
+                <button id="zoom-out-btn" class="zoom-button">-</button>
+            </div>
         </main>
 
         <!-- ===== PIED DE PAGE ===== -->
@@ -125,6 +167,8 @@
         window.onload = function() {
             const mapContainer = document.getElementById('map-container');
             const zoomableImage = document.getElementById('zoomable-image');
+            const zoomInBtn = document.getElementById('zoom-in-btn');
+            const zoomOutBtn = document.getElementById('zoom-out-btn');
 
             let scale = 1;
             let originX = 0;
@@ -135,6 +179,20 @@
 
             function updateTransform() {
                 zoomableImage.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+            }
+
+            function zoom(factor) {
+                const newScale = scale * factor;
+                if (newScale >= 1 && newScale <= 4) {
+                    scale = newScale;
+                    // Centre le zoom par rapport au centre de l'image
+                    const rect = mapContainer.getBoundingClientRect();
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    originX = centerX - (centerX - originX) * (newScale / (newScale/factor));
+                    originY = centerY - (centerY - originY) * (newScale / (newScale/factor));
+                    updateTransform();
+                }
             }
 
             // Gestion du zoom avec la molette de la souris
@@ -175,6 +233,15 @@
             window.addEventListener('mouseup', () => {
                 isDragging = false;
                 mapContainer.classList.remove('grabbing');
+            });
+
+            // Gestion des boutons de zoom
+            zoomInBtn.addEventListener('click', () => {
+                zoom(1.2);
+            });
+
+            zoomOutBtn.addEventListener('click', () => {
+                zoom(0.8);
             });
             
             // Initialisation de la position et du zoom
