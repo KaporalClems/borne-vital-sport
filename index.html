@@ -36,12 +36,12 @@
         .kiosk-header {
             padding: 4vh 4vw;
             flex-shrink: 0;
-            position: relative; /* Nécessaire pour positionner l'heure */
+            position: relative;
         }
 
         /* Taille du logo Decathlon (mise à jour) */
         .kiosk-header .logo {
-            height: 20vh; /* Hauteur du logo Decathlon augmentée */
+            height: 10vh; /* Hauteur du logo Decathlon ajustée */
             margin-bottom: 2vh;
         }
 
@@ -62,15 +62,15 @@
         }
 
         .kiosk-header .main-title {
-            font-size: 9vh;
+            font-size: 7vh; /* Taille du titre ajustée */
             font-weight: 900;
             margin: 1vh 0;
             text-transform: uppercase;
-            animation: pulse-vital 2s ease-in-out infinite; /* Application de l'animation */
+            animation: pulse-vital 2s ease-in-out infinite;
         }
 
         .kiosk-header .subtitle {
-            font-size: 3.5vh;
+            font-size: 3vh; /* Taille du sous-titre ajustée */
             font-weight: 400;
             max-width: 80%;
             margin: 2vh auto 0;
@@ -118,24 +118,24 @@
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             padding: 2vh;
-            text-decoration: none; /* Important pour les liens */
+            text-decoration: none;
             color: white;
-            outline: none; /* Supprime le contour par défaut */
+            outline: none;
         }
         
         .app-button:hover, .app-button:focus {
             transform: translateY(-10px) scale(1.03);
             box-shadow: 0 15px 25px rgba(0,0,0,0.25);
-            outline: 3px solid white; /* Ajoute un contour de focus pour l'accessibilité */
+            outline: 3px solid white;
         }
 
         .app-button i {
-            font-size: 10vh;
+            font-size: 8vh; /* Taille des icônes ajustée */
             margin-bottom: 2.5vh;
         }
 
         .app-button span {
-            font-size: 3.5vh;
+            font-size: 3vh; /* Taille du texte ajustée */
             font-weight: 700;
             text-align: center;
         }
@@ -181,15 +181,15 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            max-width: 90vw; /* Pour les mobiles */
-            width: 40vh; /* Format portrait (taller than wide) */
-            height: 70vh; /* Ajuste la hauteur en conséquence */
+            max-width: 90vw;
+            width: 40vh;
+            height: 70vh;
         }
 
         .modal-content video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Assure que la vidéo remplit la zone sans distorsion */
+            object-fit: cover;
         }
 
         .modal-close-btn {
@@ -260,7 +260,6 @@
         <div class="modal-content">
             <button class="modal-close-btn">&times;</button>
             <video id="intro-video" muted autoplay playsinline>
-                <!-- NOTE IMPORTANTE : Ce lien ne fonctionnera que si le fichier "vital sport 2025.mp4" est bien dans le même dossier sur GitHub. -->
                 <source src="vital sport 2025.mp4" type="video/mp4">
                 Votre navigateur ne supporte pas la balise vidéo.
             </video>
@@ -294,15 +293,14 @@
             
             // Lance la lecture de la vidéo (même si l'autoplay est là, c'est plus fiable)
             video.play().catch(error => {
-                // Gère les erreurs d'autoplay (si le navigateur le bloque)
                 console.log("La vidéo a besoin d'une interaction utilisateur pour démarrer.");
             });
 
             // Gère la fermeture de la modale
             closeBtn.addEventListener('click', () => {
                 modal.classList.remove('show');
-                video.pause(); // Met en pause la vidéo
-                video.currentTime = 0; // Rembobine la vidéo
+                video.pause();
+                video.currentTime = 0;
             });
             
             // Ferme la modale si on clique en dehors
