@@ -76,7 +76,7 @@
             box-sizing: border-box;
             overflow: hidden;
             /* Ajustement pour remonter le contenu */
-            margin-top: -5vh; 
+            margin-top: -5vh;
         }
 
         /* Titre du jeu */
@@ -107,7 +107,7 @@
             max-width: 90%;
             color: white;
         }
-        
+
 
         /* Minuteur */
         .timer {
@@ -218,7 +218,7 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         }
-        
+
         /* Pied de page */
         .kiosk-footer {
             padding: 1vh;
@@ -355,7 +355,7 @@
         /* Mise à jour pour un meilleur espacement et alignement */
         .puzzle-info-card {
             display: flex;
-            flex-direction: row; 
+            flex-direction: row;
             gap: 2vw; /* Espacement entre le texte et le QR code */
             align-items: center; /* Aligne verticalement au centre */
             background-color: #f0f0f0;
@@ -363,7 +363,7 @@
             border-radius: 10px;
         }
         .puzzle-info-card .info-details {
-            flex-grow: 1; 
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             gap: 1.5vh; /* Espacement entre les éléments d'info (adresse, tel, etc.) */
@@ -373,7 +373,7 @@
             align-items: flex-start;
             gap: 1.5vw;
         }
-        
+
         .item-icon {
             font-size: 2.5vh;
             color: #00a99d;
@@ -385,7 +385,7 @@
             font-size: 1.8vh;
             line-height: 1.4;
         }
-        
+
         /* Styles pour l'animation des confettis */
         #confetti-canvas {
             position: fixed;
@@ -396,16 +396,16 @@
             z-index: 101; /* Pour être au-dessus du modal */
             pointer-events: none; /* Permet les clics à travers le canvas */
         }
-        
+
         /* Animation du texte "Félicitations !" au-dessus du modal */
         #congrats-text {
             position: absolute;
-            top: 10%; 
+            top: 10%;
             left: 50%;
             transform: translateX(-50%) scale(0);
             font-size: 6vh;
             font-weight: 900;
-            color: #ffeb3b; 
+            color: #ffeb3b;
             text-shadow: 0 0 10px #ffc107, 0 0 20px #ff9800;
             z-index: 103;
             opacity: 0;
@@ -431,7 +431,7 @@
                 opacity: 1;
             }
         }
-        
+
         /* Styles pour le conteneur du QR Code */
         .qrcode-container {
             display: flex;
@@ -444,6 +444,7 @@
             background-color: #fefefe;
             flex-shrink: 0; /* Empêche le QR code de se réduire */
             text-align: center;
+            margin-top: 2vh; /* Ajout d'une marge en haut pour la séparation */
         }
         .qrcode-container p {
             font-size: 2vh;
@@ -456,7 +457,7 @@
             height: auto;
             max-width: 150px;
         }
-        
+
         /* Media queries pour rendre le modal plus responsive sur les petits écrans */
         @media (max-width: 768px) {
             #puzzle-details-modal .modal-content {
@@ -503,7 +504,8 @@
         <a href="index.html" class="back-button">
             <i class="fas fa-arrow-left"></i>
         </a>
-        <img src="logo_vital_sport_-removebg-preview.png" alt="Logo Vital Sport" class="logo">
+        <!-- URL de l'image du logo mise à jour pour un dépôt GitHub -->
+        <img src="https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/logo_vital_sport_-removebg-preview.png" alt="Logo Vital Sport" class="logo">
     </header>
 
     <main class="game-content-wrapper">
@@ -511,7 +513,7 @@
         <p class="intro-text">Reconstituez l'image en glissant et déposant les pièces et découvrez l'activité. Bonne chance !</p>
 
         <span class="timer" id="timer">00:00</span>
-        
+
         <div class="puzzle-container" id="puzzle-container">
             <div class="image-container" id="image-view"></div>
             <div class="win-overlay" id="win-overlay">
@@ -527,7 +529,7 @@
             </div>
         </div>
     </main>
-    
+
     <!-- ===== PIED DE PAGE ===== -->
     <footer class="kiosk-footer">
         <p class="footer-text">&copy; 2025 Destination Sud Réunion</p>
@@ -548,11 +550,12 @@
             <p><strong>Propriété intellectuelle :</strong><br>Le contenu de ce site (textes, images, etc.) est la propriété exclusive de Decathlon Réunion, sauf mention contraire. Toute reproduction ou utilisation, même partielle, est interdite sans autorisation préalable.</p>
             <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
             <h3>Partenaires</h3>
-            <img src="logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
+            <!-- URL de l'image des partenaires mise à jour pour un dépôt GitHub -->
+            <img src="https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
             <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Decathlon et de Crazy Adventures Réunion.</p>
         </div>
     </div>
-    
+
     <!-- Canvas pour l'animation de confettis -->
     <canvas id="confetti-canvas"></canvas>
 
@@ -572,130 +575,79 @@
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
         const puzzleData = [
+            // ATTENTION : REMPLACEZ LES URLS CI-DESSOUS PAR LES URLS RÉELLES DE VOS IMAGES SUR GITHUB.
+            // L'URL doit pointer vers le fichier RAW (brut) de l'image.
+            // Exemple : https://raw.githubusercontent.com/NOM-DE-VOTRE-COMPTE/NOM-DE-VOTRE-REPO/NOM-DE-LA-BRANCH/NOM-DE-VOTRE-IMAGE.jpg
             {
                 id: 1,
-                image: "https://placehold.co/800x600/8dc63f/ffffff?text=Football",
-                title: "Terrain de Football",
-                description: "Un terrain de football Decathlon prêt pour un match."
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/image_71927e.png",
+                title: "ELLIPTIGO REUNION",
+                description: "L’ElliptiGO, location de vélo elliptique à la Réunion.",
+                phone: "0692 003 524",
+                qrcodeLink: "https://elliptigo-reunion.com/"
             },
             {
                 id: 2,
-                image: "https://placehold.co/800x600/0072c6/ffffff?text=Basketball",
-                title: "Match de Basketball",
-                description: "Un ballon de basket en action sur le terrain."
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/image_80f858.jpg",
+                title: "Acroroc Parc Aventure",
+                description: "Acroroc Parc Aventure vous propose de passer un moment inoubliable entre amis ou en famille dans un environnement naturel exceptionnel.",
+                phone: "0692 45 71 37",
+                qrcodeLink: "https://www.acroroc974.fr/"
             },
             {
                 id: 3,
-                image: "https://placehold.co/800x600/f58220/ffffff?text=Cyclisme",
-                title: "Course de Cyclisme",
-                description: "Un cycliste en pleine course, poussé par la foule."
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/image_8d41c6.png",
+                title: "Crazy adventures reunion",
+                description: "Crazy Adventures Réunion spécialiste des excursions en buggy, encadrée par un guide diplomé, sur l’Île de la Réunion.",
+                phone: "09 74 56 75 07",
+                qrcodeLink: "https://www.crazy-adventures.fr/"
             },
             {
                 id: 4,
-                image: "https://www.crazy-adventures.fr/ressources/images/f511fa13f9bd.jpg",
-                title: "CRAZY ADVENTURES Réunion",
-                description: "Spécialiste de la location de véhicule tout terrain en toute sécurité. Vivez votre crazy adventure !",
-                address: "67 Chemin Vetyver<br>97410 SAINT-PIERRE",
-                hours: "Du Lundi au Dimanche<br>08h - 16h",
-                phone: "09 74 56 75 07",
-                qrcodeLink: "https://www.crazy-adventures.fr"
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/football.jpg",
+                title: "L’EARL Centre Equestre des Alizés",
+                description: "Asea des Alizés est un centre équestre implanté à L’Étang-Salé, sur l’île de La Réunion (974), qui accueille petits et grands pour des cours d’équitation ou encore des balades à cheval. Notre poney-club est accessible à partir de 4 ans.",
+                phone: "0692 62 07 35",
+                qrcodeLink: "https://centre-equestre-les-alizes.fr/"
             },
             {
                 id: 5,
-                image: "https://placehold.co/800x600/e94d8b/ffffff?text=Natation",
-                title: "Piscine Olympique",
-                description: "Un nageur s'entrainant dans la piscine."
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/basketball.jpg",
+                title: "VERTIKAL JUMP REUNION",
+                description: "Vous ressentirez l’adrénaline monter petit à petit, jusqu’au moment de vous approcher du bord où vous plongerez dans l’inconnu afin d’expérimenter ce sentiment pur de chute libre, un moment qui restera gravé à vie 🤩",
+                phone: "0693 861 865",
+                qrcodeLink: "https://www.vertikaljumpreunion.com/"
             },
             {
                 id: 6,
-                image: "https://placehold.co/800x600/9b59b6/ffffff?text=Tennis",
-                title: "Terrain de Tennis",
-                description: "Échange de balles sur un court de tennis."
-            },
-            {
-                id: 7,
-                image: "https://placehold.co/800x600/3498db/ffffff?text=Boxe",
-                title: "Boxe sur le ring",
-                description: "Deux boxeurs s'affrontant sur le ring."
-            },
-            {
-                id: 8,
-                image: "https://placehold.co/800x600/f1c40f/ffffff?text=Course",
-                title: "Course à pied",
-                description: "Un coureur en pleine performance."
-            },
-            {
-                id: 9,
-                image: "https://placehold.co/800x600/e67e22/ffffff?text=Fitness",
-                title: "Salle de Fitness",
-                description: "Un entrainement de fitness en groupe."
-            },
-            {
-                id: 10,
-                image: "https://placehold.co/800x600/1abc9c/ffffff?text=Ski",
-                title: "Ski en montagne",
-                description: "Un skieur dévalant une piste enneigée."
-            },
-            {
-                id: 11,
-                image: "https://placehold.co/800x600/34495e/ffffff?text=Handball",
-                title: "Match de Handball",
-                description: "L'équipe de handball en plein match."
-            },
-            {
-                id: 12,
-                image: "https://placehold.co/800x600/e74c3c/ffffff?text=Volley",
-                title: "Volley-ball sur la plage",
-                description: "Un match de volley-ball sur la plage."
-            },
-            {
-                id: 13,
-                image: "https://placehold.co/800x600/2980b9/ffffff?text=Rugby",
-                title: "Match de Rugby",
-                description: "Un joueur de rugby portant le ballon."
-            },
-            {
-                id: 14,
-                image: "https://placehold.co/800x600/95a5a6/ffffff?text=Escalade",
-                title: "Mur d'escalade",
-                description: "Un grimpeur en pleine ascension."
-            },
-            {
-                id: 15,
-                image: "https://placehold.co/800x600/2c3e50/ffffff?text=Judo",
-                title: "Entrainement de Judo",
-                description: "Deux judokas s'affrontant en judo."
-            },
-            {
-                id: 16,
-                image: "https://www.espacemer.re/wp-content/uploads/2019/04/canstockphoto50459579-1024x683.jpg",
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/cyclisme.jpg",
                 title: "Espace Mer",
-                description: "Spécialiste de la location de jetski. Partez à l'aventure en mer !",
-                address: "Port de Saint pierre<br>97410 Saint-Pierre",
-                hours: "Du Lundi au Samedi<br>10H00 – 12H00<br>14H00 – 17H00",
-                phone: "06 92 614 360",
+                description: "Espace mer, Location de jet ski, Passage du permis bateau , Service et entretien.",
+                phone: "00692 61 43 60",
                 qrcodeLink: "https://www.espacemer.re/"
             },
             {
-                id: 17,
+                id: 7,
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/natation.jpg",
+                title: "Kart'in 974",
+                description: "Circuit de karting à Saint-Pierre.",
+                phone: "0262 39 95 90",
+                qrcodeLink: "https://www.facebook.com/people/Kartin-974/61557837928616/"
+            },
+            {
+                id: 8,
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/tennis.jpg",
+                title: "Les Créations d'Amandine",
+                description: "Les Créations d'Amandine, où chaque infusion est le fruit d'un engagement profond envers la qualité, le bien-être, l'éco-responsabilité, l'anti-gaspillage et le soutien de l'économie locale.",
+                qrcodeLink: "https://www.lcaboutique.com/#:~:text=L'histoire%20d'Amandine,R%C3%A9union%20et%20les%20plantes%20aromatiques."
+            },
+            {
+                id: 9,
                 image: "https://static.wixstatic.com/media/7983d0_56027957a7844a998a6b0667901f39c3~mv2.jpg/v1/fill/w_438,h_293,fp_0.50_0.50,q_80,usm_0.66_1.00_0.01,enc_auto/7983d0_56027957a7844a998a6b0667901f39c3~mv2.jpg",
                 title: "REUNION MOUNTAIN BIKE",
                 description: "Découvrez Réunion Mountain Bike, votre spécialiste local pour des aventures à vélo inoubliables à La Réunion.",
-                address: "Rue Guy Hoarau, Étang-salée<br>97427",
-                hours: "Lundi : sur RDV<br>Mardi : sur RDV<br>Mercredi : 8h - 18h<br>Jeudi : sur RDV<br>Vendredi : 8h - 18h<br>Samedi et Dimanche : 8h - 18h",
                 phone: "0693 214 500",
-                email: "reunionmountainbike@gmail.com",
                 qrcodeLink: "https://www.reunionmountainbike.com/"
-            },
-            {
-                id: 18,
-                image: "https://elliptigo-reunion.com/wp-content/uploads/2023/05/BFY_7852-copie.jpg",
-                title: "ELLIPTIGO REUNION",
-                description: "L’ElliptiGO, location de vélo elliptique à la Réunion. Votre connexion-glisse vous accompagne dans votre quête de loisirs ludiques, sportive et écologique.",
-                address: "Départ Etang-Salé les Bains ou dans la forêt",
-                phone: "0692 003 524",
-                email: "contact@elliptigo-reunion.com",
-                qrcodeLink: "https://elliptigo-reunion.com/"
             }
         ];
 
@@ -716,7 +668,7 @@
         const viewImageButton = document.getElementById('view-image-button');
         const newPuzzleButton = document.getElementById('new-puzzle-button');
         const winOverlay = document.getElementById('win-overlay');
-        
+
         // Modal Mentions Légales
         const showLegalModalButton = document.getElementById('show-legal-modal');
         const legalModal = document.getElementById('legal-modal');
@@ -736,7 +688,7 @@
         const ctx = confettiCanvas.getContext('2d');
         let confettiParticles = [];
         const confettiColors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
-        
+
         // Fonction pour un nombre aléatoire dans une plage
         function randomRange(min, max) {
             return Math.random() * (max - min) + min;
@@ -776,12 +728,12 @@
                 ctx.restore();
             }
         }
-        
+
         // Fonction pour démarrer l'animation de confettis
         function startConfetti() {
             confettiCanvas.width = window.innerWidth;
             confettiCanvas.height = window.innerHeight;
-            
+
             function animateConfetti() {
                 // Créer de nouvelles particules
                 if (Math.random() > 0.8) {
@@ -789,7 +741,7 @@
                 }
 
                 ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-                
+
                 // Mettre à jour et dessiner les particules existantes
                 for (let i = confettiParticles.length - 1; i >= 0; i--) {
                     confettiParticles[i].update();
@@ -799,7 +751,7 @@
                         confettiParticles.splice(i, 1);
                     }
                 }
-                
+
                 confettiAnimation = requestAnimationFrame(animateConfetti);
             }
             animateConfetti();
@@ -832,7 +784,7 @@
             puzzleDetailsModal.style.display = 'none'; // Cache la modale si elle était ouverte
             puzzleDetailsModal.classList.remove('show'); // Retire la classe pour l'animation du texte
             timerDisplay.textContent = '00:00';
-            
+
             // Choix aléatoire d'un nouveau puzzle
             currentPuzzle = getRandomPuzzle();
             imageView.style.backgroundImage = `url(${currentPuzzle.image})`;
@@ -858,7 +810,7 @@
 
                 piece.style.backgroundPosition = `${bgX}% ${bgY}%`;
                 piece.dataset.index = i;
-                
+
                 pieces.push(piece);
             }
 
@@ -906,7 +858,7 @@
             e.preventDefault();
             e.target.style.opacity = 0.5;
         }
-        
+
         function handleDragLeave(e) {
             e.target.style.opacity = 1;
         }
@@ -918,20 +870,20 @@
             if (dropTarget.classList.contains('puzzle-piece')) {
                 dropTarget.style.opacity = 1;
             }
-            
+
             if (draggedPiece && draggedPiece !== dropTarget && dropTarget.classList.contains('puzzle-piece')) {
                 const tempParent = puzzleContainer;
                 const tempNextSibling = draggedPiece.nextSibling === dropTarget ? draggedPiece : draggedPiece.nextSibling;
 
                 const dropTargetNextSibling = dropTarget.nextSibling;
-                
+
                 tempParent.insertBefore(draggedPiece, dropTargetNextSibling);
                 tempParent.insertBefore(dropTarget, tempNextSibling);
-                
+
                 checkWin();
             }
         }
-        
+
         // Vérification de la victoire
         function checkWin() {
             let isCorrect = true;
@@ -962,57 +914,42 @@
             modalPuzzleImage.src = puzzle.image;
             modalPuzzleTitle.textContent = puzzle.title;
             modalPuzzleDescription.textContent = puzzle.description;
-            
+
             // Nettoyer l'ancien contenu des détails
             modalPuzzleDetails.innerHTML = '';
-            
+
             // Construire les détails (adresse, horaires, etc.)
             let detailsHtml = '';
-            
-            if (puzzle.address || puzzle.hours || puzzle.phone || puzzle.email) {
-                detailsHtml += '<div class="puzzle-info-card">';
-                detailsHtml += '<div class="info-details">';
 
-                if (puzzle.address) {
-                    detailsHtml += `
-                        <div class="puzzle-info-item">
-                            <i class="fas fa-map-marker-alt item-icon"></i>
-                            <span class="item-text">${puzzle.address}</span>
-                        </div>
-                    `;
-                }
-                if (puzzle.hours) {
-                    detailsHtml += `
-                        <div class="puzzle-info-item">
-                            <i class="fas fa-clock item-icon"></i>
-                            <span class="item-text">${puzzle.hours}</span>
-                        </div>
-                    `;
-                }
-                if (puzzle.phone) {
-                    detailsHtml += `
-                        <div class="puzzle-info-item">
-                            <i class="fas fa-phone item-icon"></i>
-                            <span class="item-text">${puzzle.phone}</span>
-                        </div>
-                    `;
-                }
-                if (puzzle.email) {
-                    detailsHtml += `
-                        <div class="puzzle-info-item">
-                            <i class="fas fa-envelope item-icon"></i>
-                            <span class="item-text">${puzzle.email}</span>
-                        </div>
-                    `;
+            // Construire la carte d'information si des détails sont présents
+            const hasDetails = puzzle.address || puzzle.hours || puzzle.phone || puzzle.email;
+            const hasQrcode = puzzle.qrcodeLink;
+
+            if (hasDetails || hasQrcode) {
+                detailsHtml += `<div class="puzzle-info-card">`;
+
+                if (hasDetails) {
+                    detailsHtml += `<div class="info-details">`;
+                    if (puzzle.address) {
+                        detailsHtml += `<div class="puzzle-info-item"><i class="fas fa-map-marker-alt item-icon"></i><p class="item-text">${puzzle.address}</p></div>`;
+                    }
+                    if (puzzle.hours) {
+                        detailsHtml += `<div class="puzzle-info-item"><i class="fas fa-clock item-icon"></i><p class="item-text">${puzzle.hours}</p></div>`;
+                    }
+                    if (puzzle.phone) {
+                        detailsHtml += `<div class="puzzle-info-item"><i class="fas fa-phone-alt item-icon"></i><p class="item-text">${puzzle.phone}</p></div>`;
+                    }
+                    if (puzzle.email) {
+                        detailsHtml += `<div class="puzzle-info-item"><i class="fas fa-envelope item-icon"></i><p class="item-text">${puzzle.email}</p></div>`;
+                    }
+                    detailsHtml += `</div>`; // Close info-details
                 }
 
-                detailsHtml += '</div>';
-
-                // Générer le QR code si le lien existe et l'ajouter à la carte
-                if (puzzle.qrcodeLink) {
+                if (hasQrcode) {
                     detailsHtml += `<div class="qrcode-container"><p>Scannez pour plus d'infos :</p><div id="qrcode-canvas"></div></div>`;
                 }
-                detailsHtml += '</div>';
+
+                detailsHtml += `</div>`; // Close puzzle-info-card
             }
 
             modalPuzzleDetails.innerHTML = detailsHtml;
@@ -1032,11 +969,11 @@
                     });
                 }, 50); // Petit délai pour s'assurer que l'élément est rendu
             }
-            
+
             puzzleDetailsModal.style.display = 'flex';
             puzzleDetailsModal.classList.add('show');
         }
-        
+
         // Fonctionnalité du timer
         function startTimer() {
             timerInterval = setInterval(() => {
@@ -1074,7 +1011,7 @@
         closeLegalModalButton.addEventListener('click', () => {
             legalModal.style.display = 'none';
         });
-        
+
         // Gestion de la modal du puzzle
         closePuzzleModalButton.addEventListener('click', () => {
             puzzleDetailsModal.style.display = 'none';
