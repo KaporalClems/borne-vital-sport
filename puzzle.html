@@ -61,7 +61,7 @@
         }
         /* Style du logo Vital Sport (agrandi) */
         .page-header .logo {
-            max-height: 10vh; /* Taille maximale du logo, ajustée pour la hauteur */
+            max-height: 8vh; /* Taille maximale du logo, ajustée pour la hauteur */
             max-width: 30vw; /* Empêche le logo d'être trop grand sur les grands écrans */
         }
 
@@ -419,6 +419,31 @@
             }
         }
         
+        /* Styles pour le conteneur du QR Code */
+        .qrcode-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1vh;
+            padding: 2vh;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 2vh;
+        }
+        .qrcode-container p {
+            font-size: 2vh;
+            font-weight: 700;
+            color: #007a73;
+            margin: 0;
+        }
+        #qrcode-canvas {
+            width: 100%;
+            height: auto;
+            max-width: 200px;
+        }
+        
+
         /* Media queries pour rendre le modal plus responsive sur les petits écrans */
         @media (max-width: 768px) {
             #puzzle-details-modal .modal-content {
@@ -494,6 +519,7 @@
         <div class="modal-content">
             <span class="modal-close-button" id="close-legal-modal">&times;</span>
             <h2>Mentions Légales</h2>
+            <h3>Éditeur du site</h3>
             <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="editor-logo">
             <p><strong>Éditeur du site :</strong> Destination Sud Réunion</p>
             <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
@@ -503,7 +529,7 @@
             <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
             <h3>Partenaires</h3>
             <img src="logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
-            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Destination Sud Réunion.</p>
+            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Decathlon et de Crazy Adventures Réunion.</p>
         </div>
     </div>
     
@@ -519,9 +545,13 @@
             <h2 id="modal-puzzle-title"></h2>
             <p id="modal-puzzle-description"></p>
             <div id="modal-puzzle-details"></div>
+            <!-- Conteneur pour le QR Code -->
+            <div id="qrcode-container-wrapper"></div>
         </div>
     </div>
 
+    <!-- Script de la librairie QR Code -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
         const puzzleData = [
             {
@@ -549,7 +579,8 @@
                 description: "Spécialiste de la location de véhicule tout terrain en toute sécurité. Vivez votre crazy adventure !",
                 address: "67 Chemin Vetyver<br>97410 SAINT-PIERRE",
                 hours: "Du Lundi au Dimanche<br>08h - 16h",
-                phone: "09 74 56 75 07"
+                phone: "09 74 56 75 07",
+                qrcodeLink: "https://www.crazy-adventures.fr"
             },
             {
                 id: 5,
@@ -668,6 +699,7 @@
         const modalPuzzleTitle = document.getElementById('modal-puzzle-title');
         const modalPuzzleDescription = document.getElementById('modal-puzzle-description');
         const modalPuzzleDetails = document.getElementById('modal-puzzle-details');
+        const qrcodeWrapper = document.getElementById('qrcode-container-wrapper');
         const congratsText = document.getElementById('congrats-text');
 
         // Confetti Canvas
@@ -904,6 +936,7 @@
             
             // Nettoyer l'ancien contenu des détails
             modalPuzzleDetails.innerHTML = '';
+            qrcodeWrapper.innerHTML = ''; // Nettoyer le conteneur du QR code
 
             // Construire les détails (adresse, horaires, etc.)
             if (puzzle.address || puzzle.hours || puzzle.phone || puzzle.email) {
@@ -939,6 +972,26 @@
                         </div>
                     `;
                 }
+            }
+            
+            // Générer le QR code si le lien existe
+            if (puzzle.qrcodeLink) {
+                const qrcodeContainer = document.createElement('div');
+                qrcodeContainer.classList.add('qrcode-container');
+                qrcodeContainer.innerHTML = `<p>Scannez pour plus d'infos :</p><div id="qrcode-canvas"></div>`;
+                qrcodeWrapper.appendChild(qrcodeContainer);
+
+                // S'assurer que le div pour le QR code est dans le DOM avant de le générer
+                setTimeout(() => {
+                    new QRCode(document.getElementById("qrcode-canvas"), {
+                        text: puzzle.qrcodeLink,
+                        width: 128,
+                        height: 128,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.H
+                    });
+                }, 50); // Petit délai pour s'assurer que l'élément est rendu
             }
             
             puzzleDetailsModal.style.display = 'flex';
@@ -1016,4 +1069,3 @@
     </script>
 </body>
 </html>
-
