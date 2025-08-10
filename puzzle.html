@@ -59,9 +59,10 @@
         .page-header .back-button:hover {
             transform: scale(1.1);
         }
-        /* Style du logo Vital Sport */
+        /* Style du logo Vital Sport (agrandi) */
         .page-header .logo {
-            max-height: 4vh; /* Taille maximale du logo, ajustée pour la hauteur */
+            max-height: 8vh; /* Taille maximale du logo, ajustée pour la hauteur */
+            max-width: 30vw; /* Empêche le logo d'être trop grand sur les grands écrans */
         }
 
         /* Conteneur principal du contenu du jeu, centré */
@@ -258,9 +259,6 @@
             font-size: 1.4vh;
             margin: 0;
         }
-        .kiosk-footer .partners-logo {
-            max-height: 2.5vh; /* Ajuster la taille du logo des partenaires */
-        }
         .kiosk-footer .legal-link {
             font-size: 1.4vh;
             color: white;
@@ -296,6 +294,7 @@
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
+            text-align: center; /* Aligne le contenu du modal au centre */
         }
         .modal-close-button {
             position: absolute;
@@ -316,10 +315,31 @@
             font-weight: 700;
             margin-top: 0;
         }
+        .modal-content h3 {
+            font-size: 2.5vh;
+            font-weight: 700;
+            margin-top: 2vh;
+            margin-bottom: 1vh;
+        }
         .modal-content p {
             font-size: 1.8vh;
             line-height: 1.5;
             margin-bottom: 1.5vh;
+        }
+        .modal-content .editor-logo,
+        .modal-content .partners-logo {
+            display: block; /* Important pour que margin:auto fonctionne */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .modal-content .editor-logo {
+            max-height: 5vh;
+            margin-bottom: 1vh;
+        }
+        .modal-content .partners-logo {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1vh;
         }
     </style>
 </head>
@@ -363,7 +383,6 @@
     <!-- ===== PIED DE PAGE ===== -->
     <footer class="kiosk-footer">
         <p class="footer-text">&copy; 2025 Decathlon</p>
-        <img src="logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
         <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
     </footer>
 
@@ -372,12 +391,16 @@
         <div class="modal-content">
             <span class="modal-close-button" id="close-legal-modal">&times;</span>
             <h2>Mentions Légales</h2>
-            <p><strong>Éditeur du site :</strong><br>Destination Sud Réunion</p>
-            <p><strong>Adresse :</strong><br>Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
+            <h3>Éditeur du site</h3>
+            <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="editor-logo">
+            <p><strong>Éditeur du site :</strong> Destination Sud Réunion</p>
+            <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
             <p><strong>Contact :</strong><br>Téléphone : 0262353433<br>Email : saintpierre.tourisme@gmail.com</p>
             <p><strong>Hébergement :</strong><br>Google Cloud Platform</p>
             <p><strong>Propriété intellectuelle :</strong><br>Le contenu de ce site (textes, images, etc.) est la propriété exclusive de Decathlon Réunion, sauf mention contraire. Toute reproduction ou utilisation, même partielle, est interdite sans autorisation préalable.</p>
             <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
+            <h3>Partenaires</h3>
+            <img src="logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
             <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Decathlon et de Crazy Adventures Réunion.</p>
         </div>
     </div>
