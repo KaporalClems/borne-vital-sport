@@ -84,7 +84,7 @@
             font-size: 5vh;
             font-weight: 900;
             text-align: center;
-            margin: 0 0 2vh;
+            margin: 2vh 0 5vh;
             animation: pulse-heartbeat 2s infinite ease-in-out;
         }
         @keyframes pulse-heartbeat {
@@ -206,12 +206,48 @@
             font-size: 2vh;
             line-height: 1.6;
         }
+        
+        /* Bouton de modal dynamique */
+        .modal-action-button {
+            background-color: #f58220;
+            color: white;
+            border: none;
+            padding: 1.5vh 3vw;
+            border-radius: 8px;
+            font-size: 2.5vh;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 2vh;
+        }
+        .modal-action-button:hover {
+            background-color: #e06c00;
+        }
+
+        /* Modal du lecteur d'image */
+        #image-viewer-modal {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        #image-viewer-modal .modal-content {
+            width: 95%;
+            max-width: 95vw;
+            height: 95%;
+            max-height: 95vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            padding: 0;
+        }
+        #image-viewer-modal img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
 
         /* Modal du lecteur de PDF */
         #pdf-viewer-modal {
             background-color: rgba(0, 0, 0, 0.9);
         }
-
         #pdf-viewer-modal .modal-content {
             width: 95%;
             max-width: 95vw;
@@ -223,7 +259,6 @@
             background-color: transparent;
             padding: 0;
         }
-
         #pdf-viewer-container {
             flex-grow: 1;
             overflow: auto;
@@ -244,7 +279,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             border-radius: 5px;
         }
-
         #pdf-viewer-controls {
             display: flex;
             justify-content: center;
@@ -342,7 +376,15 @@
             <img id="modal-catalogue-image" src="" alt="Image du catalogue">
             <h2 id="modal-catalogue-title"></h2>
             <p id="modal-catalogue-description"></p>
-            <button class="pdf-nav-button" id="read-catalogue-button">Lire le catalogue</button>
+            <button class="modal-action-button" id="catalogue-action-button"></button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL LECTEUR D'IMAGE ===== -->
+    <div id="image-viewer-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-image-modal">&times;</span>
+            <img id="image-viewer" src="" alt="Image en plein écran">
         </div>
     </div>
 
@@ -381,26 +423,27 @@
 
     <script>
         const catalogueData = [
-            // Données des 3 catalogues
+            // Données des catalogues
             {
                 id: 1,
-                image: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png",
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/football.jpg",
                 title: "Catalogue Football",
-                description: "Découvrez notre sélection complète de ballons, maillots, chaussures et équipements pour tous les passionnés de football, des débutants aux professionnels.",
-                pdfUrl: "https://vital-sport.re/wp-content/uploads/2024/07/catalogue-sport-2024-web.pdf"
+                contentType: 'image', // Type de contenu : affiche
+                fullImage: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/image_8d41c6.png-0ee59994-e8cc-489b-bdd5-2aa786bc3fca"
             },
             {
                 id: 2,
                 image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/course.jpg",
                 title: "Catalogue Running",
-                description: "Chaussures de course, vêtements techniques, montres connectées et accessoires pour optimiser vos performances et votre confort lors de vos sessions de running.",
-                pdfUrl: "https://vital-sport.re/wp-content/uploads/2024/07/catalogue-sport-2024-web.pdf"
+                contentType: 'image', // Type de contenu : affiche
+                fullImage: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/image_80f858.jpg-9fc9e31c-2e41-4898-9a09-7021688c5a1b"
             },
             {
                 id: 3,
-                image: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/CARNET%20d'inspirations%20de%20sorties%20couverture.png",
-                title: "Catalogue Cyclisme",
-                description: "VTT, vélos de route, équipements de sécurité, casques et vêtements de cyclisme pour toutes vos aventures à deux roues, sur route comme sur sentier.",
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/cyclisme.jpg",
+                title: "Carnet d'inspirations de sorties",
+                description: "Re) Découvrez les trésors du sud avec notre carnet d'inspiration de sorties. Destination Sud Réunion vous invite à explorer le Sud à travers son carnet d'inspiration de sorties ! Que trouverez-vous dans ce carnet ? Des idées d'activités à sensations fortes , de sorties culturelles, d'aventures en pleine nature... En bref, vous y trouverez les meilleures adresses pour vos sorties dans le Sud !",
+                contentType: 'pdf', // Type de contenu : PDF
                 pdfUrl: "https://vital-sport.re/wp-content/uploads/2024/07/catalogue-sport-2024-web.pdf"
             }
         ];
@@ -411,13 +454,18 @@
         const modalCatalogueImage = document.getElementById('modal-catalogue-image');
         const modalCatalogueTitle = document.getElementById('modal-catalogue-title');
         const modalCatalogueDescription = document.getElementById('modal-catalogue-description');
+        const catalogueActionButton = document.getElementById('catalogue-action-button');
         const closeCatalogueModalButton = document.getElementById('close-catalogue-modal');
-        const readCatalogueButton = document.getElementById('read-catalogue-button');
 
         // Modal Mentions Légales
         const showLegalModalButton = document.getElementById('show-legal-modal');
         const legalModal = document.getElementById('legal-modal');
         const closeLegalModalButton = document.getElementById('close-legal-modal');
+
+        // Éléments du DOM pour le lecteur d'image
+        const imageViewerModal = document.getElementById('image-viewer-modal');
+        const closeImageModalButton = document.getElementById('close-image-modal');
+        const imageViewer = document.getElementById('image-viewer');
 
         // Éléments du DOM pour le lecteur de PDF
         const pdfViewerModal = document.getElementById('pdf-viewer-modal');
@@ -442,11 +490,16 @@
                 card.classList.add('catalogue-card');
                 card.innerHTML = `
                     <img src="${catalogue.image}" alt="${catalogue.title}" class="catalogue-image">
-                    <h3 class="catalogue-title">${catalogue.title}</h3>
                 `;
 
-                // Ajoute un écouteur d'événement pour ouvrir la modal de détails
-                card.addEventListener('click', () => showCatalogueDetailsModal(catalogue));
+                // Ajoute un écouteur d'événement pour ouvrir la modal de détails ou l'image
+                card.addEventListener('click', () => {
+                    if (catalogue.contentType === 'image') {
+                        showImageViewerModal(catalogue.fullImage);
+                    } else if (catalogue.contentType === 'pdf') {
+                        showCatalogueDetailsModal(catalogue);
+                    }
+                });
 
                 catalogueGrid.appendChild(card);
             });
@@ -461,8 +514,30 @@
             modalCatalogueImage.alt = catalogue.title;
             modalCatalogueTitle.textContent = catalogue.title;
             modalCatalogueDescription.textContent = catalogue.description;
-            readCatalogueButton.onclick = () => showPdfModal(catalogue.pdfUrl); // Assigner l'URL du PDF au bouton
+            
+            // Mise à jour dynamique du bouton d'action selon le type de contenu
+            if (catalogue.contentType === 'image') {
+                catalogueActionButton.style.display = 'none';
+                modalCatalogueDescription.style.display = 'none';
+                catalogueActionButton.onclick = () => showImageViewerModal(catalogue.fullImage);
+            } else if (catalogue.contentType === 'pdf') {
+                catalogueActionButton.textContent = "Lire le catalogue";
+                catalogueActionButton.style.display = 'block';
+                modalCatalogueDescription.style.display = 'block';
+                catalogueActionButton.onclick = () => showPdfModal(catalogue.pdfUrl);
+            }
+
             catalogueModal.style.display = 'flex';
+        }
+
+        /**
+         * Affiche le modal du lecteur d'image.
+         * @param {string} imageUrl - L'URL de l'image à afficher.
+         */
+        function showImageViewerModal(imageUrl) {
+            catalogueModal.style.display = 'none';
+            imageViewer.src = imageUrl;
+            imageViewerModal.style.display = 'flex';
         }
 
         /**
@@ -547,6 +622,10 @@
             catalogueModal.style.display = 'none';
         });
 
+        closeImageModalButton.addEventListener('click', () => {
+            imageViewerModal.style.display = 'none';
+        });
+
         closePdfModalButton.addEventListener('click', () => {
             pdfViewerModal.style.display = 'none';
             // Arrêter le rendu de la page en cours si nécessaire
@@ -576,6 +655,9 @@
             }
             if (e.target === pdfViewerModal) {
                 pdfViewerModal.style.display = 'none';
+            }
+            if (e.target === imageViewerModal) {
+                imageViewerModal.style.display = 'none';
             }
         });
 
