@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vital Sport - Jeu Puzzle</title>
+    <title>Jeu Puzzle Vital Sport</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -16,25 +16,21 @@
             width: 100%;
             height: 100%;
             font-family: 'Inter', sans-serif;
-            color: white;
-            overflow: hidden;
-        }
-        .kiosk-container {
+            color: white; /* Couleur de texte plus claire */
+            background-color: #00a99d; /* Fond de page bleu */
+            /* Retiré overflow: hidden pour que le pied de page soit toujours visible */
             display: flex;
-            flex-direction: column;
-            width: 100vw;
-            height: 100vh;
-            background-color: #005f9e;
-            text-align: center;
+            flex-direction: column; /* Utiliser Flexbox pour le layout principal */
         }
 
         /* En-tête de page secondaire */
         .page-header {
-            padding: 4vh 4vw;
-            flex-shrink: 0;
+            width: 100%;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: flex-start; /* Aligner le bouton retour à gauche */
+            padding: 4vh 4vw;
+            box-sizing: border-box;
+            flex-shrink: 0;
         }
         .page-header .back-button {
             font-size: 5vh;
@@ -45,60 +41,522 @@
         .page-header .back-button:hover {
             transform: scale(1.1);
         }
-        .page-header h1 {
-            font-size: 7vh;
-            font-weight: 900;
-            flex-grow: 1;
-            text-align: center;
-            margin-left: -5vh; /* Ajustement pour centrer le titre */
+
+        /* Conteneur principal du contenu du jeu, centré */
+        .game-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1; /* Permet au conteneur de prendre l'espace restant */
+            padding: 2vh;
         }
 
-        /* Contenu principal de la page */
-        .main-content {
-            flex-grow: 1;
+        /* Titre du jeu */
+        .main-title {
+            font-size: 7vh;
+            font-weight: 900;
+            text-align: center;
+            margin: 0 0 2vh;
+            /* Animation de battement de cœur */
+            animation: pulse-heartbeat 2s infinite ease-in-out;
+        }
+        /* Définition des keyframes pour l'animation */
+        @keyframes pulse-heartbeat {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.05); }
+            50% { transform: scale(1); }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+
+        /* Texte d'introduction du jeu */
+        .intro-text {
+            font-size: 3vh;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 3vh;
+            max-width: 80%;
+            color: white;
+        }
+
+        /* Minuteur */
+        .timer {
+            font-size: 5vh;
+            font-weight: 700;
+            margin-bottom: 3vh;
+        }
+
+        /* Conteneur de puzzle */
+        .puzzle-container {
+            position: relative;
+            background-color: #e3f2fd; /* Fond bleu clair pour le puzzle */
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 2px;
+            width: 80vh; /* Agrandit le puzzle */
+            height: 64vh; /* Agrandit le puzzle tout en gardant le ratio */
+        }
+
+        /* Pièce de puzzle */
+        .puzzle-piece {
+            border: 1px solid rgba(0,0,0,0.1);
+            background-size: 500% 400%; /* 5 colonnes x 4 lignes */
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        /* Conteneur d'image */
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            display: none; /* Caché par défaut */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        /* Overlay de victoire */
+        .win-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 5vh;
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
         }
-        .main-content h2 {
-            font-size: 10vh;
+        .win-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .win-overlay h2 {
+            font-size: 6vh;
             font-weight: 900;
+            margin: 0;
+            color: white;
+            animation: bounceIn 1s ease-in-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            80% { transform: scale(0.9); }
+            100% { transform: scale(1); }
         }
 
+        /* Description du puzzle */
+        .puzzle-info {
+            background-color: rgba(255, 255, 255, 0.1); /* Arrière-plan semi-transparent */
+            border-radius: 15px;
+            padding: 3vh 5vw;
+            margin-top: 3vh;
+            max-width: 90%;
+            text-align: center;
+            display: none; /* Masqué par défaut */
+        }
+        .puzzle-info.show {
+            display: block;
+        }
+        .puzzle-info h3 {
+            font-size: 3vh;
+            font-weight: 700;
+            margin: 0 0 1vh;
+            color: white;
+        }
+        .puzzle-info p {
+            font-size: 2vh;
+            font-weight: 400;
+            margin: 0;
+            color: white;
+        }
+
+        /* Tableau de bord du jeu */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 3vh;
+            gap: 2vh;
+        }
+        .control-buttons button {
+            background-color: rgba(255, 255, 255, 0.1); /* Boutons semi-transparents */
+            border: none;
+            color: white;
+            width: 8vh;
+            height: 8vh;
+            font-size: 4vh;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .control-buttons button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+        
         /* Pied de page */
         .kiosk-footer {
             padding: 2vh;
             font-size: 1.8vh;
             background-color: rgba(0, 0, 0, 0.1);
+            text-align: center;
             flex-shrink: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="kiosk-container">
+    <header class="page-header">
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </header>
 
-        <!-- ===== EN-TÊTE DE PAGE SECONDAIRE ===== -->
-        <header class="page-header">
-            <!-- Le lien de retour a été mis à jour pour pointer vers index.html -->
-            <a href="index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1>Jeu Puzzle</h1>
-        </header>
+    <main class="game-content-wrapper">
+        <h1 class="main-title">Jeu de Puzzle</h1>
+        <p class="intro-text">Reconstituez l'image en glissant et déposant les pièces. Bonne chance !</p>
 
-        <!-- ===== CONTENU PRINCIPAL ===== -->
-        <main class="main-content">
-            <p>Ici se trouvera le jeu de puzzle !</p>
-        </main>
+        <span class="timer" id="timer">00:00</span>
+        
+        <div class="puzzle-container" id="puzzle-container">
+            <div class="image-container" id="image-view"></div>
+            <div class="win-overlay" id="win-overlay">
+                <h2>Félicitations !</h2>
+            </div>
+        </div>
 
-        <!-- ===== PIED DE PAGE ===== -->
-        <footer class="kiosk-footer">
-            &copy; 2025 Decathlon - Tous droits réservés
-        </footer>
+        <!-- Description du puzzle -->
+        <div class="puzzle-info" id="puzzle-info">
+            <h3 id="puzzle-title"></h3>
+            <p id="puzzle-description"></p>
+        </div>
 
-    </div>
+        <!-- Tableau de bord du jeu -->
+        <div class="game-controls">
+            <div class="control-buttons">
+                <button id="new-puzzle-button" title="Nouveau puzzle"><i class="fas fa-redo-alt"></i></button>
+                <button id="view-image-button" title="Afficher l'image"><i class="fas fa-eye"></i></button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- ===== PIED DE PAGE ===== -->
+    <footer class="kiosk-footer">
+        &copy; 2025 Decathlon - Tous droits réservés
+    </footer>
 
+    <script>
+        const puzzleData = [
+            {
+                id: 1,
+                image: "https://placehold.co/800x600/8dc63f/ffffff?text=Football",
+                title: "Terrain de Football",
+                description: "Un terrain de football Decathlon prêt pour un match."
+            },
+            {
+                id: 2,
+                image: "https://placehold.co/800x600/0072c6/ffffff?text=Basketball",
+                title: "Match de Basketball",
+                description: "Un ballon de basket en action sur le terrain."
+            },
+            {
+                id: 3,
+                image: "https://placehold.co/800x600/f58220/ffffff?text=Cyclisme",
+                title: "Course de Cyclisme",
+                description: "Un cycliste en pleine course, poussé par la foule."
+            },
+            {
+                id: 4,
+                image: "https://www.crazy-adventures.fr/ressources/images/f511fa13f9bd.jpg",
+                title: "CRAZY ADVENTURES Réunion",
+                description: "Spécialiste de la location de véhicule tout terrain en toute sécurité. Vivez votre crazy adventure ! 67 Chemin Vetyver 97410 SAINT-PIERRE - Heures d'ouverture : Lun - Dim 08h - 16h - Tél : 09 74 56 75 07"
+            },
+            {
+                id: 5,
+                image: "https://placehold.co/800x600/e94d8b/ffffff?text=Natation",
+                title: "Piscine Olympique",
+                description: "Un nageur s'entrainant dans la piscine."
+            },
+            {
+                id: 6,
+                image: "https://placehold.co/800x600/9b59b6/ffffff?text=Tennis",
+                title: "Terrain de Tennis",
+                description: "Échange de balles sur un court de tennis."
+            },
+            {
+                id: 7,
+                image: "https://placehold.co/800x600/3498db/ffffff?text=Boxe",
+                title: "Boxe sur le ring",
+                description: "Deux boxeurs s'affrontant sur le ring."
+            },
+            {
+                id: 8,
+                image: "https://placehold.co/800x600/f1c40f/ffffff?text=Course",
+                title: "Course à pied",
+                description: "Un coureur en pleine performance."
+            },
+            {
+                id: 9,
+                image: "https://placehold.co/800x600/e67e22/ffffff?text=Fitness",
+                title: "Salle de Fitness",
+                description: "Un entrainement de fitness en groupe."
+            },
+            {
+                id: 10,
+                image: "https://placehold.co/800x600/1abc9c/ffffff?text=Ski",
+                title: "Ski en montagne",
+                description: "Un skieur dévalant une piste enneigée."
+            },
+            {
+                id: 11,
+                image: "https://placehold.co/800x600/34495e/ffffff?text=Handball",
+                title: "Match de Handball",
+                description: "L'équipe de handball en plein match."
+            },
+            {
+                id: 12,
+                image: "https://placehold.co/800x600/e74c3c/ffffff?text=Volley",
+                title: "Volley-ball sur la plage",
+                description: "Un match de volley-ball sur la plage."
+            },
+            {
+                id: 13,
+                image: "https://placehold.co/800x600/2980b9/ffffff?text=Rugby",
+                title: "Match de Rugby",
+                description: "Un joueur de rugby portant le ballon."
+            },
+            {
+                id: 14,
+                image: "https://placehold.co/800x600/95a5a6/ffffff?text=Escalade",
+                title: "Mur d'escalade",
+                description: "Un grimpeur en pleine ascension."
+            },
+            {
+                id: 15,
+                image: "https://placehold.co/800x600/2c3e50/ffffff?text=Judo",
+                title: "Entrainement de Judo",
+                description: "Deux judokas s'affrontant en judo."
+            }
+        ];
+
+        const COLS = 5;
+        const ROWS = 4;
+        const totalPieces = COLS * ROWS;
+        let currentPuzzle = null;
+        let pieces = [];
+        let isStarted = false;
+        let timerInterval = null;
+        let seconds = 0;
+        let isSolved = false;
+
+        const puzzleContainer = document.getElementById('puzzle-container');
+        const imageView = document.getElementById('image-view');
+        const puzzleInfo = document.getElementById('puzzle-info');
+        const puzzleTitle = document.getElementById('puzzle-title');
+        const puzzleDescription = document.getElementById('puzzle-description');
+        const timerDisplay = document.getElementById('timer');
+        const viewImageButton = document.getElementById('view-image-button');
+        const newPuzzleButton = document.getElementById('new-puzzle-button');
+        const winOverlay = document.getElementById('win-overlay');
+
+        // Fonction pour sélectionner un puzzle aléatoire
+        function getRandomPuzzle() {
+            const randomIndex = Math.floor(Math.random() * puzzleData.length);
+            return puzzleData[randomIndex];
+        }
+
+        // Fonction pour initialiser le puzzle
+        function initPuzzle() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            isStarted = false;
+            seconds = 0;
+            isSolved = false;
+            winOverlay.classList.remove('show');
+            puzzleInfo.style.display = 'none'; // Cache la description et le titre
+            timerDisplay.textContent = '00:00';
+            
+            // Choix aléatoire d'un nouveau puzzle
+            currentPuzzle = getRandomPuzzle();
+            imageView.style.backgroundImage = `url(${currentPuzzle.image})`;
+
+            // Nettoyage de l'ancien puzzle
+            puzzleContainer.innerHTML = '';
+            puzzleContainer.appendChild(imageView);
+            puzzleContainer.appendChild(winOverlay);
+            pieces = [];
+
+            // Création des pièces
+            for (let i = 0; i < totalPieces; i++) {
+                const piece = document.createElement('div');
+                piece.classList.add('puzzle-piece');
+                piece.style.backgroundImage = `url(${currentPuzzle.image})`;
+
+                const row = Math.floor(i / COLS);
+                const col = i % COLS;
+
+                const bgX = (col / (COLS - 1)) * 100;
+                const bgY = (row / (ROWS - 1)) * 100;
+
+                piece.style.backgroundPosition = `${bgX}% ${bgY}%`;
+                piece.dataset.index = i;
+                
+                pieces.push(piece);
+            }
+
+            shufflePieces();
+            pieces.forEach(piece => puzzleContainer.appendChild(piece));
+
+            // Ajout des événements de drag and drop
+            pieces.forEach(piece => {
+                piece.draggable = true;
+                piece.addEventListener('dragstart', handleDragStart);
+                piece.addEventListener('dragover', handleDragOver);
+                piece.addEventListener('drop', handleDrop);
+                piece.addEventListener('dragenter', handleDragEnter);
+                piece.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        // Mélange les pièces
+        function shufflePieces() {
+            for (let i = pieces.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const tempPiece = pieces[i];
+                pieces[i] = pieces[j];
+                pieces[j] = tempPiece;
+            }
+        }
+
+        // Drag and Drop
+        let draggedPiece = null;
+
+        function handleDragStart(e) {
+            draggedPiece = e.target;
+            // Démarre le timer si ce n'est pas déjà fait
+            if (!isStarted) {
+                startTimer();
+                isStarted = true;
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            e.target.style.opacity = 0.5;
+        }
+        
+        function handleDragLeave(e) {
+            e.target.style.opacity = 1;
+        }
+
+        // CORRECTION DU BUG DANS CETTE FONCTION
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropTarget = e.target;
+
+            if (dropTarget.classList.contains('puzzle-piece')) {
+                dropTarget.style.opacity = 1;
+            }
+            
+            if (draggedPiece && draggedPiece !== dropTarget && dropTarget.classList.contains('puzzle-piece')) {
+                const tempParent = puzzleContainer;
+                const tempNextSibling = draggedPiece.nextSibling === dropTarget ? draggedPiece : draggedPiece.nextSibling;
+
+                // On s'assure d'avoir un "placeholder" pour l'élément à déplacer
+                const dropTargetNextSibling = dropTarget.nextSibling;
+                
+                // Déplace la pièce glissée à la position de la cible
+                tempParent.insertBefore(draggedPiece, dropTargetNextSibling);
+                // Déplace la cible à la position initiale de la pièce glissée
+                tempParent.insertBefore(dropTarget, tempNextSibling);
+                
+                checkWin();
+            }
+        }
+        
+        // Vérification de la victoire
+        function checkWin() {
+            let isCorrect = true;
+            const currentPieces = Array.from(puzzleContainer.querySelectorAll('.puzzle-piece'));
+
+            for (let i = 0; i < currentPieces.length; i++) {
+                if (parseInt(currentPieces[i].dataset.index) !== i) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            if (isCorrect && !isSolved) {
+                isSolved = true;
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                setTimeout(() => {
+                    winOverlay.classList.add('show');
+                    puzzleInfo.style.display = 'block'; // Affiche la description et le titre
+                    puzzleTitle.textContent = currentPuzzle.title;
+                    puzzleDescription.textContent = currentPuzzle.description;
+                }, 500);
+            }
+        }
+        
+        // Fonctionnalité du timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                seconds++;
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                timerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+            }, 1000);
+        }
+
+        // Bouton pour changer de puzzle
+        newPuzzleButton.addEventListener('click', () => {
+            initPuzzle();
+        });
+
+        // Bouton pour voir l'image
+        let isImageViewVisible = false;
+        viewImageButton.addEventListener('click', () => {
+            isImageViewVisible = !isImageViewVisible;
+            if (isImageViewVisible) {
+                imageView.style.display = 'block';
+                viewImageButton.innerHTML = `<i class="fas fa-eye-slash"></i>`;
+            } else {
+                imageView.style.display = 'none';
+                viewImageButton.innerHTML = `<i class="fas fa-eye"></i>`;
+            }
+        });
+
+        // Initialisation au chargement de la page
+        window.onload = initPuzzle;
+
+    </script>
 </body>
 </html>
