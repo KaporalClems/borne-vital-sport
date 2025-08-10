@@ -19,7 +19,7 @@
             height: 100%;
             font-family: 'Inter', sans-serif;
             color: white;
-            overflow: hidden;
+            overflow: hidden; /* Empêche le défilement */
             display: flex;
             flex-direction: column;
         }
@@ -89,19 +89,26 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: center; /* Centre l'image verticalement */
             padding: 2vh 5vw;
-            overflow-y: auto; /* Permet le défilement si le contenu est trop grand */
+            overflow: hidden; /* Empêche le défilement */
         }
         
         /* Style pour l'image du plan */
         .plan-image {
             max-width: 100%;
-            max-height: 80vh; /* Ajuste la hauteur maximale de l'image */
-            height: auto;
+            max-height: 100%; /* L'image ne dépasse pas la hauteur du conteneur */
+            height: auto; 
+            width: auto;
             border-radius: 20px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            margin-top: 2vh;
+            display: block;
+            cursor: pointer; /* Indique que l'image est cliquable */
+            transition: transform 0.3s ease;
+        }
+        
+        .plan-image:hover {
+            transform: scale(1.02);
         }
 
         /* Pied de page */
@@ -128,7 +135,7 @@
             margin-top: 0.5vh;
         }
         
-        /* Modal pour les mentions légales */
+        /* --- Modal pour les Mentions Légales et Affiche du Plan --- */
         .modal {
             display: none;
             position: fixed;
@@ -143,11 +150,18 @@
             padding: 2vh;
             box-sizing: border-box;
             backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .modal.show {
             display: flex;
+            opacity: 1;
+            visibility: visible;
         }
-        .modal .modal-content {
+
+        /* Contenu du modal des mentions légales */
+        .modal-legal .modal-content {
             background-color: #fefefe;
             color: #333;
             padding: 3vh 3vw;
@@ -158,23 +172,52 @@
             max-height: 85vh;
             overflow-y: auto;
             position: relative;
-            text-align: center; /* Aligne le contenu du modal au centre */
+            text-align: center;
         }
+        
+        /* Contenu du modal du plan (style affiche) */
+        .modal-plan .modal-content {
+            background-color: transparent; /* Fond transparent pour l'affiche */
+            color: white;
+            position: relative;
+            max-height: 95vh;
+            max-width: 95vw;
+            box-shadow: none;
+        }
+        
+        .modal-plan .modal-content img {
+            max-height: 100%;
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
         .modal-close-button {
             position: absolute;
             top: 1.5vh;
             right: 1.5vw;
-            color: #aaa;
+            color: white; /* Bouton blanc pour le modal du plan */
             font-size: 4vh;
             font-weight: bold;
             cursor: pointer;
-            z-index: 104; /* Assure que le bouton de fermeture est toujours visible */
+            z-index: 104;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            transition: color 0.2s ease;
         }
         .modal-close-button:hover,
         .modal-close-button:focus {
-            color: #000;
+            color: #ccc;
             text-decoration: none;
         }
+        
+        .modal-legal .modal-close-button {
+            color: #aaa; /* Bouton gris pour le modal des mentions légales */
+        }
+        .modal-legal .modal-close-button:hover {
+            color: #000;
+        }
+        
+        /* Styles pour le contenu des modals */
         .modal .modal-content h2 {
             font-size: 3vh;
             font-weight: 700;
@@ -193,7 +236,7 @@
         }
         .modal .modal-content .editor-logo,
         .modal .modal-content .partners-logo {
-            display: block; /* Important pour que margin:auto fonctionne */
+            display: block;
             margin-left: auto;
             margin-right: auto;
         }
@@ -221,8 +264,8 @@
 
     <!-- ===== CONTENU PRINCIPAL ===== -->
     <main class="main-content">
-        <!-- Ajoute ici l'image de ton plan -->
-        <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/Plan_site.png" alt="Plan du Vital Sport" class="plan-image">
+        <!-- L'image est maintenant cliquable -->
+        <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/Plan_site.png" alt="Plan du Vital Sport, cliquez pour agrandir" class="plan-image" id="plan-image">
     </main>
 
     <!-- ===== PIED DE PAGE ===== -->
@@ -232,7 +275,7 @@
     </footer>
 
     <!-- ===== MODAL MENTIONS LÉGALES ===== -->
-    <div id="legal-modal" class="modal">
+    <div id="legal-modal" class="modal modal-legal">
         <div class="modal-content">
             <span class="modal-close-button" id="close-legal-modal">&times;</span>
             <h2>Mentions Légales</h2>
@@ -247,6 +290,15 @@
             <!-- URL de l'image des partenaires mise à jour pour un dépôt GitHub -->
             <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
             <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Destination Sud Réunion.</p>
+        </div>
+    </div>
+
+    <!-- ===== NOUVEAU MODAL POUR LE PLAN GRAND FORMAT ===== -->
+    <div id="plan-modal" class="modal modal-plan">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-plan-modal">&times;</span>
+            <!-- L'image du plan agrandie sera chargée ici -->
+            <img src="" alt="Plan du Vital Sport agrandi" id="modal-plan-image">
         </div>
     </div>
 
@@ -268,6 +320,31 @@
         window.addEventListener('click', (e) => {
             if (e.target === legalModal) {
                 legalModal.classList.remove('show');
+            }
+        });
+        
+        // Gère le nouveau modal pour le plan
+        const planImage = document.getElementById('plan-image');
+        const planModal = document.getElementById('plan-modal');
+        const modalPlanImage = document.getElementById('modal-plan-image');
+        const closePlanModalBtn = document.getElementById('close-plan-modal');
+        
+        // Lorsque l'utilisateur clique sur l'image du plan
+        planImage.addEventListener('click', () => {
+            // Utilise l'URL de l'image pour le modal
+            modalPlanImage.src = planImage.src;
+            planModal.classList.add('show');
+        });
+        
+        // Ferme le modal du plan lorsque l'utilisateur clique sur le bouton de fermeture
+        closePlanModalBtn.addEventListener('click', () => {
+            planModal.classList.remove('show');
+        });
+        
+        // Ferme le modal du plan si l'utilisateur clique en dehors de l'image
+        planModal.addEventListener('click', (e) => {
+            if (e.target === planModal || e.target === closePlanModalBtn) {
+                planModal.classList.remove('show');
             }
         });
     </script>
