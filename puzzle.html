@@ -352,15 +352,28 @@
             margin: 1vh auto;
             display: block;
         }
-        .puzzle-info-item {
+        /* Mise à jour pour un meilleur espacement et alignement */
+        .puzzle-info-card {
             display: flex;
-            align-items: center;
-            gap: 1.5vw;
+            flex-direction: row; 
+            gap: 2vw; /* Espacement entre le texte et le QR code */
+            align-items: center; /* Aligne verticalement au centre */
             background-color: #f0f0f0;
             padding: 1.5vh 2.5vw;
             border-radius: 10px;
         }
-
+        .puzzle-info-card .info-details {
+            flex-grow: 1; 
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh; /* Espacement entre les éléments d'info (adresse, tel, etc.) */
+        }
+        .puzzle-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5vw;
+        }
+        
         .item-icon {
             font-size: 2.5vh;
             color: #00a99d;
@@ -424,12 +437,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1vh;
-            padding: 2vh;
-            background-color: #fff;
+            justify-content: center;
+            padding: 1vh;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-top: 2vh;
+            background-color: #fefefe;
+            flex-shrink: 0; /* Empêche le QR code de se réduire */
+            text-align: center;
         }
         .qrcode-container p {
             font-size: 2vh;
@@ -440,10 +454,9 @@
         #qrcode-canvas {
             width: 100%;
             height: auto;
-            max-width: 200px;
+            max-width: 150px;
         }
         
-
         /* Media queries pour rendre le modal plus responsive sur les petits écrans */
         @media (max-width: 768px) {
             #puzzle-details-modal .modal-content {
@@ -461,20 +474,27 @@
                 font-size: 4vh;
                 top: 5%;
             }
-            .puzzle-info-item {
+            .puzzle-info-card {
                 flex-direction: column;
                 align-items: center;
-                gap: 0.5vh;
-                padding: 1vh;
+                gap: 1.5vh;
+                padding: 1.5vh;
+            }
+            .puzzle-info-item {
+                flex-direction: row; /* Garde les icônes et le texte côte à côte */
+                align-items: flex-start;
+                gap: 1vw;
             }
             .item-text {
-                text-align: center;
+                text-align: left;
             }
             .modal-close-button {
                 font-size: 3vh;
             }
+            #qrcode-canvas {
+                max-width: 120px;
+            }
         }
-
     </style>
 </head>
 <body>
@@ -519,7 +539,6 @@
         <div class="modal-content">
             <span class="modal-close-button" id="close-legal-modal">&times;</span>
             <h2>Mentions Légales</h2>
-            <h3>Éditeur du site</h3>
             <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="editor-logo">
             <p><strong>Éditeur du site :</strong> Destination Sud Réunion</p>
             <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
@@ -529,7 +548,7 @@
             <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
             <h3>Partenaires</h3>
             <img src="logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
-            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Decathlon et de Crazy Adventures Réunion.</p>
+            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Destination Sud Réunion.</p>
         </div>
     </div>
     
@@ -545,8 +564,6 @@
             <h2 id="modal-puzzle-title"></h2>
             <p id="modal-puzzle-description"></p>
             <div id="modal-puzzle-details"></div>
-            <!-- Conteneur pour le QR Code -->
-            <div id="qrcode-container-wrapper"></div>
         </div>
     </div>
 
@@ -699,7 +716,6 @@
         const modalPuzzleTitle = document.getElementById('modal-puzzle-title');
         const modalPuzzleDescription = document.getElementById('modal-puzzle-description');
         const modalPuzzleDetails = document.getElementById('modal-puzzle-details');
-        const qrcodeWrapper = document.getElementById('qrcode-container-wrapper');
         const congratsText = document.getElementById('congrats-text');
 
         // Confetti Canvas
@@ -936,12 +952,16 @@
             
             // Nettoyer l'ancien contenu des détails
             modalPuzzleDetails.innerHTML = '';
-            qrcodeWrapper.innerHTML = ''; // Nettoyer le conteneur du QR code
-
+            
             // Construire les détails (adresse, horaires, etc.)
+            let detailsHtml = '';
+            
             if (puzzle.address || puzzle.hours || puzzle.phone || puzzle.email) {
+                detailsHtml += '<div class="puzzle-info-card">';
+                detailsHtml += '<div class="info-details">';
+
                 if (puzzle.address) {
-                    modalPuzzleDetails.innerHTML += `
+                    detailsHtml += `
                         <div class="puzzle-info-item">
                             <i class="fas fa-map-marker-alt item-icon"></i>
                             <span class="item-text">${puzzle.address}</span>
@@ -949,7 +969,7 @@
                     `;
                 }
                 if (puzzle.hours) {
-                    modalPuzzleDetails.innerHTML += `
+                    detailsHtml += `
                         <div class="puzzle-info-item">
                             <i class="fas fa-clock item-icon"></i>
                             <span class="item-text">${puzzle.hours}</span>
@@ -957,7 +977,7 @@
                     `;
                 }
                 if (puzzle.phone) {
-                    modalPuzzleDetails.innerHTML += `
+                    detailsHtml += `
                         <div class="puzzle-info-item">
                             <i class="fas fa-phone item-icon"></i>
                             <span class="item-text">${puzzle.phone}</span>
@@ -965,22 +985,27 @@
                     `;
                 }
                 if (puzzle.email) {
-                    modalPuzzleDetails.innerHTML += `
+                    detailsHtml += `
                         <div class="puzzle-info-item">
                             <i class="fas fa-envelope item-icon"></i>
                             <span class="item-text">${puzzle.email}</span>
                         </div>
                     `;
                 }
+
+                detailsHtml += '</div>';
+
+                // Générer le QR code si le lien existe et l'ajouter à la carte
+                if (puzzle.qrcodeLink) {
+                    detailsHtml += `<div class="qrcode-container"><p>Scannez pour plus d'infos :</p><div id="qrcode-canvas"></div></div>`;
+                }
+                detailsHtml += '</div>';
             }
-            
+
+            modalPuzzleDetails.innerHTML = detailsHtml;
+
             // Générer le QR code si le lien existe
             if (puzzle.qrcodeLink) {
-                const qrcodeContainer = document.createElement('div');
-                qrcodeContainer.classList.add('qrcode-container');
-                qrcodeContainer.innerHTML = `<p>Scannez pour plus d'infos :</p><div id="qrcode-canvas"></div>`;
-                qrcodeWrapper.appendChild(qrcodeContainer);
-
                 // S'assurer que le div pour le QR code est dans le DOM avant de le générer
                 setTimeout(() => {
                     new QRCode(document.getElementById("qrcode-canvas"), {
@@ -988,7 +1013,8 @@
                         width: 128,
                         height: 128,
                         colorDark : "#000000",
-                        colorLight : "#ffffff",
+                        // L'arrière-plan devient transparent en utilisant la couleur "transparent"
+                        colorLight : "transparent",
                         correctLevel : QRCode.CorrectLevel.H
                     });
                 }, 50); // Petit délai pour s'assurer que l'élément est rendu
@@ -1069,3 +1095,4 @@
     </script>
 </body>
 </html>
+
