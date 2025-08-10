@@ -28,8 +28,30 @@
             flex-direction: column;
             width: 100vw;
             height: 100vh;
-            background-color: #005f9e;
+            /* Rendre le fond transparent pour voir l'animation du body */
+            background-color: transparent; 
             text-align: center;
+        }
+
+        /* Animation du dégradé pour le corps de la page */
+        body {
+            /* Couleurs du dégradé (ici des tons de bleu) */
+            background: linear-gradient(-45deg, #005f9e, #0072c6, #00a99d);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        
+        /* Définition de l'animation */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* En-tête avec les titres et la nouvelle section date/heure */
@@ -38,11 +60,30 @@
             flex-shrink: 0;
             position: relative;
         }
+        
+        /* Logo Destination Sud Réunion */
+        .logo-dsr {
+            position: absolute;
+            top: 4vh;
+            left: 4vw;
+            height: 8vh;
+        }
 
-        /* Taille du logo Decathlon (mise à jour) */
-        .kiosk-header .logo {
-            height: 10vh; /* Hauteur du logo Decathlon ajustée */
-            margin-bottom: 2vh;
+        /* Conteneur pour la date, l'heure et le logo Decathlon */
+        .top-right-section {
+            position: absolute;
+            top: 4vh;
+            right: 4vw;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1vh; /* Espace entre les éléments */
+        }
+
+        /* Taille des logos */
+        .logo-decathlon {
+            height: 8vh; /* Hauteur ajustée pour le logo Decathlon */
+            margin-top: 2vh; /* Espace au-dessus du logo pour le séparer de la date */
         }
 
         /* Animation de pulsation pour le titre */
@@ -78,9 +119,6 @@
         
         /* Style pour la date et l'heure */
         #datetime-container {
-            position: absolute;
-            top: 4vh;
-            right: 4vw;
             font-family: 'Inter', sans-serif;
             text-align: right;
         }
@@ -148,13 +186,28 @@
 
         /* Pied de page */
         .kiosk-footer {
-            padding: 2vh;
-            font-size: 1.8vh;
+            padding: 1vh;
             background-color: rgba(0, 0, 0, 0.1);
+            text-align: center;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5vh;
         }
-
-        /* Styles pour la fenêtre modale */
+        .kiosk-footer .footer-text {
+            font-size: 1.4vh;
+            margin: 0;
+        }
+        .kiosk-footer .legal-link {
+            font-size: 1.4vh;
+            color: white;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 0.5vh;
+        }
+        /* Styles pour la fenêtre modale vidéo */
         .modal-container {
             position: fixed;
             top: 0;
@@ -209,6 +262,85 @@
             align-items: center;
             z-index: 10;
         }
+        
+        /* Modal pour les mentions légales et le puzzle */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal .modal-content {
+            background-color: #fefefe;
+            color: #333;
+            padding: 3vh 3vw;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            text-align: center; /* Aligne le contenu du modal au centre */
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 1.5vh;
+            right: 1.5vw;
+            color: #aaa;
+            font-size: 4vh;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 104; /* Assure que le bouton de fermeture est toujours visible */
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        .modal .modal-content h2 {
+            font-size: 3vh;
+            font-weight: 700;
+            margin-top: 0;
+        }
+        .modal .modal-content h3 {
+            font-size: 2.5vh;
+            font-weight: 700;
+            margin-top: 2vh;
+            margin-bottom: 1vh;
+        }
+        .modal .modal-content p {
+            font-size: 1.8vh;
+            line-height: 1.5;
+            margin-bottom: 1.5vh;
+        }
+        .modal .modal-content .editor-logo,
+        .modal .modal-content .partners-logo {
+            display: block; /* Important pour que margin:auto fonctionne */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .modal .modal-content .editor-logo {
+            max-height: 5vh;
+            margin-bottom: 1vh;
+        }
+        .modal .modal-content .partners-logo {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1vh;
+        }
     </style>
 </head>
 <body>
@@ -217,15 +349,22 @@
 
         <!-- ===== EN-TÊTE ===== -->
         <header class="kiosk-header">
-            <img src="https://logo-marque.com/wp-content/uploads/2020/12/Decathlon-Logo.png" alt="Logo Decathlon" class="logo">
+            <!-- Logo Destination Sud Réunion -->
+            <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="logo-dsr">
+            
+            <!-- Section droite pour la date et les logos -->
+            <div class="top-right-section">
+                <!-- CONTENEUR POUR LA DATE ET L'HEURE -->
+                <div id="datetime-container">
+                    <div class="time"></div>
+                    <div class="date"></div>
+                </div>
+                <!-- Logo Decathlon en dessous de la date/heure -->
+                <img src="https://logo-marque.com/wp-content/uploads/2020/12/Decathlon-Logo.png" alt="Logo Decathlon" class="logo-decathlon">
+            </div>
+
             <h1 class="main-title">Vital Sport</h1>
             <p class="subtitle">Découvre, joue et explore le sport autrement !</p>
-            
-            <!-- CONTENEUR POUR LA DATE ET L'HEURE -->
-            <div id="datetime-container">
-                <div class="time"></div>
-                <div class="date"></div>
-            </div>
         </header>
 
         <!-- ===== GRILLE D'APPLICATIONS ===== -->
@@ -250,7 +389,8 @@
 
         <!-- ===== PIED DE PAGE ===== -->
         <footer class="kiosk-footer">
-            &copy; 2025 Decathlon - Tous droits réservés
+            <p class="footer-text">&copy; 2025 Destination Sud Réunion</p>
+            <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
         </footer>
 
     </div>
@@ -265,8 +405,27 @@
             </video>
         </div>
     </div>
+    
+    <!-- ===== MODAL MENTIONS LÉGALES ===== -->
+    <div id="legal-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-legal-modal">&times;</span>
+            <h2>Mentions Légales</h2>
+            <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="editor-logo">
+            <p><strong>Éditeur du site :</strong> Destination Sud Réunion</p>
+            <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
+            <p><strong>Contact :</strong><br>Téléphone : 0262353433<br>Email : saintpierre.tourisme@gmail.com</p>
+            <p><strong>Hébergement :</strong><br>Google Cloud Platform</p>
+            <p><strong>Propriété intellectuelle :</strong><br>Le contenu de ce site (textes, images, etc.) est la propriété exclusive de Decathlon Réunion, sauf mention contraire. Toute reproduction ou utilisation, même partielle, est interdite sans autorisation préalable.</p>
+            <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
+            <h3>Partenaires</h3>
+            <!-- URL de l'image des partenaires mise à jour pour un dépôt GitHub -->
+            <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
+            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Destination Sud Réunion.</p>
+        </div>
+    </div>
 
-    <!-- Script JavaScript pour la date et l'heure & gestion de la modale -->
+    <!-- Script JavaScript pour la date et l'heure & gestion des modales -->
     <script>
         function updateDateTime() {
             const now = new Date();
@@ -283,32 +442,52 @@
             updateDateTime();
             setInterval(updateDateTime, 1000);
 
-            // Gère la fenêtre modale
-            const modal = document.getElementById('video-modal');
-            const video = document.getElementById('intro-video');
-            const closeBtn = document.querySelector('.modal-close-btn');
+            // Gère la fenêtre modale vidéo
+            const videoModal = document.getElementById('video-modal');
+            const introVideo = document.getElementById('intro-video');
+            const closeVideoBtn = document.querySelector('#video-modal .modal-close-btn');
             
-            // Affiche la modale au chargement de la page
-            modal.classList.add('show');
+            // Affiche la modale vidéo au chargement de la page
+            videoModal.classList.add('show');
             
             // Lance la lecture de la vidéo (même si l'autoplay est là, c'est plus fiable)
-            video.play().catch(error => {
+            introVideo.play().catch(error => {
                 console.log("La vidéo a besoin d'une interaction utilisateur pour démarrer.");
             });
 
-            // Gère la fermeture de la modale
-            closeBtn.addEventListener('click', () => {
-                modal.classList.remove('show');
-                video.pause();
-                video.currentTime = 0;
+            // Gère la fermeture de la modale vidéo
+            closeVideoBtn.addEventListener('click', () => {
+                videoModal.classList.remove('show');
+                introVideo.pause();
+                introVideo.currentTime = 0;
             });
             
             // Ferme la modale si on clique en dehors
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('show');
-                    video.pause();
-                    video.currentTime = 0;
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) {
+                    videoModal.classList.remove('show');
+                    introVideo.pause();
+                    introVideo.currentTime = 0;
+                }
+            });
+
+            // Gère la modale des mentions légales
+            const legalModal = document.getElementById('legal-modal');
+            const showLegalModalBtn = document.getElementById('show-legal-modal');
+            const closeLegalModalBtn = document.getElementById('close-legal-modal');
+            
+            showLegalModalBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                legalModal.classList.add('show');
+            });
+            
+            closeLegalModalBtn.addEventListener('click', () => {
+                legalModal.classList.remove('show');
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === legalModal) {
+                    legalModal.classList.remove('show');
                 }
             });
         };
