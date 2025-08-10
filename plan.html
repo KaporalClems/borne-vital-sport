@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vital Sport - Plan</title>
+    <title>Plan du Vital Sport</title>
+    <!-- Importation d'une police Google Fonts pour un meilleur rendu visuel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Importation des icônes depuis Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* Styles de base pour toutes les pages */
+        /* Réinitialisation des styles par défaut et police globale */
         body, html {
             margin: 0;
             padding: 0;
@@ -22,95 +24,252 @@
             flex-direction: column;
         }
 
-        .kiosk-container {
-            width: 100vw;
-            height: 100vh;
-            background-color: #005f9e;
-            display: flex;
-            flex-direction: column;
+        /* Animation du dégradé pour le corps de la page */
+        body {
+            /* Couleurs du dégradé (ici des tons de bleu) */
+            background: linear-gradient(-45deg, #005f9e, #0072c6, #00a99d);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        
+        /* Définition de l'animation */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
-        /* En-tête de page secondaire */
+        /* En-tête avec les titres et le logo */
         .page-header {
             padding: 4vh 4vw;
             flex-shrink: 0;
+            position: relative;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
         }
+
+        /* Style du bouton de retour */
         .page-header .back-button {
             font-size: 5vh;
             color: white;
             text-decoration: none;
             transition: transform 0.2s ease;
         }
+        
         .page-header .back-button:hover {
             transform: scale(1.1);
         }
+
+        /* Style du logo de l'en-tête */
+        .page-header .header-logo {
+            height: 8vh; /* Taille du logo */
+            width: auto;
+        }
+
+        /* Style du titre de la page */
         .page-header h1 {
-            font-size: 7vh;
+            font-size: 6vh;
             font-weight: 900;
-            flex-grow: 1;
+            text-transform: uppercase;
             text-align: center;
+            flex-grow: 1;
             margin: 0;
         }
-        .page-header .header-logo {
-            height: 12vh;
-        }
-        
-        /* Contenu principal du plan */
-        .plan-content {
+
+        /* Conteneur principal pour le contenu */
+        .main-content {
             flex-grow: 1;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            overflow: hidden;
+            justify-content: center;
             padding: 2vh 5vw;
+            overflow-y: auto; /* Permet le défilement si le contenu est trop grand */
         }
         
+        /* Style pour l'image du plan */
         .plan-image {
             max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+            max-height: 80vh; /* Ajuste la hauteur maximale de l'image */
+            height: auto;
             border-radius: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            margin-top: 2vh;
         }
 
         /* Pied de page */
         .kiosk-footer {
-            padding: 2vh;
-            font-size: 1.8vh;
+            padding: 1vh;
             background-color: rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
             text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5vh;
+        }
+        .kiosk-footer .footer-text {
+            font-size: 1.4vh;
+            margin: 0;
+        }
+        .kiosk-footer .legal-link {
+            font-size: 1.4vh;
+            color: white;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 0.5vh;
+        }
+        
+        /* Modal pour les mentions légales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
+        }
+        .modal.show {
+            display: flex;
+        }
+        .modal .modal-content {
+            background-color: #fefefe;
+            color: #333;
+            padding: 3vh 3vw;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            text-align: center; /* Aligne le contenu du modal au centre */
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 1.5vh;
+            right: 1.5vw;
+            color: #aaa;
+            font-size: 4vh;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 104; /* Assure que le bouton de fermeture est toujours visible */
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        .modal .modal-content h2 {
+            font-size: 3vh;
+            font-weight: 700;
+            margin-top: 0;
+        }
+        .modal .modal-content h3 {
+            font-size: 2.5vh;
+            font-weight: 700;
+            margin-top: 2vh;
+            margin-bottom: 1vh;
+        }
+        .modal .modal-content p {
+            font-size: 1.8vh;
+            line-height: 1.5;
+            margin-bottom: 1.5vh;
+        }
+        .modal .modal-content .editor-logo,
+        .modal .modal-content .partners-logo {
+            display: block; /* Important pour que margin:auto fonctionne */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .modal .modal-content .editor-logo {
+            max-height: 5vh;
+            margin-bottom: 1vh;
+        }
+        .modal .modal-content .partners-logo {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1vh;
         }
     </style>
 </head>
 <body>
 
-    <div class="kiosk-container">
+    <!-- ===== EN-TÊTE ===== -->
+    <header class="page-header">
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1>Plan du Vital Sport</h1>
+        <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/logo_vital_sport_-removebg-preview.png" alt="Logo Vital Sport" class="header-logo">
+    </header>
 
-        <!-- ===== EN-TÊTE DE PAGE SECONDAIRE ===== -->
-        <header class="page-header">
-            <a href="index.html" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1>Plan du Vital Sport</h1>
-            <img src="https://image.over-blog.com/ouUrfqzLHhSoqiXpPRUr7NtQxSg=/filters:no_upscale()/image%2F2961648%2F20230901%2Fob_fe2277_logo-vitalsport.png" alt="Logo Vital Sport" class="header-logo">
-        </header>
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <main class="main-content">
+        <!-- Ajoute ici l'image de ton plan -->
+        <img src="https://placehold.co/1200x800/0072c6/ffffff?text=Plan+du+Vital+Sport" alt="Plan du Vital Sport" class="plan-image">
+    </main>
 
-        <!-- ===== CONTENU PRINCIPAL DU PLAN ===== -->
-        <main class="plan-content">
-            <!-- L'image du plan est affichée ici -->
-            <img src="Plan_site.png" alt="Plan de l'événement Vital Sport" class="plan-image" onerror="this.src='https://placehold.co/1000x800/0072C6/FFFFFF?text=Image+indisponible'">
-        </main>
+    <!-- ===== PIED DE PAGE ===== -->
+    <footer class="kiosk-footer">
+        <p class="footer-text">&copy; 2025 Destination Sud Réunion</p>
+        <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
+    </footer>
 
-        <!-- ===== PIED DE PAGE ===== -->
-        <footer class="kiosk-footer">
-            &copy; 2025 Decathlon - Tous droits réservés
-        </footer>
-
+    <!-- ===== MODAL MENTIONS LÉGALES ===== -->
+    <div id="legal-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-legal-modal">&times;</span>
+            <h2>Mentions Légales</h2>
+            <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="editor-logo">
+            <p><strong>Éditeur du site :</strong> Destination Sud Réunion</p>
+            <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
+            <p><strong>Contact :</strong><br>Téléphone : 0262353433<br>Email : saintpierre.tourisme@gmail.com</p>
+            <p><strong>Hébergement :</strong><br>Google Cloud Platform</p>
+            <p><strong>Propriété intellectuelle :</strong><br>Le contenu de ce site (textes, images, etc.) est la propriété exclusive de Decathlon Réunion, sauf mention contraire. Toute reproduction ou utilisation, même partielle, est interdite sans autorisation préalable.</p>
+            <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
+            <h3>Partenaires</h3>
+            <!-- URL de l'image des partenaires mise à jour pour un dépôt GitHub -->
+            <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
+            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Destination Sud Réunion.</p>
+        </div>
     </div>
 
+    <script>
+        // Gère la modale des mentions légales
+        const legalModal = document.getElementById('legal-modal');
+        const showLegalModalBtn = document.getElementById('show-legal-modal');
+        const closeLegalModalBtn = document.getElementById('close-legal-modal');
+        
+        showLegalModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            legalModal.classList.add('show');
+        });
+        
+        closeLegalModalBtn.addEventListener('click', () => {
+            legalModal.classList.remove('show');
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === legalModal) {
+                legalModal.classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>
