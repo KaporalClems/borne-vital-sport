@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vital Sport - Nos Catalogues Sports</title>
+    <title>Vital Sport - Catalogues des Sports</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <style>
         /* Styles de base pour toutes les pages */
         body, html {
@@ -17,27 +18,40 @@
             height: 100%;
             font-family: 'Inter', sans-serif;
             color: white;
-            overflow: hidden;
-        }
-        .kiosk-container {
+            /* Fond avec dégradé animé */
+            background: linear-gradient(-45deg, #f58220, #e06c00, #f58220, #e06c00);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
             display: flex;
             flex-direction: column;
-            width: 100vw;
-            height: 100vh;
-            background-color: #005f9e;
-            text-align: center;
+            overflow: hidden; /* Empêche le défilement */
         }
 
-        /* En-tête de page secondaire */
+        /* Définition de l'animation pour le dégradé */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* En-tête de page */
         .page-header {
-            padding: 4vh 4vw;
-            flex-shrink: 0;
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1.5vh 4vw;
+            box-sizing: border-box;
+            flex-shrink: 0;
         }
         .page-header .back-button {
-            font-size: 5vh;
+            font-size: 3.5vh;
             color: white;
             text-decoration: none;
             transition: transform 0.2s ease;
@@ -45,59 +59,531 @@
         .page-header .back-button:hover {
             transform: scale(1.1);
         }
-        .page-header h1 {
-            font-size: 7vh;
-            font-weight: 900;
-            flex-grow: 1;
-            text-align: center;
-            margin-left: -5vh; /* Ajustement pour centrer le titre */
+        .page-header .logo {
+            max-height: 8vh;
+            max-width: 30vw;
         }
 
-        /* Contenu principal de la page */
-        .main-content {
+        /* Conteneur principal */
+        .main-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             flex-grow: 1;
+            padding: 2vh 4vw;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .main-content-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Titre de la page */
+        .main-title {
+            font-size: 5vh;
+            font-weight: 900;
+            text-align: center;
+            margin: 0 0 2vh;
+            animation: pulse-heartbeat 2s infinite ease-in-out;
+        }
+        @keyframes pulse-heartbeat {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.05); }
+            50% { transform: scale(1); }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Grille des catalogues - Mise à jour pour le style "livres iOS" */
+        .catalogue-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 40px; /* Espace augmenté entre les cartes */
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* Carte de catalogue - Mise à jour pour le style "livres iOS" */
+        .catalogue-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            /* Ombre plus prononcée pour l'effet de profondeur */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
+            
+            /* Dimensions augmentées pour un effet plus grand */
+            width: 250px;
+            height: auto; /* La hauteur s'ajuste au contenu */
+        }
+        .catalogue-card:hover {
+            transform: translateY(-10px); /* L'effet de survol est plus marqué */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 10px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Image du catalogue */
+        .catalogue-image {
+            width: 100%;
+            height: 300px; /* Hauteur de l'image augmentée */
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Ligne de séparation subtile */
+        }
+
+        /* Titre du catalogue */
+        .catalogue-title {
+            font-size: 2.8vh;
+            font-weight: 700;
+            padding: 20px 10px;
+            margin: 0;
+        }
+
+        /* Modal de détails du catalogue */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            color: #333;
+            padding: 3vh 3vw;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            text-align: center;
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 1.5vh;
+            right: 1.5vw;
+            color: #aaa;
+            font-size: 4vh;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 104;
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        #modal-catalogue-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin: 1vh auto;
+            display: block;
+        }
+        #modal-catalogue-title {
+            font-size: 3.5vh;
+            margin-bottom: 1vh;
+            color: #e06c00;
+        }
+        #modal-catalogue-description {
+            font-size: 2vh;
+            line-height: 1.6;
+        }
+
+        /* Modal du lecteur de PDF */
+        #pdf-viewer-modal {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        #pdf-viewer-modal .modal-content {
+            width: 95%;
+            max-width: 95vw;
+            height: 95%;
+            max-height: 95vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: transparent;
+            padding: 0;
+        }
+
+        #pdf-viewer-container {
+            flex-grow: 1;
+            overflow: auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 5vh;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        .main-content h2 {
-            font-size: 10vh;
-            font-weight: 900;
+        #pdf-viewer-container::-webkit-scrollbar {
+            display: none;
+        }
+        #pdf-viewer-container canvas {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+
+        #pdf-viewer-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 2vh 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin-top: 1vh;
+        }
+        .pdf-nav-button {
+            background-color: #f58220;
+            color: white;
+            border: none;
+            padding: 1vh 2vw;
+            border-radius: 8px;
+            font-size: 2.5vh;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .pdf-nav-button:hover:not(:disabled) {
+            background-color: #e06c00;
+        }
+        .pdf-nav-button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        #page-info {
+            font-size: 2.5vh;
+            font-weight: bold;
         }
 
         /* Pied de page */
         .kiosk-footer {
-            padding: 2vh;
-            font-size: 1.8vh;
+            padding: 1vh;
             background-color: rgba(0, 0, 0, 0.1);
+            text-align: center;
             flex-shrink: 0;
+        }
+        .kiosk-footer p {
+            font-size: 1.4vh;
+            margin: 0;
+        }
+        .kiosk-footer .legal-link {
+            font-size: 1.4vh;
+            color: white;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Modal Mentions Légales */
+        #legal-modal .modal-content {
+            text-align: center; /* Centrage du texte de la modal des mentions légales */
+        }
+        .modal-content h2 {
+            text-align: center;
+        }
+        .modal-content .editor-logo {
+            max-height: 5vh;
+            margin-bottom: 1vh;
+        }
+        .modal-content .partners-logo {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1vh;
         }
     </style>
 </head>
 <body>
 
-    <div class="kiosk-container">
+    <header class="page-header">
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <img src="https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/logo_vital_sport_-removebg-preview.png" alt="Logo Vital Sport" class="logo">
+    </header>
 
-        <!-- ===== EN-TÊTE DE PAGE SECONDAIRE ===== -->
-        <header class="page-header">
-            <a href="accueil.html" class="back-button">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1>Nos Catalogues Sports</h1>
-        </header>
+    <main class="main-content-wrapper">
+        <h1 class="main-title">Catalogues des Sports</h1>
+        <div class="catalogue-grid" id="catalogue-grid">
+            <!-- Les fiches des catalogues seront injectées ici par le JavaScript -->
+        </div>
+    </main>
 
-        <!-- ===== CONTENU PRINCIPAL ===== -->
-        <main class="main-content">
-            <p>Ici se trouvera la liste de nos catalogues.</p>
-        </main>
+    <!-- ===== PIED DE PAGE ===== -->
+    <footer class="kiosk-footer">
+        <p>&copy; 2025 Destination Sud Réunion</p>
+        <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
+    </footer>
 
-        <!-- ===== PIED DE PAGE ===== -->
-        <footer class="kiosk-footer">
-            &copy; 2025 Decathlon - Tous droits réservés
-        </footer>
-
+    <!-- ===== MODAL DÉTAILS DU CATALOGUE ===== -->
+    <div id="catalogue-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-catalogue-modal">&times;</span>
+            <img id="modal-catalogue-image" src="" alt="Image du catalogue">
+            <h2 id="modal-catalogue-title"></h2>
+            <p id="modal-catalogue-description"></p>
+            <button class="pdf-nav-button" id="read-catalogue-button">Lire le catalogue</button>
+        </div>
     </div>
 
+    <!-- ===== MODAL LECTEUR DE PDF ===== -->
+    <div id="pdf-viewer-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-pdf-modal">&times;</span>
+            <div id="pdf-viewer-container">
+                <canvas id="pdf-canvas"></canvas>
+            </div>
+            <div id="pdf-viewer-controls">
+                <button id="prev-page-button" class="pdf-nav-button"><i class="fas fa-chevron-left"></i></button>
+                <span id="page-info"></span>
+                <button id="next-page-button" class="pdf-nav-button"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL MENTIONS LÉGALES ===== -->
+    <div id="legal-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-legal-modal">&times;</span>
+            <h2>Mentions Légales</h2>
+            <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="editor-logo">
+            <p><strong>Éditeur du site :</strong> Destination Sud Réunion</p>
+            <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
+            <p><strong>Contact :</strong><br>Téléphone : 0262353433<br>Email : saintpierre.tourisme@gmail.com</p>
+            <p><strong>Hébergement :</strong><br>Google Cloud Platform</p>
+            <p><strong>Propriété intellectuelle :</strong><br>Le contenu de ce site (textes, images, etc.) est la propriété exclusive de Decathlon Réunion, sauf mention contraire. Toute reproduction ou utilisation, même partielle, est interdite sans autorisation préalable.</p>
+            <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
+            <h3>Partenaires</h3>
+            <img src="https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
+            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires de <strong>Destination Sud Réunion</strong>.</p>
+        </div>
+    </div>
+
+    <script>
+        const catalogueData = [
+            // Données des 3 catalogues
+            {
+                id: 1,
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/football.jpg",
+                title: "Catalogue Football",
+                description: "Découvrez notre sélection complète de ballons, maillots, chaussures et équipements pour tous les passionnés de football, des débutants aux professionnels.",
+                pdfUrl: "https://vital-sport.re/wp-content/uploads/2024/07/catalogue-sport-2024-web.pdf"
+            },
+            {
+                id: 2,
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/course.jpg",
+                title: "Catalogue Running",
+                description: "Chaussures de course, vêtements techniques, montres connectées et accessoires pour optimiser vos performances et votre confort lors de vos sessions de running.",
+                pdfUrl: "https://vital-sport.re/wp-content/uploads/2024/07/catalogue-sport-2024-web.pdf"
+            },
+            {
+                id: 3,
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/cyclisme.jpg",
+                title: "Catalogue Cyclisme",
+                description: "VTT, vélos de route, équipements de sécurité, casques et vêtements de cyclisme pour toutes vos aventures à deux roues, sur route comme sur sentier.",
+                pdfUrl: "https://vital-sport.re/wp-content/uploads/2024/07/catalogue-sport-2024-web.pdf"
+            }
+        ];
+
+        // Éléments du DOM pour les fiches
+        const catalogueGrid = document.getElementById('catalogue-grid');
+        const catalogueModal = document.getElementById('catalogue-modal');
+        const modalCatalogueImage = document.getElementById('modal-catalogue-image');
+        const modalCatalogueTitle = document.getElementById('modal-catalogue-title');
+        const modalCatalogueDescription = document.getElementById('modal-catalogue-description');
+        const closeCatalogueModalButton = document.getElementById('close-catalogue-modal');
+        const readCatalogueButton = document.getElementById('read-catalogue-button');
+
+        // Modal Mentions Légales
+        const showLegalModalButton = document.getElementById('show-legal-modal');
+        const legalModal = document.getElementById('legal-modal');
+        const closeLegalModalButton = document.getElementById('close-legal-modal');
+
+        // Éléments du DOM pour le lecteur de PDF
+        const pdfViewerModal = document.getElementById('pdf-viewer-modal');
+        const closePdfModalButton = document.getElementById('close-pdf-modal');
+        const pdfCanvas = document.getElementById('pdf-canvas');
+        const prevPageButton = document.getElementById('prev-page-button');
+        const nextPageButton = document.getElementById('next-page-button');
+        const pageInfo = document.getElementById('page-info');
+
+        let currentPdf = null;
+        let currentPageNum = 1;
+        let currentPageInstance = null;
+
+        /**
+         * Affiche les fiches des catalogues sur la page.
+         */
+        function renderCatalogues() {
+            catalogueGrid.innerHTML = ''; // Nettoyer la grille avant de la remplir
+
+            catalogueData.forEach(catalogue => {
+                const card = document.createElement('div');
+                card.classList.add('catalogue-card');
+                card.innerHTML = `
+                    <img src="${catalogue.image}" alt="${catalogue.title}" class="catalogue-image">
+                    <h3 class="catalogue-title">${catalogue.title}</h3>
+                `;
+
+                // Ajoute un écouteur d'événement pour ouvrir la modal de détails
+                card.addEventListener('click', () => showCatalogueDetailsModal(catalogue));
+
+                catalogueGrid.appendChild(card);
+            });
+        }
+
+        /**
+         * Affiche le modal avec les détails du catalogue sélectionné.
+         * @param {Object} catalogue - L'objet catalogue à afficher.
+         */
+        function showCatalogueDetailsModal(catalogue) {
+            modalCatalogueImage.src = catalogue.image;
+            modalCatalogueImage.alt = catalogue.title;
+            modalCatalogueTitle.textContent = catalogue.title;
+            modalCatalogueDescription.textContent = catalogue.description;
+            readCatalogueButton.onclick = () => showPdfModal(catalogue.pdfUrl); // Assigner l'URL du PDF au bouton
+            catalogueModal.style.display = 'flex';
+        }
+
+        /**
+         * Affiche le modal du lecteur de PDF.
+         * @param {string} url - L'URL du fichier PDF à charger.
+         */
+        async function showPdfModal(url) {
+            catalogueModal.style.display = 'none'; // Ferme la modal de détails
+            pdfViewerModal.style.display = 'flex'; // Ouvre la modal du lecteur
+
+            // Charger le PDF
+            const loadingTask = pdfjsLib.getDocument(url);
+            try {
+                const pdf = await loadingTask.promise;
+                currentPdf = pdf;
+                currentPageNum = 1;
+                renderPage(currentPageNum);
+            } catch (err) {
+                console.error('Erreur lors du chargement du PDF', err);
+            }
+        }
+
+        /**
+         * Rend une page spécifique du PDF sur le canvas.
+         * @param {number} num - Le numéro de la page à rendre.
+         */
+        async function renderPage(num) {
+            if (!currentPdf) return;
+
+            try {
+                const page = await currentPdf.getPage(num);
+                const viewport = page.getViewport({ scale: 1 });
+
+                // Ajuster l'échelle pour s'adapter à la largeur de la fenêtre
+                const scale = Math.min(
+                    (window.innerWidth * 0.9) / viewport.width,
+                    (window.innerHeight * 0.8) / viewport.height
+                );
+                const scaledViewport = page.getViewport({ scale: scale });
+
+                pdfCanvas.height = scaledViewport.height;
+                pdfCanvas.width = scaledViewport.width;
+
+                const renderContext = {
+                    canvasContext: pdfCanvas.getContext('2d'),
+                    viewport: scaledViewport
+                };
+                currentPageInstance = page.render(renderContext);
+
+                pageInfo.textContent = `Page ${num} sur ${currentPdf.numPages}`;
+                updateNavButtons();
+            } catch (err) {
+                console.error('Erreur lors du rendu de la page', err);
+            }
+        }
+
+        /**
+         * Met à jour l'état des boutons de navigation.
+         */
+        function updateNavButtons() {
+            prevPageButton.disabled = currentPageNum <= 1;
+            nextPageButton.disabled = currentPageNum >= currentPdf.numPages;
+        }
+
+        // Écouteurs d'événements de navigation du PDF
+        prevPageButton.addEventListener('click', () => {
+            if (currentPageNum > 1) {
+                currentPageNum--;
+                renderPage(currentPageNum);
+            }
+        });
+
+        nextPageButton.addEventListener('click', () => {
+            if (currentPageNum < currentPdf.numPages) {
+                currentPageNum++;
+                renderPage(currentPageNum);
+            }
+        });
+
+        // Fermeture des modals
+        closeCatalogueModalButton.addEventListener('click', () => {
+            catalogueModal.style.display = 'none';
+        });
+
+        closePdfModalButton.addEventListener('click', () => {
+            pdfViewerModal.style.display = 'none';
+            // Arrêter le rendu de la page en cours si nécessaire
+            if (currentPageInstance) {
+                currentPageInstance.cancel();
+            }
+            currentPdf = null;
+        });
+
+        // Gestion de la modal des mentions légales
+        showLegalModalButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            legalModal.style.display = 'flex';
+        });
+
+        closeLegalModalButton.addEventListener('click', () => {
+            legalModal.style.display = 'none';
+        });
+
+        // Fermeture des modals si on clique à l'extérieur
+        window.addEventListener('click', (e) => {
+            if (e.target === catalogueModal) {
+                catalogueModal.style.display = 'none';
+            }
+            if (e.target === legalModal) {
+                legalModal.style.display = 'none';
+            }
+            if (e.target === pdfViewerModal) {
+                pdfViewerModal.style.display = 'none';
+            }
+        });
+
+        // Appelle la fonction pour afficher les catalogues au chargement de la page
+        window.onload = renderCatalogues;
+
+        // Assurez-vous que la variable globale pour pdf.js est bien définie
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`;
+    </script>
 </body>
 </html>
