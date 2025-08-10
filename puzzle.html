@@ -16,30 +16,52 @@
             width: 100%;
             height: 100%;
             font-family: 'Inter', sans-serif;
-            color: white; /* Couleur de texte plus claire */
-            background-color: #00a99d; /* Fond de page bleu */
-            /* Retiré overflow: hidden pour que le pied de page soit toujours visible */
+            color: white;
+            /* Fond avec dégradé animé */
+            background: linear-gradient(-45deg, #00a99d, #007a73, #00a99d, #007a73);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
             display: flex;
-            flex-direction: column; /* Utiliser Flexbox pour le layout principal */
+            flex-direction: column;
+            overflow: hidden; /* Empêche le défilement */
         }
+
+        /* Définition de l'animation pour le dégradé */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
 
         /* En-tête de page secondaire */
         .page-header {
             width: 100%;
             display: flex;
-            justify-content: flex-start; /* Aligner le bouton retour à gauche */
-            padding: 4vh 4vw;
+            justify-content: space-between; /* Permet de placer les éléments aux extrémités */
+            align-items: center; /* Centre les éléments verticalement */
+            padding: 1.5vh 4vw;
             box-sizing: border-box;
             flex-shrink: 0;
         }
         .page-header .back-button {
-            font-size: 5vh;
+            font-size: 3.5vh;
             color: white;
             text-decoration: none;
             transition: transform 0.2s ease;
         }
         .page-header .back-button:hover {
             transform: scale(1.1);
+        }
+        /* Style du logo Vital Sport */
+        .page-header .logo {
+            max-height: 4vh; /* Taille maximale du logo, ajustée pour la hauteur */
         }
 
         /* Conteneur principal du contenu du jeu, centré */
@@ -48,16 +70,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-grow: 1; /* Permet au conteneur de prendre l'espace restant */
-            padding: 2vh;
+            flex-grow: 1;
+            padding: 0.5vh;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         /* Titre du jeu */
         .main-title {
-            font-size: 7vh;
+            font-size: 5vh;
             font-weight: 900;
             text-align: center;
-            margin: 0 0 2vh;
+            margin: 0 0 0.5vh;
             /* Animation de battement de cœur */
             animation: pulse-heartbeat 2s infinite ease-in-out;
         }
@@ -73,40 +97,41 @@
 
         /* Texte d'introduction du jeu */
         .intro-text {
-            font-size: 3vh;
+            font-size: 2.2vh;
             font-weight: 400;
             text-align: center;
-            margin-bottom: 3vh;
-            max-width: 80%;
+            margin-bottom: 1vh;
+            max-width: 90%;
             color: white;
         }
 
         /* Minuteur */
         .timer {
-            font-size: 5vh;
+            font-size: 3.5vh;
             font-weight: 700;
-            margin-bottom: 3vh;
+            margin-bottom: 1.5vh;
         }
 
         /* Conteneur de puzzle */
         .puzzle-container {
             position: relative;
-            background-color: #e3f2fd; /* Fond bleu clair pour le puzzle */
+            background-color: #e3f2fd;
             border-radius: 10px;
-            padding: 10px;
+            padding: 3px;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(4, 1fr);
             gap: 2px;
-            width: 80vh; /* Agrandit le puzzle */
-            height: 64vh; /* Agrandit le puzzle tout en gardant le ratio */
+            width: 85vmin;
+            height: calc(85vmin * 4 / 5);
+            max-height: 60vh;
         }
 
         /* Pièce de puzzle */
         .puzzle-piece {
             border: 1px solid rgba(0,0,0,0.1);
-            background-size: 500% 400%; /* 5 colonnes x 4 lignes */
+            background-size: 500% 400%;
             cursor: pointer;
             transition: transform 0.1s ease;
         }
@@ -122,7 +147,7 @@
             overflow: hidden;
             background-size: cover;
             background-position: center;
-            display: none; /* Caché par défaut */
+            display: none;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
         }
 
@@ -149,7 +174,7 @@
             pointer-events: auto;
         }
         .win-overlay h2 {
-            font-size: 6vh;
+            font-size: 4vh;
             font-weight: 900;
             margin: 0;
             color: white;
@@ -164,25 +189,26 @@
 
         /* Description du puzzle */
         .puzzle-info {
-            background-color: rgba(255, 255, 255, 0.1); /* Arrière-plan semi-transparent */
+            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 3vh 5vw;
-            margin-top: 3vh;
+            padding: 1.5vh 2.5vw;
+            margin-top: 1.5vh;
             max-width: 90%;
             text-align: center;
-            display: none; /* Masqué par défaut */
+            display: none;
+            flex-shrink: 0;
         }
         .puzzle-info.show {
             display: block;
         }
         .puzzle-info h3 {
-            font-size: 3vh;
+            font-size: 2.2vh;
             font-weight: 700;
-            margin: 0 0 1vh;
+            margin: 0 0 0.8vh;
             color: white;
         }
         .puzzle-info p {
-            font-size: 2vh;
+            font-size: 1.8vh;
             font-weight: 400;
             margin: 0;
             color: white;
@@ -194,16 +220,17 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            margin-top: 3vh;
-            gap: 2vh;
+            margin-top: 1.5vh;
+            gap: 1.5vh;
+            flex-shrink: 0;
         }
         .control-buttons button {
-            background-color: rgba(255, 255, 255, 0.1); /* Boutons semi-transparents */
+            background-color: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
-            width: 8vh;
-            height: 8vh;
-            font-size: 4vh;
+            width: 6vh;
+            height: 6vh;
+            font-size: 3vh;
             border-radius: 15px;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -217,11 +244,82 @@
         
         /* Pied de page */
         .kiosk-footer {
-            padding: 2vh;
-            font-size: 1.8vh;
+            padding: 1vh;
             background-color: rgba(0, 0, 0, 0.1);
             text-align: center;
             flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5vh;
+        }
+        .kiosk-footer .footer-text {
+            font-size: 1.4vh;
+            margin: 0;
+        }
+        .kiosk-footer .partners-logo {
+            max-height: 2.5vh; /* Ajuster la taille du logo des partenaires */
+        }
+        .kiosk-footer .legal-link {
+            font-size: 1.4vh;
+            color: white;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 0.5vh;
+        }
+
+        /* Modal pour les mentions légales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            color: #333;
+            padding: 3vh 3vw;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 1.5vh;
+            right: 1.5vw;
+            color: #aaa;
+            font-size: 4vh;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #000;
+            text-decoration: none;
+        }
+        .modal-content h2 {
+            font-size: 3vh;
+            font-weight: 700;
+            margin-top: 0;
+        }
+        .modal-content p {
+            font-size: 1.8vh;
+            line-height: 1.5;
+            margin-bottom: 1.5vh;
         }
     </style>
 </head>
@@ -231,6 +329,7 @@
         <a href="index.html" class="back-button">
             <i class="fas fa-arrow-left"></i>
         </a>
+        <img src="logo_vital_sport_-removebg-preview.png" alt="Logo Vital Sport" class="logo">
     </header>
 
     <main class="game-content-wrapper">
@@ -263,8 +362,25 @@
     
     <!-- ===== PIED DE PAGE ===== -->
     <footer class="kiosk-footer">
-        &copy; 2025 Decathlon - Tous droits réservés
+        <p class="footer-text">&copy; 2025 Decathlon</p>
+        <img src="logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
+        <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
     </footer>
+
+    <!-- ===== MODAL MENTIONS LÉGALES ===== -->
+    <div id="legal-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-legal-modal">&times;</span>
+            <h2>Mentions Légales</h2>
+            <p><strong>Éditeur du site :</strong><br>Destination Sud Réunion</p>
+            <p><strong>Adresse :</strong><br>Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
+            <p><strong>Contact :</strong><br>Téléphone : 0262353433<br>Email : saintpierre.tourisme@gmail.com</p>
+            <p><strong>Hébergement :</strong><br>Google Cloud Platform</p>
+            <p><strong>Propriété intellectuelle :</strong><br>Le contenu de ce site (textes, images, etc.) est la propriété exclusive de Decathlon Réunion, sauf mention contraire. Toute reproduction ou utilisation, même partielle, est interdite sans autorisation préalable.</p>
+            <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
+            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Decathlon et de Crazy Adventures Réunion.</p>
+        </div>
+    </div>
 
     <script>
         const puzzleData = [
@@ -379,6 +495,9 @@
         const viewImageButton = document.getElementById('view-image-button');
         const newPuzzleButton = document.getElementById('new-puzzle-button');
         const winOverlay = document.getElementById('win-overlay');
+        const showLegalModalButton = document.getElementById('show-legal-modal');
+        const legalModal = document.getElementById('legal-modal');
+        const closeLegalModalButton = document.getElementById('close-legal-modal');
 
         // Fonction pour sélectionner un puzzle aléatoire
         function getRandomPuzzle() {
@@ -553,6 +672,23 @@
                 viewImageButton.innerHTML = `<i class="fas fa-eye"></i>`;
             }
         });
+
+        // Gestion de la modal des mentions légales
+        showLegalModalButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            legalModal.style.display = 'flex';
+        });
+
+        closeLegalModalButton.addEventListener('click', () => {
+            legalModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === legalModal) {
+                legalModal.style.display = 'none';
+            }
+        });
+
 
         // Initialisation au chargement de la page
         window.onload = initPuzzle;
