@@ -288,6 +288,7 @@
             background-color: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
             margin-top: 1vh;
+            flex-wrap: wrap; /* Permet aux éléments de passer à la ligne */
         }
         .pdf-nav-button {
             background-color: #f58220;
@@ -309,6 +310,31 @@
         #page-info {
             font-size: 2.5vh;
             font-weight: bold;
+        }
+
+        /* Style pour la liste déroulante des pages */
+        .page-select-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1vh;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1vh 2vw;
+        }
+        #page-select-label {
+            font-size: 2.5vh;
+            font-weight: bold;
+        }
+        #page-select {
+            font-family: 'Inter', sans-serif;
+            font-size: 2vh;
+            padding: 0.5vh 1vw;
+            border-radius: 5px;
+            border: none;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
         }
 
         /* Pied de page */
@@ -400,6 +426,11 @@
                 <span id="page-info"></span>
                 <button id="next-page-button" class="pdf-nav-button"><i class="fas fa-chevron-right"></i></button>
             </div>
+            <!-- Conteneur pour la liste déroulante des pages -->
+            <div class="page-select-container">
+                <label for="page-select" id="page-select-label">Aller à la page:</label>
+                <select id="page-select"></select>
+            </div>
         </div>
     </div>
 
@@ -426,10 +457,10 @@
             // Données des catalogues
             {
                 id: 1,
-                image: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png",
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/football.jpg",
                 title: "Catalogue Football",
                 contentType: 'image', // Type de contenu : affiche
-                fullImage: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png"
+                fullImage: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/image_8d41c6.png-0ee59994-e8cc-489b-bdd5-2aa786bc3fca"
             },
             {
                 id: 2,
@@ -440,11 +471,12 @@
             },
             {
                 id: 3,
-                image: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/CARNET%20d'inspirations%20de%20sorties%20couverture.png",
+                image: "https://raw.githubusercontent.com/votre-utilisateur/votre-repo/main/cyclisme.jpg",
                 title: "Carnet d'inspirations de sorties",
                 description: "Re) Découvrez les trésors du sud avec notre carnet d'inspiration de sorties. Destination Sud Réunion vous invite à explorer le Sud à travers son carnet d'inspiration de sorties ! Que trouverez-vous dans ce carnet ? Des idées d'activités à sensations fortes , de sorties culturelles, d'aventures en pleine nature... En bref, vous y trouverez les meilleures adresses pour vos sorties dans le Sud !",
                 contentType: 'pdf', // Type de contenu : PDF
-                pdfUrl: "https://github.com/KaporalClems/borne-vital-sport/blob/3a2979fb6cd5ada43a334eebd7d3cb88a2b1b600/CARNET%20d'inspirations%20de%20sorties.pdf"
+                // L'URL a été mise à jour pour le lien brut
+                pdfUrl: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/main/CARNET%20d'inspirations%20de%20sorties.pdf"
             }
         ];
 
@@ -474,6 +506,8 @@
         const prevPageButton = document.getElementById('prev-page-button');
         const nextPageButton = document.getElementById('next-page-button');
         const pageInfo = document.getElementById('page-info');
+        const pageSelect = document.getElementById('page-select');
+
 
         let currentPdf = null;
         let currentPageNum = 1;
@@ -555,6 +589,7 @@
                 currentPdf = pdf;
                 currentPageNum = 1;
                 renderPage(currentPageNum);
+                renderPageSelect(); // Affiche la liste déroulante des pages
             } catch (err) {
                 console.error('Erreur lors du chargement du PDF', err);
             }
@@ -565,7 +600,12 @@
          * @param {number} num - Le numéro de la page à rendre.
          */
         async function renderPage(num) {
-            if (!currentPdf) return;
+            if (!currentPdf || num < 1 || num > currentPdf.numPages) return;
+
+            // Annuler le rendu de la page précédente pour éviter les conflits
+            if (currentPageInstance && currentPageInstance.promise) {
+                currentPageInstance.cancel();
+            }
 
             try {
                 const page = await currentPdf.getPage(num);
@@ -585,14 +625,38 @@
                     canvasContext: pdfCanvas.getContext('2d'),
                     viewport: scaledViewport
                 };
+
+                currentPageNum = num;
                 currentPageInstance = page.render(renderContext);
 
                 pageInfo.textContent = `Page ${num} sur ${currentPdf.numPages}`;
                 updateNavButtons();
+                pageSelect.value = num; // Sélectionne la bonne page dans la liste déroulante
             } catch (err) {
                 console.error('Erreur lors du rendu de la page', err);
             }
         }
+
+        /**
+         * Génère la liste déroulante de tous les numéros de page.
+         */
+        function renderPageSelect() {
+            pageSelect.innerHTML = ''; // Nettoyer la liste
+            for (let i = 1; i <= currentPdf.numPages; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Page ${i}`;
+                pageSelect.appendChild(option);
+            }
+            // Sélectionne la première page par défaut
+            pageSelect.value = currentPageNum;
+        }
+
+        // Écouteur de l'événement de changement sur la liste déroulante
+        pageSelect.addEventListener('change', (event) => {
+            const selectedPage = parseInt(event.target.value, 10);
+            renderPage(selectedPage);
+        });
 
         /**
          * Met à jour l'état des boutons de navigation.
@@ -605,15 +669,13 @@
         // Écouteurs d'événements de navigation du PDF
         prevPageButton.addEventListener('click', () => {
             if (currentPageNum > 1) {
-                currentPageNum--;
-                renderPage(currentPageNum);
+                renderPage(currentPageNum - 1);
             }
         });
 
         nextPageButton.addEventListener('click', () => {
             if (currentPageNum < currentPdf.numPages) {
-                currentPageNum++;
-                renderPage(currentPageNum);
+                renderPage(currentPageNum + 1);
             }
         });
 
