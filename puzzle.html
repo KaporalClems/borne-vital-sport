@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -61,7 +60,7 @@
         }
         /* Style du logo Vital Sport (agrandi) */
         .page-header .logo {
-            max-height: 20vh; /* Taille maximale du logo, ajustée pour la hauteur */
+            max-height: 8vh; /* Taille maximale du logo, ajustée pour la hauteur */
             max-width: 30vw; /* Empêche le logo d'être trop grand sur les grands écrans */
         }
 
@@ -107,6 +106,7 @@
             max-width: 90%;
             color: white;
         }
+        
 
         /* Minuteur */
         .timer {
@@ -190,34 +190,7 @@
             100% { transform: scale(1); }
         }
 
-        /* Description du puzzle */
-        .puzzle-info {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 1.5vh 2.5vw;
-            margin-top: 1.5vh;
-            max-width: 90%;
-            text-align: center;
-            display: none;
-            flex-shrink: 0;
-        }
-        .puzzle-info.show {
-            display: block;
-        }
-        .puzzle-info h3 {
-            font-size: 2.2vh;
-            font-weight: 700;
-            margin: 0 0 0.8vh;
-            color: white;
-        }
-        .puzzle-info p {
-            font-size: 1.8vh;
-            font-weight: 400;
-            margin: 0;
-            color: white;
-        }
-
-        /* Tableau de bord du jeu */
+        /* Styles pour le tableau de bord du jeu */
         .game-controls {
             display: flex;
             justify-content: center;
@@ -269,7 +242,7 @@
             margin-top: 0.5vh;
         }
 
-        /* Modal pour les mentions légales */
+        /* Modal pour les mentions légales et le puzzle */
         .modal {
             display: none;
             position: fixed;
@@ -306,6 +279,7 @@
             font-size: 4vh;
             font-weight: bold;
             cursor: pointer;
+            z-index: 104; /* Assure que le bouton de fermeture est toujours visible */
         }
         .modal-close-button:hover,
         .modal-close-button:focus {
@@ -343,6 +317,138 @@
             height: auto;
             margin-top: 1vh;
         }
+
+        /* Styles spécifiques pour le modal du puzzle */
+        #puzzle-details-modal .modal-content {
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vh;
+            position: relative;
+            z-index: 102;
+        }
+        #puzzle-details-modal .modal-content h2 {
+            text-align: center;
+            font-size: 3.5vh;
+            margin-bottom: 1vh;
+            color: #007a73;
+        }
+        #puzzle-details-modal .modal-content h3 {
+            text-align: center;
+            font-size: 2.5vh;
+            margin-bottom: 1vh;
+            color: #333;
+        }
+        #puzzle-details-modal .modal-content p {
+            font-size: 2vh;
+            line-height: 1.6;
+        }
+        #modal-puzzle-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin: 1vh auto;
+            display: block;
+        }
+        .puzzle-info-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5vw;
+            background-color: #f0f0f0;
+            padding: 1.5vh 2.5vw;
+            border-radius: 10px;
+        }
+
+        .item-icon {
+            font-size: 2.5vh;
+            color: #00a99d;
+            flex-shrink: 0;
+        }
+
+        .item-text {
+            text-align: left;
+            font-size: 1.8vh;
+            line-height: 1.4;
+        }
+        
+        /* Styles pour l'animation des confettis */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 101; /* Pour être au-dessus du modal */
+            pointer-events: none; /* Permet les clics à travers le canvas */
+        }
+        
+        /* Animation du texte "Félicitations !" au-dessus du modal */
+        #congrats-text {
+            position: absolute;
+            top: 10%; 
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            font-size: 6vh;
+            font-weight: 900;
+            color: #ffeb3b; 
+            text-shadow: 0 0 10px #ffc107, 0 0 20px #ff9800;
+            z-index: 103;
+            opacity: 0;
+            display: none;
+        }
+
+        #puzzle-details-modal.show #congrats-text {
+            display: block;
+            animation: text-implosion 2s infinite ease-in-out;
+        }
+
+        @keyframes text-implosion {
+            0% {
+                transform: translateX(-50%) scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Media queries pour rendre le modal plus responsive sur les petits écrans */
+        @media (max-width: 768px) {
+            #puzzle-details-modal .modal-content {
+                padding: 2vh 4vw;
+                max-width: 95%;
+            }
+            #puzzle-details-modal .modal-content h2,
+            #puzzle-details-modal .modal-content h3 {
+                font-size: 2.5vh;
+            }
+            #puzzle-details-modal .modal-content p {
+                font-size: 1.6vh;
+            }
+            #congrats-text {
+                font-size: 4vh;
+                top: 5%;
+            }
+            .puzzle-info-item {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5vh;
+                padding: 1vh;
+            }
+            .item-text {
+                text-align: center;
+            }
+            .modal-close-button {
+                font-size: 3vh;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -367,12 +473,6 @@
             </div>
         </div>
 
-        <!-- Description du puzzle -->
-        <div class="puzzle-info" id="puzzle-info">
-            <h3 id="puzzle-title"></h3>
-            <p id="puzzle-description"></p>
-        </div>
-
         <!-- Tableau de bord du jeu -->
         <div class="game-controls">
             <div class="control-buttons">
@@ -384,7 +484,7 @@
     
     <!-- ===== PIED DE PAGE ===== -->
     <footer class="kiosk-footer">
-        <p class="footer-text">&copy; 2025 Decathlon</p>
+        <p class="footer-text">&copy; 2025 Destination Sud Réunion</p>
         <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
     </footer>
 
@@ -404,6 +504,21 @@
             <h3>Partenaires</h3>
             <img src="logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
             <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Decathlon et de Crazy Adventures Réunion.</p>
+        </div>
+    </div>
+    
+    <!-- Canvas pour l'animation de confettis -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ===== MODAL DÉTAILS DU PUZZLE ===== -->
+    <div id="puzzle-details-modal" class="modal">
+        <h2 id="congrats-text">Félicitations !</h2>
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-puzzle-modal">&times;</span>
+            <img id="modal-puzzle-image" src="" alt="Image du puzzle résolu">
+            <h2 id="modal-puzzle-title"></h2>
+            <p id="modal-puzzle-description"></p>
+            <div id="modal-puzzle-details"></div>
         </div>
     </div>
 
@@ -431,7 +546,10 @@
                 id: 4,
                 image: "https://www.crazy-adventures.fr/ressources/images/f511fa13f9bd.jpg",
                 title: "CRAZY ADVENTURES Réunion",
-                description: "Spécialiste de la location de véhicule tout terrain en toute sécurité. Vivez votre crazy adventure ! 67 Chemin Vetyver 97410 SAINT-PIERRE - Heures d'ouverture : Lun - Dim 08h - 16h - Tél : 09 74 56 75 07"
+                description: "Spécialiste de la location de véhicule tout terrain en toute sécurité. Vivez votre crazy adventure !",
+                address: "67 Chemin Vetyver<br>97410 SAINT-PIERRE",
+                hours: "Du Lundi au Dimanche<br>08h - 16h",
+                phone: "09 74 56 75 07"
             },
             {
                 id: 5,
@@ -498,6 +616,25 @@
                 image: "https://placehold.co/800x600/2c3e50/ffffff?text=Judo",
                 title: "Entrainement de Judo",
                 description: "Deux judokas s'affrontant en judo."
+            },
+            {
+                id: 16,
+                image: "https://www.espacemer.re/wp-content/uploads/2019/04/canstockphoto50459579-1024x683.jpg",
+                title: "Espace Mer",
+                description: "Spécialiste de la location de jetski. Partez à l'aventure en mer !",
+                address: "Port de Saint pierre<br>97410 Saint-Pierre",
+                hours: "Du Lundi au Samedi<br>10H00 – 12H00<br>14H00 – 17H00",
+                phone: "06 92 614 360"
+            },
+            {
+                id: 17,
+                image: "https://static.wixstatic.com/media/7983d0_56027957a7844a998a6b0667901f39c3~mv2.jpg/v1/fill/w_438,h_293,fp_0.50_0.50,q_80,usm_0.66_1.00_0.01,enc_auto/7983d0_56027957a7844a998a6b0667901f39c3~mv2.jpg",
+                title: "REUNION MOUNTAIN BIKE",
+                description: "Découvrez Réunion Mountain Bike, votre spécialiste local pour des aventures à vélo inoubliables à La Réunion.",
+                address: "Rue Guy Hoarau, Étang-salée<br>97427",
+                hours: "Lundi : sur RDV<br>Mardi : sur RDV<br>Mercredi : 8h - 18h<br>Jeudi : sur RDV<br>Vendredi : 8h - 18h<br>Samedi et Dimanche : 8h - 18h",
+                phone: "0693 214 500",
+                email: "reunionmountainbike@gmail.com"
             }
         ];
 
@@ -510,19 +647,110 @@
         let timerInterval = null;
         let seconds = 0;
         let isSolved = false;
+        let confettiAnimation = null; // Gère l'état de l'animation de confettis
 
         const puzzleContainer = document.getElementById('puzzle-container');
         const imageView = document.getElementById('image-view');
-        const puzzleInfo = document.getElementById('puzzle-info');
-        const puzzleTitle = document.getElementById('puzzle-title');
-        const puzzleDescription = document.getElementById('puzzle-description');
         const timerDisplay = document.getElementById('timer');
         const viewImageButton = document.getElementById('view-image-button');
         const newPuzzleButton = document.getElementById('new-puzzle-button');
         const winOverlay = document.getElementById('win-overlay');
+        
+        // Modal Mentions Légales
         const showLegalModalButton = document.getElementById('show-legal-modal');
         const legalModal = document.getElementById('legal-modal');
         const closeLegalModalButton = document.getElementById('close-legal-modal');
+
+        // Modal Détails du Puzzle
+        const puzzleDetailsModal = document.getElementById('puzzle-details-modal');
+        const closePuzzleModalButton = document.getElementById('close-puzzle-modal');
+        const modalPuzzleImage = document.getElementById('modal-puzzle-image');
+        const modalPuzzleTitle = document.getElementById('modal-puzzle-title');
+        const modalPuzzleDescription = document.getElementById('modal-puzzle-description');
+        const modalPuzzleDetails = document.getElementById('modal-puzzle-details');
+        const congratsText = document.getElementById('congrats-text');
+
+        // Confetti Canvas
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const ctx = confettiCanvas.getContext('2d');
+        let confettiParticles = [];
+        const confettiColors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722', '#795548', '#9e9e9e', '#607d8b'];
+        
+        // Fonction pour un nombre aléatoire dans une plage
+        function randomRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // Classe pour les particules de confettis
+        class Confetti {
+            constructor() {
+                this.x = randomRange(0, confettiCanvas.width);
+                this.y = -10;
+                this.size = randomRange(5, 10);
+                this.color = confettiColors[Math.floor(randomRange(0, confettiColors.length))];
+                this.velocity = {
+                    x: randomRange(-2, 2),
+                    y: randomRange(2, 5)
+                };
+                this.rotation = randomRange(0, 360);
+                this.rotationSpeed = randomRange(1, 5);
+                this.opacity = 1;
+            }
+
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.velocity.y += 0.05; // Gravité
+                this.rotation += this.rotationSpeed;
+                this.opacity -= 0.005;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+        
+        // Fonction pour démarrer l'animation de confettis
+        function startConfetti() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+            
+            function animateConfetti() {
+                // Créer de nouvelles particules
+                if (Math.random() > 0.8) {
+                    confettiParticles.push(new Confetti());
+                }
+
+                ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                
+                // Mettre à jour et dessiner les particules existantes
+                for (let i = confettiParticles.length - 1; i >= 0; i--) {
+                    confettiParticles[i].update();
+                    confettiParticles[i].draw();
+
+                    if (confettiParticles[i].y > confettiCanvas.height || confettiParticles[i].opacity <= 0) {
+                        confettiParticles.splice(i, 1);
+                    }
+                }
+                
+                confettiAnimation = requestAnimationFrame(animateConfetti);
+            }
+            animateConfetti();
+        }
+
+        // Fonction pour arrêter l'animation de confettis
+        function stopConfetti() {
+            cancelAnimationFrame(confettiAnimation);
+            confettiParticles = [];
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
+
 
         // Fonction pour sélectionner un puzzle aléatoire
         function getRandomPuzzle() {
@@ -535,16 +763,19 @@
             if (timerInterval) {
                 clearInterval(timerInterval);
             }
+            stopConfetti(); // Arrête les confettis au démarrage d'un nouveau puzzle
             isStarted = false;
             seconds = 0;
             isSolved = false;
             winOverlay.classList.remove('show');
-            puzzleInfo.style.display = 'none'; // Cache la description et le titre
+            puzzleDetailsModal.style.display = 'none'; // Cache la modale si elle était ouverte
+            puzzleDetailsModal.classList.remove('show'); // Retire la classe pour l'animation du texte
             timerDisplay.textContent = '00:00';
             
             // Choix aléatoire d'un nouveau puzzle
             currentPuzzle = getRandomPuzzle();
             imageView.style.backgroundImage = `url(${currentPuzzle.image})`;
+
 
             // Nettoyage de l'ancien puzzle
             puzzleContainer.innerHTML = '';
@@ -619,7 +850,6 @@
             e.target.style.opacity = 1;
         }
 
-        // CORRECTION DU BUG DANS CETTE FONCTION
         function handleDrop(e) {
             e.preventDefault();
             const dropTarget = e.target;
@@ -632,12 +862,9 @@
                 const tempParent = puzzleContainer;
                 const tempNextSibling = draggedPiece.nextSibling === dropTarget ? draggedPiece : draggedPiece.nextSibling;
 
-                // On s'assure d'avoir un "placeholder" pour l'élément à déplacer
                 const dropTargetNextSibling = dropTarget.nextSibling;
                 
-                // Déplace la pièce glissée à la position de la cible
                 tempParent.insertBefore(draggedPiece, dropTargetNextSibling);
-                // Déplace la cible à la position initiale de la pièce glissée
                 tempParent.insertBefore(dropTarget, tempNextSibling);
                 
                 checkWin();
@@ -663,11 +890,59 @@
                 }
                 setTimeout(() => {
                     winOverlay.classList.add('show');
-                    puzzleInfo.style.display = 'block'; // Affiche la description et le titre
-                    puzzleTitle.textContent = currentPuzzle.title;
-                    puzzleDescription.textContent = currentPuzzle.description;
+                    showPuzzleDetailsModal(currentPuzzle); // Affiche la nouvelle modal
+                    startConfetti(); // Lance l'animation de confettis
                 }, 500);
             }
+        }
+
+        // Affiche la modale avec les détails du puzzle
+        function showPuzzleDetailsModal(puzzle) {
+            modalPuzzleImage.src = puzzle.image;
+            modalPuzzleTitle.textContent = puzzle.title;
+            modalPuzzleDescription.textContent = puzzle.description;
+            
+            // Nettoyer l'ancien contenu des détails
+            modalPuzzleDetails.innerHTML = '';
+
+            // Construire les détails (adresse, horaires, etc.)
+            if (puzzle.address || puzzle.hours || puzzle.phone || puzzle.email) {
+                if (puzzle.address) {
+                    modalPuzzleDetails.innerHTML += `
+                        <div class="puzzle-info-item">
+                            <i class="fas fa-map-marker-alt item-icon"></i>
+                            <span class="item-text">${puzzle.address}</span>
+                        </div>
+                    `;
+                }
+                if (puzzle.hours) {
+                    modalPuzzleDetails.innerHTML += `
+                        <div class="puzzle-info-item">
+                            <i class="fas fa-clock item-icon"></i>
+                            <span class="item-text">${puzzle.hours}</span>
+                        </div>
+                    `;
+                }
+                if (puzzle.phone) {
+                    modalPuzzleDetails.innerHTML += `
+                        <div class="puzzle-info-item">
+                            <i class="fas fa-phone item-icon"></i>
+                            <span class="item-text">${puzzle.phone}</span>
+                        </div>
+                    `;
+                }
+                if (puzzle.email) {
+                    modalPuzzleDetails.innerHTML += `
+                        <div class="puzzle-info-item">
+                            <i class="fas fa-envelope item-icon"></i>
+                            <span class="item-text">${puzzle.email}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            puzzleDetailsModal.style.display = 'flex';
+            puzzleDetailsModal.classList.add('show');
         }
         
         // Fonctionnalité du timer
@@ -707,10 +982,30 @@
         closeLegalModalButton.addEventListener('click', () => {
             legalModal.style.display = 'none';
         });
+        
+        // Gestion de la modal du puzzle
+        closePuzzleModalButton.addEventListener('click', () => {
+            puzzleDetailsModal.style.display = 'none';
+            puzzleDetailsModal.classList.remove('show');
+            stopConfetti(); // Arrête les confettis à la fermeture du modal
+        });
 
         window.addEventListener('click', (e) => {
             if (e.target === legalModal) {
                 legalModal.style.display = 'none';
+            }
+            if (e.target === puzzleDetailsModal) {
+                puzzleDetailsModal.style.display = 'none';
+                puzzleDetailsModal.classList.remove('show');
+                stopConfetti(); // Arrête les confettis si on clique à côté du modal
+            }
+        });
+
+        // Fonction pour gérer la redimension de la fenêtre et ajuster le canvas
+        window.addEventListener('resize', () => {
+            if (confettiAnimation) {
+                confettiCanvas.width = window.innerWidth;
+                confettiCanvas.height = window.innerHeight;
             }
         });
 
