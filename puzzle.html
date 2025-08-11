@@ -816,7 +816,7 @@
             shufflePieces();
             pieces.forEach(piece => puzzleContainer.appendChild(piece));
 
-            // Ajout des événements de drag and drop
+            // Ajout des événements de drag and drop ET TACTILES
             pieces.forEach(piece => {
                 piece.draggable = true;
                 piece.addEventListener('dragstart', handleDragStart);
@@ -824,6 +824,11 @@
                 piece.addEventListener('drop', handleDrop);
                 piece.addEventListener('dragenter', handleDragEnter);
                 piece.addEventListener('dragleave', handleDragLeave);
+                
+                // === NOUVEAUX GESTIONNAIRES TACTILES ===
+                piece.addEventListener('touchstart', handleTouchStart);
+                piece.addEventListener('touchmove', handleTouchMove);
+                piece.addEventListener('touchend', handleTouchEnd);
             });
         }
 
@@ -837,8 +842,12 @@
             }
         }
 
-        // Drag and Drop
+        // ==========================================================
+        //  DRAG AND DROP ET GESTIONNAIRES DE TOUCHES MIS À JOUR
+        // ==========================================================
         let draggedPiece = null;
+        let touchedPiece = null; // Pièce actuellement touchée
+        let dropTargetPiece = null; // Pièce de destination pour le toucher
 
         function handleDragStart(e) {
             draggedPiece = e.target;
@@ -882,6 +891,64 @@
                 checkWin();
             }
         }
+
+        // Gère le début du toucher
+        function handleTouchStart(e) {
+            e.preventDefault(); // Empêche le défilement et le zoom
+            if (!isStarted) {
+                startTimer();
+                isStarted = true;
+            }
+            touchedPiece = e.target;
+            touchedPiece.style.opacity = 0.5;
+        }
+
+        // Gère le mouvement du toucher
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (touchedPiece) {
+                const touch = e.touches[0];
+                const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+
+                if (targetElement && targetElement.classList.contains('puzzle-piece') && targetElement !== touchedPiece) {
+                    if (dropTargetPiece && dropTargetPiece !== targetElement) {
+                        dropTargetPiece.style.opacity = 1; // Réinitialise l'ancienne cible
+                    }
+                    dropTargetPiece = targetElement;
+                    dropTargetPiece.style.opacity = 0.5; // Met en surbrillance la nouvelle cible
+                } else if (dropTargetPiece) {
+                    dropTargetPiece.style.opacity = 1;
+                    dropTargetPiece = null;
+                }
+            }
+        }
+
+        // Gère la fin du toucher
+        function handleTouchEnd(e) {
+            if (touchedPiece) {
+                touchedPiece.style.opacity = 1; // Réinitialise l'opacité de la pièce de départ
+            }
+            
+            if (touchedPiece && dropTargetPiece) {
+                // Effectue l'échange de pièces
+                const tempParent = puzzleContainer;
+                const tempNextSibling = touchedPiece.nextSibling === dropTargetPiece ? touchedPiece : touchedPiece.nextSibling;
+                const dropTargetNextSibling = dropTargetPiece.nextSibling;
+
+                tempParent.insertBefore(touchedPiece, dropTargetNextSibling);
+                tempParent.insertBefore(dropTargetPiece, tempNextSibling);
+
+                checkWin();
+            }
+
+            // Réinitialise les variables pour le prochain toucher
+            if (dropTargetPiece) {
+                dropTargetPiece.style.opacity = 1;
+            }
+            touchedPiece = null;
+            dropTargetPiece = null;
+        }
+
 
         // Vérification de la victoire
         function checkWin() {
@@ -1044,3 +1111,4 @@
     </script>
 </body>
 </html>
+
