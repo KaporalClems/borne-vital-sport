@@ -458,6 +458,41 @@
             max-width: 150px;
         }
 
+        /* Styles pour l'écran de chargement */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            font-size: 3vh;
+            font-weight: 700;
+            text-align: center;
+        }
+        #loading-overlay.hidden {
+            display: none;
+        }
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #00a99d;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Media queries pour rendre le modal plus responsive sur les petits écrans */
         @media (max-width: 768px) {
             #puzzle-details-modal .modal-content {
@@ -499,6 +534,11 @@
     </style>
 </head>
 <body>
+    <!-- Écran de chargement ajouté -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        Chargement des images...
+    </div>
 
     <header class="page-header">
         <a href="index.html" class="back-button">
@@ -667,6 +707,7 @@
         const viewImageButton = document.getElementById('view-image-button');
         const newPuzzleButton = document.getElementById('new-puzzle-button');
         const winOverlay = document.getElementById('win-overlay');
+        const loadingOverlay = document.getElementById('loading-overlay');
 
         // Modal Mentions Légales
         const showLegalModalButton = document.getElementById('show-legal-modal');
@@ -768,6 +809,35 @@
         function getRandomPuzzle() {
             const randomIndex = Math.floor(Math.random() * puzzleData.length);
             return puzzleData[randomIndex];
+        }
+
+        /**
+         * @description Précharge toutes les images des puzzles pour un chargement instantané.
+         * @returns {Promise<void>} Une promesse qui se résout une fois que toutes les images sont chargées.
+         */
+        function preloadImages() {
+            // Affiche l'écran de chargement
+            loadingOverlay.classList.remove('hidden');
+
+            const imagesToLoad = puzzleData.map(puzzle => puzzle.image);
+            const promises = imagesToLoad.map(imageUrl => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.src = imageUrl;
+                    img.onload = resolve;
+                    img.onerror = reject;
+                });
+            });
+
+            return Promise.all(promises).then(() => {
+                // Cache l'écran de chargement une fois que toutes les images sont chargées
+                loadingOverlay.classList.add('hidden');
+                console.log('Toutes les images ont été préchargées avec succès.');
+            }).catch(error => {
+                console.error('Erreur lors du préchargement des images :', error);
+                // On cache l'overlay même en cas d'erreur pour ne pas bloquer l'utilisateur
+                loadingOverlay.classList.add('hidden');
+            });
         }
 
         // Fonction pour initialiser le puzzle
@@ -1106,9 +1176,9 @@
 
 
         // Initialisation au chargement de la page
-        window.onload = initPuzzle;
-
+        window.onload = () => {
+            preloadImages().then(initPuzzle);
+        };
     </script>
 </body>
 </html>
-
