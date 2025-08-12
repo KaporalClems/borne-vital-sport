@@ -15,15 +15,14 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Inter', 'Noto Color Emoji', sans-serif; /* Ajout d'une police de secours pour les emojis */
+            font-family: 'Inter', 'Noto Color Emoji', sans-serif;
             color: white;
-            /* Fond avec dégradé animé utilisant uniquement les couleurs principales */
             background: linear-gradient(-45deg, #8dc63f, #a3d46f);
             background-size: 400% 400%;
             animation: gradient-animation 15s ease infinite;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Empêche le défilement */
+            overflow: hidden;
         }
 
         /* Définition de l'animation pour le dégradé */
@@ -68,6 +67,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Ajouté pour centrer verticalement */
             flex-grow: 1;
             padding: 2vh 4vw;
             overflow-y: auto;
@@ -78,223 +78,22 @@
             display: none;
         }
 
-        /* Titre de la page */
-        .main-title {
-            font-size: 5vh;
-            font-weight: 900;
-            text-align: center;
-            margin: 2vh 0 5vh;
-            animation: pulse-heartbeat 2s infinite ease-in-out;
-        }
-        @keyframes pulse-heartbeat {
-            0% { transform: scale(1); }
-            20% { transform: scale(1.05); }
-            50% { transform: scale(1); }
-            80% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Conteneur du quiz */
-        #quiz-container {
+        /* Style pour l'iframe afin de la centrer et de la rendre responsive */
+        .iframe-container {
             width: 100%;
-            max-width: 800px;
-            background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 5vh 3vw;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            position: relative;
-        }
-        
-        /* Centrer le texte "Votre avis est important pour nous" */
-        .centered-text {
-            text-align: center;
-        }
-
-        /* Contenu de la question */
-        .question-content {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-            text-align: left;
-        }
-        .question-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .question-content h2 {
-            font-size: 3.5vh;
-            font-weight: 700;
-            margin-bottom: 2vh;
-            text-align: center;
-        }
-        .question-content p {
-            font-size: 2.2vh;
-            margin-bottom: 3vh;
-            line-height: 1.5;
-        }
-        .question-content h3 {
-            font-size: 2.5vh;
-            margin-bottom: 2vh;
-            text-align: center;
-        }
-
-        .options-list {
-            list-style: none;
-            padding: 0;
+            max-width: 640px; /* Limite la largeur de l'iframe */
+            height: 100%; /* Permet au conteneur de prendre la hauteur disponible */
             display: flex;
-            flex-direction: column;
-            gap: 2vh;
-        }
-
-        .option-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-        .option-item:hover {
-            transform: scale(1.03);
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .option-item input[type="radio"],
-        .option-item input[type="checkbox"] {
-            display: none; /* Cache les boutons radio/checkbox par défaut */
-        }
-        
-        .option-label {
-            display: flex;
+            justify-content: center;
             align-items: center;
-            padding: 3vh 2vw;
-            font-size: 2.5vh;
-            cursor: pointer;
+            flex-grow: 1; /* Permet au conteneur de prendre l'espace disponible */
+        }
+
+        .iframe-container iframe {
             width: 100%;
-            box-sizing: border-box;
-            transition: background-color 0.2s ease;
-        }
-        
-        /* Style pour l'icône de radio/checkbox customisée */
-        .option-label::before {
-            content: '';
-            display: inline-block;
-            width: 2.5vh;
-            height: 2.5vh;
-            border-radius: 50%;
-            border: 2px solid white;
-            margin-right: 2vw;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-        
-        .option-item input[type="radio"]:checked + .option-label::before {
-            background-color: #f58220;
-            border-color: #f58220;
-        }
-
-        .option-item input[type="checkbox"] + .option-label::before {
-            border-radius: 5px; /* Carré pour les checkboxes */
-        }
-        
-        .option-item input[type="checkbox"]:checked + .option-label::before {
-            background-color: #f58220;
-            border-color: #f58220;
-        }
-        
-        /* Style pour les emojis dans les labels */
-        .option-label .emoji-icon {
-            font-size: 3vh;
-            margin-right: 1.5vw;
-        }
-
-        /* Champs de texte et autres inputs */
-        .form-group {
-            margin-bottom: 3vh;
-        }
-        .form-group label {
-            display: block;
-            font-size: 2.2vh;
-            margin-bottom: 1vh;
-        }
-        .form-group input[type="text"],
-        .form-group textarea,
-        .form-group input[type="checkbox"] + label {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 2vh 2vw;
-            border-radius: 10px;
-            border: none;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 2.2vh;
-            resize: none;
-        }
-        .form-group input[type="text"]:focus,
-        .form-group textarea:focus {
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .form-group textarea {
-            min-height: 15vh;
-        }
-        
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            font-size: 2vh;
-            margin-top: 1vh;
-            cursor: pointer;
-        }
-        .checkbox-label input[type="checkbox"] {
-            margin-right: 1vw;
-            width: 2.5vh;
-            height: 2.5vh;
-        }
-
-        /* Contrôles de navigation */
-        #quiz-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 5vh;
-        }
-
-        .quiz-button {
-            background-color: #f58220;
-            color: white;
-            border: none;
-            padding: 1.5vh 3vw;
-            border-radius: 8px;
-            font-size: 2.5vh;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            flex: 1;
-            margin: 0 1vw;
-        }
-        .quiz-button:hover:not(:disabled) {
-            background-color: #e06c00;
-            transform: translateY(-2px);
-        }
-        .quiz-button:disabled {
-            background-color: #aaa;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        
-        #prev-button {
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-        #prev-button:hover:not(:disabled) {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-        #prev-button:disabled {
-            border-color: #aaa;
+            height: 100%; /* L'iframe s'étend pour remplir son conteneur */
+            border-radius: 15px; /* Coins arrondis */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Ombre légère */
         }
         
         /* Modal */
@@ -385,16 +184,9 @@
     <main class="main-content-wrapper">
         <h1 class="main-title">Donne ton avis !</h1>
         
-        <div id="quiz-container">
-            <p class="centered-text">Votre avis est important pour nous.</p>
-            <p class="centered-text"><strong>Question <span id="current-question-number">1</span> sur <span id="total-questions"></span></strong></p>
-            <form id="satisfaction-form">
-                <!-- Les questions seront injectées ici par le JavaScript -->
-            </form>
-            <div id="quiz-controls">
-                <button id="prev-button" class="quiz-button" disabled>Précédent</button>
-                <button id="next-button" class="quiz-button">Suivant</button>
-            </div>
+        <!-- Conteneur pour l'iframe de Google Forms -->
+        <div class="iframe-container">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfFy2Ihurf2hsvhk6xbDgayEc41l_3p-rSqvjbCNYTKdQdK9A/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Chargement…</iframe>
         </div>
     </main>
 
@@ -416,15 +208,6 @@
         </div>
     </div>
 
-    <!-- Modal de confirmation de soumission -->
-    <div id="submission-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close-button" id="close-submission-modal">&times;</span>
-            <h2>Merci pour votre participation !</h2>
-            <p>Vos réponses ont été enregistrées. Vous serez redirigé vers l'accueil.</p>
-        </div>
-    </div>
-
     <!-- Pied de page -->
     <footer class="kiosk-footer">
         <p>&copy; 2025 Destination Sud Réunion</p>
@@ -432,327 +215,11 @@
     </footer>
 
     <script>
-        // Tableau d'objets pour les questions du questionnaire
-        const surveyQuestions = [
-            {
-                question: "Quels sports avez-vous pratiqués lors de l'événement ?",
-                type: "text",
-                name: "sports_pratiques",
-                placeholder: "Ex: Tir à l'arc, football, danse..."
-            },
-            {
-                question: "Que pensez-vous du stand de l'accueil?",
-                type: "radio",
-                name: "avis_accueil",
-                options: [
-                    { label: "Super 😊", value: "Super" },
-                    { label: "Rien à redire 😉", value: "Rien à redire" },
-                    { label: "Moyen 🤔", value: "Moyen" },
-                    { label: "À revoir 😒", value: "À revoir" }
-                ]
-            },
-            {
-                question: "Avez-vous participé à d'autres activités ?",
-                type: "checkbox",
-                name: "autres_activites",
-                options: [
-                    { label: "1. 🏴‍☠️ Area Hunter \"Chasse aux trésors\"", value: "Area Hunter" },
-                    { label: "2. 🧩 Puzzle interactif", value: "Puzzle" }
-                ]
-            },
-            {
-                question: "Que pensez-vous de l'activité réalisée?",
-                type: "radio",
-                name: "avis_activite",
-                options: [
-                    { label: "Exceptionnelle 😊", value: "Exceptionnelle" },
-                    { label: "Belle découverte 😉", value: "Belle découverte" },
-                    { label: "À refaire 🤔", value: "À refaire" },
-                    { label: "Sans intérêt 😒", value: "Sans intérêt" }
-                ]
-            },
-            {
-                question: "Que pensez-vous de l'organisation générale de l'événement?",
-                type: "radio",
-                name: "avis_organisation",
-                options: [
-                    { label: "Super 😊", value: "Super" },
-                    { label: "Rien à redire 😉", value: "Rien à redire" },
-                    { label: "Moyen 🤔", value: "Moyen" },
-                    { label: "À revoir 😒", value: "À revoir" }
-                ]
-            },
-            {
-                question: "Avez-vous rencontré des difficultés?",
-                type: "checkbox",
-                name: "difficultes",
-                options: [
-                    { label: "Accès Parking", value: "Accès Parking" },
-                    { label: "Inscription aux activités", value: "Inscription" },
-                    { label: "Temps d'attente", value: "Temps d'attente" },
-                    { label: "Rien à signaler", value: "Rien à signaler" },
-                    { label: "Autre :", value: "Autre" }
-                ]
-            },
-            {
-                question: "Comment avez-vous connu l'événement?",
-                type: "checkbox",
-                name: "connaissance_evenement",
-                options: [
-                    { label: "Réseaux Sociaux", value: "Réseaux Sociaux" },
-                    { label: "Par un tiers", value: "Par un tiers" },
-                    { label: "Affiches publicitaires", value: "Affiches publicitaires" },
-                    { label: "Par l'Office de Tourisme", value: "Office de Tourisme" },
-                    { label: "Autre :", value: "Autre" }
-                ]
-            },
-            {
-                question: "Comment évalueriez-vous l'ambiance et l'animation de l'événement ?",
-                type: "text",
-                name: "avis_ambiance",
-                placeholder: "Ex: Superbe, festive, un peu calme..."
-            },
-            {
-                question: "Quel est votre code postal ?",
-                type: "text",
-                name: "code_postal",
-                placeholder: "Ex: 97410"
-            },
-            {
-                question: "Vos suggestions",
-                type: "textarea",
-                name: "suggestions",
-                placeholder: "Écrivez ici vos suggestions pour améliorer l'événement..."
-            },
-            {
-                question: "📩 Souhaitez-vous recevoir notre newsletter ?",
-                type: "checkbox-single",
-                name: "newsletter",
-                options: [
-                    { label: "Oui, je souhaite m’abonner à la newsletter.<br><small>En cochant cette case, vous acceptez de recevoir nos emails d’information. Vous pouvez vous désabonner à tout moment via le lien présent dans chaque message.</small>", value: "oui" }
-                ]
-            }
-        ];
-
-        let currentQuestionIndex = 0;
-        // On utilisera un objet pour stocker les réponses de l'utilisateur
-        let userAnswers = {};
-
-        // Éléments du DOM
-        const formContainer = document.getElementById('satisfaction-form');
-        const prevButton = document.getElementById('prev-button');
-        const nextButton = document.getElementById('next-button');
-        const currentQuestionNumberSpan = document.getElementById('current-question-number');
-        const totalQuestionsSpan = document.getElementById('total-questions');
+        // Gestion de la modal des mentions légales
         const legalModal = document.getElementById('legal-modal');
         const showLegalModalButton = document.getElementById('show-legal-modal');
         const closeLegalModalButton = document.getElementById('close-legal-modal');
-        const submissionModal = document.getElementById('submission-modal');
-        const closeSubmissionModalButton = document.getElementById('close-submission-modal');
         
-        // Initialisation de l'état du quiz
-        totalQuestionsSpan.textContent = surveyQuestions.length;
-
-        /**
-         * Affiche la question courante en fonction de son type.
-         */
-        function renderQuestion() {
-            formContainer.innerHTML = '';
-            
-            const questionData = surveyQuestions[currentQuestionIndex];
-            
-            // Créer le conteneur de la question
-            const questionContent = document.createElement('div');
-            questionContent.classList.add('question-content', 'active');
-            
-            // Titre de la question
-            const title = document.createElement('h3');
-            title.innerHTML = questionData.question;
-            questionContent.appendChild(title);
-            
-            // Gérer les différents types de questions
-            if (questionData.type === "radio" || questionData.type === "checkbox") {
-                const optionsList = document.createElement('ul');
-                optionsList.classList.add('options-list');
-                
-                questionData.options.forEach((option, index) => {
-                    const optionItem = document.createElement('li');
-                    optionItem.classList.add('option-item');
-
-                    const input = document.createElement('input');
-                    input.type = questionData.type;
-                    input.id = `${questionData.name}_${index}`;
-                    input.name = questionData.name;
-                    input.value = option.value;
-                    
-                    const label = document.createElement('label');
-                    label.htmlFor = `${questionData.name}_${index}`;
-                    label.classList.add('option-label');
-                    
-                    // Gérer les emojis dans le label
-                    const emojiRegex = /^(.*?)(\s*[\uD83C-\uDBFF\uDC00-\uDFFF\u2600-\u26FF\u2700-\u27BF])/;
-                    const match = option.label.match(emojiRegex);
-                    if (match && match[2]) {
-                        label.innerHTML = `<span class="emoji-icon">${match[2]}</span>${match[1].trim()}`;
-                    } else {
-                        label.innerHTML = option.label;
-                    }
-                    
-                    optionItem.appendChild(input);
-                    optionItem.appendChild(label);
-                    optionsList.appendChild(optionItem);
-                });
-                questionContent.appendChild(optionsList);
-            } else if (questionData.type === "text" || questionData.type === "textarea") {
-                const formGroup = document.createElement('div');
-                formGroup.classList.add('form-group');
-
-                let inputElement;
-                if (questionData.type === "textarea") {
-                    inputElement = document.createElement('textarea');
-                } else {
-                    inputElement = document.createElement('input');
-                    inputElement.type = "text";
-                }
-                
-                inputElement.name = questionData.name;
-                inputElement.placeholder = questionData.placeholder;
-                inputElement.id = questionData.name;
-                
-                formGroup.appendChild(inputElement);
-                questionContent.appendChild(formGroup);
-
-            } else if (questionData.type === "checkbox-single") {
-                 const formGroup = document.createElement('div');
-                 formGroup.classList.add('form-group');
-
-                 const input = document.createElement('input');
-                 input.type = "checkbox";
-                 input.id = questionData.name;
-                 input.name = questionData.name;
-                 input.value = questionData.options[0].value;
-                 
-                 const label = document.createElement('label');
-                 label.htmlFor = questionData.name;
-                 label.classList.add('checkbox-label');
-                 label.innerHTML = questionData.options[0].label;
-                 
-                 formGroup.appendChild(input);
-                 formGroup.appendChild(label);
-                 questionContent.appendChild(formGroup);
-            }
-            
-            formContainer.appendChild(questionContent);
-
-            // Restaurer la réponse si elle existe déjà
-            if (userAnswers[questionData.name]) {
-                if (questionData.type === "radio") {
-                    document.querySelector(`input[name="${questionData.name}"][value="${userAnswers[questionData.name]}"]`).checked = true;
-                } else if (questionData.type === "checkbox") {
-                    userAnswers[questionData.name].forEach(val => {
-                        const checkbox = document.querySelector(`input[name="${questionData.name}"][value="${val}"]`);
-                        if(checkbox) checkbox.checked = true;
-                    });
-                } else if (questionData.type === "checkbox-single") {
-                    document.getElementById(questionData.name).checked = true;
-                } else if (questionData.type === "text" || questionData.type === "textarea") {
-                    document.getElementById(questionData.name).value = userAnswers[questionData.name];
-                }
-            }
-            
-            // Mettre à jour l'indicateur de page
-            currentQuestionNumberSpan.textContent = currentQuestionIndex + 1;
-            
-            // Mettre à jour les boutons de navigation
-            updateNavButtons();
-        }
-
-        /**
-         * Met à jour l'état des boutons de navigation (Précédent, Suivant, Envoyer).
-         */
-        function updateNavButtons() {
-            prevButton.disabled = currentQuestionIndex === 0;
-
-            if (currentQuestionIndex === surveyQuestions.length - 1) {
-                // Dernière question : le bouton "Suivant" devient "Envoyer"
-                nextButton.textContent = "Envoyer";
-                nextButton.classList.add('submit-button');
-                nextButton.onclick = submitForm;
-            } else {
-                // Pas la dernière question : le bouton est "Suivant"
-                nextButton.textContent = "Suivant";
-                nextButton.classList.remove('submit-button');
-                nextButton.onclick = nextQuestion;
-            }
-        }
-
-        /**
-         * Sauvegarde la réponse courante avant de passer à la question suivante.
-         */
-        function saveCurrentAnswer() {
-            const questionData = surveyQuestions[currentQuestionIndex];
-            const name = questionData.name;
-            
-            if (questionData.type === "radio") {
-                const checkedRadio = document.querySelector(`input[name="${name}"]:checked`);
-                userAnswers[name] = checkedRadio ? checkedRadio.value : null;
-            } else if (questionData.type === "checkbox") {
-                const checkedCheckboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
-                userAnswers[name] = Array.from(checkedCheckboxes).map(cb => cb.value);
-            } else if (questionData.type === "text" || questionData.type === "textarea") {
-                const inputElement = document.getElementById(name);
-                userAnswers[name] = inputElement ? inputElement.value : null;
-            } else if (questionData.type === "checkbox-single") {
-                const checkbox = document.getElementById(name);
-                userAnswers[name] = checkbox ? checkbox.checked : false;
-            }
-        }
-
-        /**
-         * Affiche la question suivante.
-         */
-        function nextQuestion() {
-            saveCurrentAnswer();
-            if (currentQuestionIndex < surveyQuestions.length - 1) {
-                currentQuestionIndex++;
-                renderQuestion();
-            }
-        }
-
-        /**
-         * Affiche la question précédente.
-         */
-        function prevQuestion() {
-            saveCurrentAnswer();
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                renderQuestion();
-            }
-        }
-        
-        /**
-         * Gère la soumission du formulaire.
-         */
-        function submitForm(event) {
-            event.preventDefault();
-            saveCurrentAnswer();
-
-            console.log("Formulaire soumis! Réponses:", userAnswers);
-
-            // Affiche la modal de confirmation
-            submissionModal.style.display = 'flex';
-
-            // Redirection après un court délai
-            setTimeout(() => {
-                window.location.href = "index.html"; // Redirige vers l'accueil
-            }, 3000); // 3 secondes
-        }
-
-        // Écouteurs d'événements pour les boutons de navigation
-        prevButton.addEventListener('click', prevQuestion);
-        nextButton.addEventListener('click', nextQuestion);
-
-        // Gestion de la modal des mentions légales
         showLegalModalButton.addEventListener('click', (e) => {
             e.preventDefault();
             legalModal.style.display = 'flex';
@@ -762,22 +229,12 @@
             legalModal.style.display = 'none';
         });
         
-        closeSubmissionModalButton.addEventListener('click', () => {
-            submissionModal.style.display = 'none';
-        });
-
         // Fermeture des modals si on clique à l'extérieur
         window.addEventListener('click', (e) => {
             if (e.target === legalModal) {
                 legalModal.style.display = 'none';
             }
-            if (e.target === submissionModal) {
-                submissionModal.style.display = 'none';
-            }
         });
-
-        // Lance le questionnaire au chargement de la page
-        window.onload = renderQuestion;
     </script>
 </body>
 </html>
