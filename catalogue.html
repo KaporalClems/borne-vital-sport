@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vital Sport - Catalogues des Sports</title>
+    <!-- Importation d'une police Google Fonts pour un meilleur rendu visuel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Importation des icônes depuis Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Importation de la bibliothèque PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <style>
         /* Styles de base pour toutes les pages */
@@ -137,6 +140,18 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Ligne de séparation subtile */
         }
 
+        /* Conteneur de chargement */
+        .loading-container {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            font-size: 2vh;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
         /* Titre du catalogue */
         .catalogue-title {
             font-size: 2.8vh;
@@ -145,8 +160,9 @@
             margin: 0;
         }
 
-        /* Modal de détails du catalogue */
-        .modal {
+        /* Modal du lecteur d'image */
+        #image-viewer-modal {
+            background-color: rgba(0, 0, 0, 0.9);
             display: none;
             position: fixed;
             z-index: 100;
@@ -154,25 +170,28 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
             justify-content: center;
             align-items: center;
             padding: 2vh;
             box-sizing: border-box;
             backdrop-filter: blur(5px);
         }
-        .modal-content {
-            background-color: #fefefe;
-            color: #333;
-            padding: 3vh 3vw;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 800px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            max-height: 85vh;
-            overflow-y: auto;
+        #image-viewer-modal .modal-content {
+            width: 95%;
+            max-width: 95vw;
+            height: 95%;
+            max-height: 95vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            padding: 0;
             position: relative;
-            text-align: center;
+        }
+        #image-viewer-modal img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
         .modal-close-button {
             position: absolute;
@@ -186,67 +205,25 @@
         }
         .modal-close-button:hover,
         .modal-close-button:focus {
-            color: #000;
+            color: #fff;
             text-decoration: none;
-        }
-        #modal-catalogue-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            margin: 1vh auto;
-            display: block;
-        }
-        #modal-catalogue-title {
-            font-size: 3.5vh;
-            margin-bottom: 1vh;
-            color: #e06c00;
-        }
-        #modal-catalogue-description {
-            font-size: 2vh;
-            line-height: 1.6;
-        }
-        
-        /* Bouton de modal dynamique */
-        .modal-action-button {
-            background-color: #f58220;
-            color: white;
-            border: none;
-            padding: 1.5vh 3vw;
-            border-radius: 8px;
-            font-size: 2.5vh;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 2vh;
-        }
-        .modal-action-button:hover {
-            background-color: #e06c00;
-        }
-
-        /* Modal du lecteur d'image */
-        #image-viewer-modal {
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-        #image-viewer-modal .modal-content {
-            width: 95%;
-            max-width: 95vw;
-            height: 95%;
-            max-height: 95vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: transparent;
-            padding: 0;
-        }
-        #image-viewer-modal img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
         }
 
         /* Modal du lecteur de PDF */
         #pdf-viewer-modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
             background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
         }
         #pdf-viewer-modal .modal-content {
             width: 95%;
@@ -311,28 +288,12 @@
             font-size: 2.5vh;
             font-weight: bold;
         }
-
-        /* Style pour la liste déroulante des pages */
-        .page-select-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 1vh;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 1vh 2vw;
-        }
-        #page-select-label {
-            font-size: 2.5vh;
-            font-weight: bold;
-        }
         #page-select {
-            font-family: 'Inter', sans-serif;
-            font-size: 2vh;
+            font-size: 2.5vh;
             padding: 0.5vh 1vw;
-            border-radius: 5px;
+            border-radius: 8px;
             border: none;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.8);
             color: #333;
             cursor: pointer;
         }
@@ -358,6 +319,31 @@
         /* Modal Mentions Légales */
         #legal-modal .modal-content {
             text-align: center; /* Centrage du texte de la modal des mentions légales */
+            background-color: #fefefe;
+            color: #333;
+            padding: 3vh 3vw;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        #legal-modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
         }
         .modal-content h2 {
             text-align: center;
@@ -375,6 +361,7 @@
 </head>
 <body>
 
+    <!-- En-tête de la page -->
     <header class="page-header">
         <a href="index.html" class="back-button">
             <i class="fas fa-arrow-left"></i>
@@ -382,6 +369,7 @@
         <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/logo_vital_sport_-removebg-preview.png" alt="Logo Vital Sport" class="logo">
     </header>
 
+    <!-- Conteneur principal du contenu -->
     <main class="main-content-wrapper">
         <h1 class="main-title">Catalogues des Sports</h1>
         <div class="catalogue-grid" id="catalogue-grid">
@@ -389,52 +377,36 @@
         </div>
     </main>
 
-    <!-- ===== PIED DE PAGE ===== -->
+    <!-- Pied de page -->
     <footer class="kiosk-footer">
         <p>&copy; 2025 Destination Sud Réunion</p>
         <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
     </footer>
 
-    <!-- ===== MODAL DÉTAILS DU CATALOGUE ===== -->
-    <div id="catalogue-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close-button" id="close-catalogue-modal">&times;</span>
-            <img id="modal-catalogue-image" src="" alt="Image du catalogue">
-            <h2 id="modal-catalogue-title"></h2>
-            <p id="modal-catalogue-description"></p>
-            <button class="modal-action-button" id="catalogue-action-button"></button>
-        </div>
-    </div>
-
-    <!-- ===== MODAL LECTEUR D'IMAGE ===== -->
+    <!-- Modal pour le lecteur d'image -->
     <div id="image-viewer-modal" class="modal">
         <div class="modal-content">
-            <span class="modal-close-button" id="close-image-modal">&times;</span>
-            <img id="image-viewer" src="" alt="Image en plein écran">
+            <span class="modal-close-button" id="close-image-viewer-modal">&times;</span>
+            <img id="image-viewer" src="" alt="Image agrandie">
         </div>
     </div>
 
-    <!-- ===== MODAL LECTEUR DE PDF ===== -->
+    <!-- Modal pour le lecteur de PDF -->
     <div id="pdf-viewer-modal" class="modal">
         <div class="modal-content">
-            <span class="modal-close-button" id="close-pdf-modal">&times;</span>
+            <span class="modal-close-button" id="close-pdf-viewer-modal">&times;</span>
             <div id="pdf-viewer-container">
                 <canvas id="pdf-canvas"></canvas>
             </div>
             <div id="pdf-viewer-controls">
-                <button id="prev-page-button" class="pdf-nav-button"><i class="fas fa-chevron-left"></i></button>
-                <span id="page-info"></span>
-                <button id="next-page-button" class="pdf-nav-button"><i class="fas fa-chevron-right"></i></button>
-            </div>
-            <!-- Conteneur pour la liste déroulante des pages -->
-            <div class="page-select-container">
-                <label for="page-select" id="page-select-label">Aller à la page:</label>
+                <button id="prev-page" class="pdf-nav-button"><i class="fas fa-arrow-left"></i></button>
                 <select id="page-select"></select>
+                <button id="next-page" class="pdf-nav-button"><i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
     </div>
 
-    <!-- ===== MODAL MENTIONS LÉGALES ===== -->
+    <!-- Modal Mentions Légales -->
     <div id="legal-modal" class="modal">
         <div class="modal-content">
             <span class="modal-close-button" id="close-legal-modal">&times;</span>
@@ -448,256 +420,309 @@
             <p><strong>Protection des données personnelles :</strong><br>Ce site ne collecte aucune donnée personnelle. Le jeu est conçu pour être anonyme et ne stocke aucune information sur les joueurs.</p>
             <h3>Partenaires</h3>
             <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/logo_partenaires-removebg-preview.png" alt="Logos partenaires" class="partners-logo">
-            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires de <strong>Destination Sud Réunion</strong>.</p>
+            <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires Destination Sud Réunion.</p>
         </div>
     </div>
 
     <script>
-        const catalogueData = [
-            // Données des catalogues
+        // Définition des catalogues avec leurs informations
+        const catalogues = [
             {
-                id: 1,
-                image: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png",
-                title: "Affiche Vitalsports 2025",
-                contentType: 'image', // Type de contenu : affiche
-                fullImage: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png"
+                id: 'sports-catalogue-1',
+                image: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT-02.png',
+                title: 'Affiche Vital Sport',
+                description: 'Explorez la diversité des activités sportives disponibles au Vital Sport. Trouvez l\'activité qui vous convient !',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT-02.png',
+                type: 'image'
             },
             {
-                id: 2,
-                image: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT-02.png",
-                title: "Affiche Liste des Sports",
-                contentType: 'image', // Type de contenu : affiche
-                fullImage: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT-02.png"
+                id: 'sports-catalogue-2',
+                image: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png',
+                title: 'Le Programme',
+                description: 'Découvrez les équipements essentiels pour la course à pied, des chaussures aux accessoires connectés.',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png',
+                type: 'image'
             },
             {
-                id: 3,
-                image: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/CARNET%20d'inspirations%20de%20sorties%20couverture.png",
-                title: "Carnet d'inspirations de sorties",
-                description: "Re) Découvrez les trésors du sud avec notre carnet d'inspiration de sorties. Destination Sud Réunion vous invite à explorer le Sud à travers son carnet d'inspiration de sorties ! Que trouverez-vous dans ce carnet ? Des idées d'activités à sensations fortes , de sorties culturelles, d'aventures en pleine nature... En bref, vous y trouverez les meilleures adresses pour vos sorties dans le Sud !",
-                contentType: 'pdf', // Type de contenu : PDF
-                // L'URL a été mise à jour pour le lien brut
-                pdfUrl: "https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/main/CARNET%20d'inspirations%20de%20sorties.pdf"
+                id: 'sports-catalogue-3',
+                image: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/CARNET%20d\'inspirations%20de%20sorties%20couverture.png',
+                title: "Carnet d'activités",
+                description: 'Tout ce qu\'il faut savoir sur les vélos et les équipements de sécurité pour profiter pleinement du cyclisme.',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/CARNET%20d\'inspirations%20de%20sorties.pdf',
+                type: 'pdf'
+            },
+            {
+                id: 'catalogue-etang-sale',
+                // L'image sera générée dynamiquement par le script ci-dessous
+                image: '',
+                title: 'L\'Étang-Salé',
+                description: 'Découvrez la richesse naturelle et les activités offertes à L\'Étang-Salé.',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/c95b1e7db6e3b05323c4ac129595f079a09f9d58/Etang_Sale_-_francais_anglais.pdf',
+                type: 'pdf'
+            },
+            {
+                id: 'plan-st-pierre',
+                // L'image sera générée dynamiquement par le script ci-dessous
+                image: '',
+                title: 'Plan de Saint-Pierre 2022',
+                description: 'Découvrez le plan de Saint-Pierre pour vous orienter lors de l\'événement Vital Sport.',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/420be5f7831595f0390d9b7ea10019b2fb20b385/1%20Plan%20de%20saint%20pierre%202022.pdf',
+                type: 'pdf'
+            },
+            {
+                id: 'plan-tev',
+                // L'image sera générée dynamiquement par le script ci-dessous
+                image: '',
+                title: 'Plan Tévelave-Les Avirons',
+                description: 'Explorez les sentiers de VTT (Territoire de l\'Est Varois) avec ce plan détaillé.',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/c95b1e7db6e3b05323c4ac129595f079a09f9d58/PLAN_TEV_-_FR_ANG-min.pdf',
+                type: 'pdf'
+            },
+            {
+                id: 'catalogue-petite-ile',
+                // L'image sera générée dynamiquement par le script ci-dessous
+                image: '',
+                title: 'Petite-Île',
+                description: 'Découvrez les points d\'intérêts et les activités disponibles à Petite-Île.',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/c95b1e7db6e3b05323c4ac129595f079a09f9d58/Petite_ile_-_francais_anglais.pdf',
+                type: 'pdf'
+            },
+            {
+                id: 'catalogue-saint-louis',
+                // L'image sera générée dynamiquement par le script ci-dessous
+                image: '',
+                title: 'Saint-Louis',
+                description: 'Explorez la commune de Saint-Louis et ses différentes offres d\'activités.',
+                file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/c95b1e7db6e3b05323c4ac129595f079a09f9d58/Saint_Louis_-_francais_anglais.pdf',
+                type: 'pdf'
             }
         ];
 
-        // Éléments du DOM pour les fiches
+        // Rendu des catalogues dans la page
         const catalogueGrid = document.getElementById('catalogue-grid');
-        const catalogueModal = document.getElementById('catalogue-modal');
-        const modalCatalogueImage = document.getElementById('modal-catalogue-image');
-        const modalCatalogueTitle = document.getElementById('modal-catalogue-title');
-        const modalCatalogueDescription = document.getElementById('modal-catalogue-description');
-        const catalogueActionButton = document.getElementById('catalogue-action-button');
-        const closeCatalogueModalButton = document.getElementById('close-catalogue-modal');
 
-        // Modal Mentions Légales
-        const showLegalModalButton = document.getElementById('show-legal-modal');
-        const legalModal = document.getElementById('legal-modal');
-        const closeLegalModalButton = document.getElementById('close-legal-modal');
+        // Fonction asynchrone pour générer la miniature d'un PDF
+        async function getPdfThumbnail(pdfUrl) {
+            let pdf = null;
+            let loadingTask = null;
+            try {
+                loadingTask = pdfjsLib.getDocument(pdfUrl);
+                pdf = await loadingTask.promise;
+                const page = await pdf.getPage(1);
+                
+                const viewport = page.getViewport({ scale: 1.0 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = 300; // Hauteur fixe pour la miniature
+                canvas.width = viewport.width / (viewport.height / 300); // Proportionnel
 
-        // Éléments du DOM pour le lecteur d'image
-        const imageViewerModal = document.getElementById('image-viewer-modal');
-        const closeImageModalButton = document.getElementById('close-image-modal');
-        const imageViewer = document.getElementById('image-viewer');
-
-        // Éléments du DOM pour le lecteur de PDF
-        const pdfViewerModal = document.getElementById('pdf-viewer-modal');
-        const closePdfModalButton = document.getElementById('close-pdf-modal');
-        const pdfCanvas = document.getElementById('pdf-canvas');
-        const prevPageButton = document.getElementById('prev-page-button');
-        const nextPageButton = document.getElementById('next-page-button');
-        const pageInfo = document.getElementById('page-info');
-        const pageSelect = document.getElementById('page-select');
-
-
-        let currentPdf = null;
-        let currentPageNum = 1;
-        let currentPageInstance = null;
-
-        /**
-         * Affiche les fiches des catalogues sur la page.
-         */
-        function renderCatalogues() {
-            catalogueGrid.innerHTML = ''; // Nettoyer la grille avant de la remplir
-
-            catalogueData.forEach(catalogue => {
-                const card = document.createElement('div');
-                card.classList.add('catalogue-card');
-                card.innerHTML = `
-                    <img src="${catalogue.image}" alt="${catalogue.title}" class="catalogue-image">
-                `;
-
-                // Ajoute un écouteur d'événement pour ouvrir la modal de détails ou l'image
-                card.addEventListener('click', () => {
-                    if (catalogue.contentType === 'image') {
-                        showImageViewerModal(catalogue.fullImage);
-                    } else if (catalogue.contentType === 'pdf') {
-                        showCatalogueDetailsModal(catalogue);
-                    }
-                });
-
-                catalogueGrid.appendChild(card);
-            });
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: page.getViewport({ scale: canvas.width / viewport.width }),
+                };
+                
+                await page.render(renderContext).promise;
+                return canvas.toDataURL();
+            } catch (error) {
+                console.error("Erreur lors de la génération de la miniature du PDF:", error);
+                // Si la tâche de rendu est en cours, l'annuler
+                if (loadingTask) {
+                    loadingTask.destroy();
+                }
+                return 'https://placehold.co/250x300/e06c00/ffffff?text=PDF'; // Placeholder en cas d'erreur
+            }
         }
 
-        /**
-         * Affiche le modal avec les détails du catalogue sélectionné.
-         * @param {Object} catalogue - L'objet catalogue à afficher.
-         */
-        function showCatalogueDetailsModal(catalogue) {
-            modalCatalogueImage.src = catalogue.image;
-            modalCatalogueImage.alt = catalogue.title;
-            modalCatalogueTitle.textContent = catalogue.title;
-            modalCatalogueDescription.textContent = catalogue.description;
+        // Fonction pour créer une carte de catalogue (avec état de chargement)
+        const createCatalogueCard = async (catalogue) => {
+            const card = document.createElement('div');
+            card.classList.add('catalogue-card');
             
-            // Mise à jour dynamique du bouton d'action selon le type de contenu
-            if (catalogue.contentType === 'image') {
-                catalogueActionButton.style.display = 'none';
-                modalCatalogueDescription.style.display = 'none';
-                catalogueActionButton.onclick = () => showImageViewerModal(catalogue.fullImage);
-            } else if (catalogue.contentType === 'pdf') {
-                catalogueActionButton.textContent = "Lire le catalogue";
-                catalogueActionButton.style.display = 'block';
-                modalCatalogueDescription.style.display = 'block';
-                catalogueActionButton.onclick = () => showPdfModal(catalogue.pdfUrl);
+            // État de chargement initial pour les PDF
+            if (catalogue.type === 'pdf') {
+                card.innerHTML = `
+                    <div class="loading-container">Chargement...</div>
+                    <h3 class="catalogue-title">${catalogue.title}</h3>
+                `;
+            } else {
+                 card.innerHTML = `
+                    <img src="${catalogue.image}" alt="Couverture du catalogue ${catalogue.title}" class="catalogue-image">
+                    <h3 class="catalogue-title">${catalogue.title}</h3>
+                `;
             }
 
-            catalogueModal.style.display = 'flex';
-        }
+            // Gère l'événement de clic
+            card.addEventListener('click', () => {
+                if (catalogue.type === 'pdf') {
+                    showPdfViewer(catalogue.file);
+                } else if (catalogue.type === 'image') {
+                    showImageViewer(catalogue.file);
+                }
+            });
 
-        /**
-         * Affiche le modal du lecteur d'image.
-         * @param {string} imageUrl - L'URL de l'image à afficher.
-         */
-        function showImageViewerModal(imageUrl) {
-            catalogueModal.style.display = 'none';
+            // Si c'est un PDF, génère la miniature et met à jour la carte
+            if (catalogue.type === 'pdf') {
+                const thumbnail = await getPdfThumbnail(catalogue.file);
+                card.innerHTML = `
+                    <img src="${thumbnail}" alt="Couverture du catalogue ${catalogue.title}" class="catalogue-image">
+                    <h3 class="catalogue-title">${catalogue.title}</h3>
+                `;
+            }
+            
+            return card;
+        };
+        
+        // Fonction principale pour afficher tous les catalogues
+        const renderCatalogues = async () => {
+            catalogueGrid.innerHTML = '';
+            catalogueGrid.style.justifyContent = catalogues.length > 2 ? 'space-between' : 'center';
+
+            for (const catalogue of catalogues) {
+                const card = await createCatalogueCard(catalogue);
+                catalogueGrid.appendChild(card);
+            }
+        };
+
+        // Gestion des modaux de visualisation
+        const imageViewerModal = document.getElementById('image-viewer-modal');
+        const imageViewer = document.getElementById('image-viewer');
+        const pdfViewerModal = document.getElementById('pdf-viewer-modal');
+        
+        function showImageViewer(imageUrl) {
             imageViewer.src = imageUrl;
             imageViewerModal.style.display = 'flex';
         }
 
-        /**
-         * Affiche le modal du lecteur de PDF.
-         * @param {string} url - L'URL du fichier PDF à charger.
-         */
-        async function showPdfModal(url) {
-            catalogueModal.style.display = 'none'; // Ferme la modal de détails
-            pdfViewerModal.style.display = 'flex'; // Ouvre la modal du lecteur
-
-            // Charger le PDF
-            const loadingTask = pdfjsLib.getDocument(url);
-            try {
-                const pdf = await loadingTask.promise;
-                currentPdf = pdf;
-                currentPageNum = 1;
-                renderPage(currentPageNum);
-                renderPageSelect(); // Affiche la liste déroulante des pages
-            } catch (err) {
-                console.error('Erreur lors du chargement du PDF', err);
-            }
+        function showPdfViewer(pdfUrl) {
+            pdfViewerModal.style.display = 'flex';
+            renderPdf(pdfUrl);
         }
 
-        /**
-         * Rend une page spécifique du PDF sur le canvas.
-         * @param {number} num - Le numéro de la page à rendre.
-         */
-        async function renderPage(num) {
-            if (!currentPdf || num < 1 || num > currentPdf.numPages) return;
-
-            // Annuler le rendu de la page précédente pour éviter les conflits
-            if (currentPageInstance && currentPageInstance.promise) {
-                currentPageInstance.cancel();
-            }
-
-            try {
-                const page = await currentPdf.getPage(num);
-                const viewport = page.getViewport({ scale: 1 });
-
-                // Ajuster l'échelle pour s'adapter à la largeur de la fenêtre
-                const scale = Math.min(
-                    (window.innerWidth * 0.9) / viewport.width,
-                    (window.innerHeight * 0.8) / viewport.height
-                );
-                const scaledViewport = page.getViewport({ scale: scale });
-
-                pdfCanvas.height = scaledViewport.height;
-                pdfCanvas.width = scaledViewport.width;
-
-                const renderContext = {
-                    canvasContext: pdfCanvas.getContext('2d'),
-                    viewport: scaledViewport
-                };
-
-                currentPageNum = num;
-                currentPageInstance = page.render(renderContext);
-
-                pageInfo.textContent = `Page ${num} sur ${currentPdf.numPages}`;
-                updateNavButtons();
-                pageSelect.value = num; // Sélectionne la bonne page dans la liste déroulante
-            } catch (err) {
-                console.error('Erreur lors du rendu de la page', err);
-            }
-        }
-
-        /**
-         * Génère la liste déroulante de tous les numéros de page.
-         */
-        function renderPageSelect() {
-            pageSelect.innerHTML = ''; // Nettoyer la liste
-            for (let i = 1; i <= currentPdf.numPages; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `Page ${i}`;
-                pageSelect.appendChild(option);
-            }
-            // Sélectionne la première page par défaut
-            pageSelect.value = currentPageNum;
-        }
-
-        // Écouteur de l'événement de changement sur la liste déroulante
-        pageSelect.addEventListener('change', (event) => {
-            const selectedPage = parseInt(event.target.value, 10);
-            renderPage(selectedPage);
-        });
-
-        /**
-         * Met à jour l'état des boutons de navigation.
-         */
-        function updateNavButtons() {
-            prevPageButton.disabled = currentPageNum <= 1;
-            nextPageButton.disabled = currentPageNum >= currentPdf.numPages;
-        }
-
-        // Écouteurs d'événements de navigation du PDF
-        prevPageButton.addEventListener('click', () => {
-            if (currentPageNum > 1) {
-                renderPage(currentPageNum - 1);
-            }
-        });
-
-        nextPageButton.addEventListener('click', () => {
-            if (currentPageNum < currentPdf.numPages) {
-                renderPage(currentPageNum + 1);
-            }
-        });
-
-        // Fermeture des modals
-        closeCatalogueModalButton.addEventListener('click', () => {
-            catalogueModal.style.display = 'none';
-        });
-
-        closeImageModalButton.addEventListener('click', () => {
+        // Fermeture des modaux de visualisation
+        document.getElementById('close-image-viewer-modal').addEventListener('click', () => {
             imageViewerModal.style.display = 'none';
         });
 
-        closePdfModalButton.addEventListener('click', () => {
+        document.getElementById('close-pdf-viewer-modal').addEventListener('click', () => {
             pdfViewerModal.style.display = 'none';
             // Arrêter le rendu de la page en cours si nécessaire
             if (currentPageInstance) {
                 currentPageInstance.cancel();
+                currentPageInstance = null; // Réinitialiser l'instance
             }
             currentPdf = null;
+            // Nettoyer le canvas pour la prochaine utilisation
+            const context = pdfCanvas.getContext('2d');
+            context.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+        });
+
+        // Logique de lecture des PDF avec PDF.js
+        let currentPdf = null;
+        let currentPage = 1;
+        let currentPageInstance = null;
+        
+        const pdfCanvas = document.getElementById('pdf-canvas');
+        const pageSelect = document.getElementById('page-select');
+        const prevPageBtn = document.getElementById('prev-page');
+        const nextPageBtn = document.getElementById('next-page');
+
+        async function renderPdf(url) {
+            currentPage = 1;
+            let loadingTask = null;
+            try {
+                loadingTask = pdfjsLib.getDocument(url);
+                const pdf = await loadingTask.promise;
+                currentPdf = pdf;
+                
+                // Remplir la liste déroulante des pages
+                pageSelect.innerHTML = ''; // Nettoyer les options précédentes
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `Page ${i}`;
+                    pageSelect.appendChild(option);
+                }
+
+                prevPageBtn.disabled = true;
+                nextPageBtn.disabled = pdf.numPages <= 1;
+                pageSelect.disabled = pdf.numPages <= 1;
+
+                renderPage(currentPage);
+            } catch (error) {
+                console.error("Erreur lors du chargement du PDF:", error);
+                // Utilisation d'un modal personnalisé au lieu d'alert()
+                showCustomAlert("Impossible de charger le document PDF.");
+                // Si la tâche de rendu est en cours, l'annuler
+                if (loadingTask) {
+                    loadingTask.destroy();
+                }
+                pdfViewerModal.style.display = 'none';
+            }
+        }
+
+        async function renderPage(num) {
+            if (!currentPdf) return;
+            
+            // Annuler la tâche de rendu précédente si elle existe
+            if (currentPageInstance) {
+                currentPageInstance.cancel();
+            }
+            
+            try {
+                const page = await currentPdf.getPage(num);
+                const viewport = page.getViewport({ scale: 1.5 });
+                
+                // Ajuster la taille du canvas
+                pdfCanvas.width = viewport.width;
+                pdfCanvas.height = viewport.height;
+                
+                const renderContext = {
+                    canvasContext: pdfCanvas.getContext('2d'),
+                    viewport: viewport
+                };
+
+                // Mettre à jour la liste déroulante et l'état des boutons
+                pageSelect.value = num;
+                prevPageBtn.disabled = num === 1;
+                nextPageBtn.disabled = num === currentPdf.numPages;
+                
+                currentPageInstance = page.render(renderContext);
+                await currentPageInstance.promise; // Attendre la fin du rendu
+            } catch (error) {
+                console.error("Erreur lors du rendu de la page:", error);
+                // Si l'erreur n'est pas une annulation de rendu, afficher une alerte
+                if (error.name !== "RenderingCancelledException") {
+                    showCustomAlert("Une erreur est survenue lors du rendu de la page.");
+                    pdfViewerModal.style.display = 'none';
+                }
+            }
+        }
+        
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPdf && currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+        
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPdf && currentPage < currentPdf.numPages) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+
+        // Gestion de la sélection de page via la liste déroulante
+        pageSelect.addEventListener('change', (e) => {
+            currentPage = parseInt(e.target.value);
+            renderPage(currentPage);
         });
 
         // Gestion de la modal des mentions légales
+        const legalModal = document.getElementById('legal-modal');
+        const showLegalModalButton = document.getElementById('show-legal-modal');
+        const closeLegalModalButton = document.getElementById('close-legal-modal');
+        
         showLegalModalButton.addEventListener('click', (e) => {
             e.preventDefault();
             legalModal.style.display = 'flex';
@@ -707,16 +732,19 @@
             legalModal.style.display = 'none';
         });
 
-        // Fermeture des modals si on clique à l'extérieur
+        // Fermeture des modaux si on clique à l'extérieur
         window.addEventListener('click', (e) => {
-            if (e.target === catalogueModal) {
-                catalogueModal.style.display = 'none';
-            }
             if (e.target === legalModal) {
                 legalModal.style.display = 'none';
             }
             if (e.target === pdfViewerModal) {
                 pdfViewerModal.style.display = 'none';
+                // Annuler le rendu et nettoyer
+                if (currentPageInstance) {
+                    currentPageInstance.cancel();
+                    currentPageInstance = null;
+                }
+                currentPdf = null;
             }
             if (e.target === imageViewerModal) {
                 imageViewerModal.style.display = 'none';
@@ -728,6 +756,28 @@
 
         // Assurez-vous que la variable globale pour pdf.js est bien définie
         pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`;
+
+        // Fonction pour un modal d'alerte personnalisé (remplace alert())
+        function showCustomAlert(message) {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '50%';
+            modal.style.left = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.backgroundColor = 'white';
+            modal.style.color = 'black';
+            modal.style.padding = '20px';
+            modal.style.borderRadius = '10px';
+            modal.style.zIndex = '200';
+            modal.style.boxShadow = '0 5px 15px rgba(0,0,0,0.5)';
+            modal.textContent = message;
+            
+            document.body.appendChild(modal);
+
+            setTimeout(() => {
+                modal.remove();
+            }, 3000);
+        }
     </script>
 </body>
 </html>
