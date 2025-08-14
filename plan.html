@@ -91,6 +91,7 @@
             align-items: center;
             justify-content: center; /* Centre l'image verticalement */
             padding: 2vh 5vw;
+            position: relative; /* Ajouté pour positionner le message d'instruction */
             overflow: hidden; /* Empêche le défilement */
         }
         
@@ -185,11 +186,23 @@
             box-shadow: none;
         }
         
-        .modal-plan .modal-content img {
+        /* Conteneur pour le plan dans le modal qui gère le zoom */
+        .modal-plan .zoomable-container {
+            position: relative;
+            max-height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            touch-action: pan-x pan-y; /* Permet le défilement et le zoom sur les appareils tactiles */
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-plan .zoomable-container img {
             max-height: 100%;
             max-width: 100%;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            /* Important pour le zoom/pan */
+            transform-origin: 0 0;
         }
 
         .modal-close-button {
@@ -249,6 +262,46 @@
             height: auto;
             margin-top: 1vh;
         }
+        
+        /* Message d'instruction principal pour cliquer sur l'image */
+        .main-instruction-message {
+            position: absolute;
+            bottom: 10%; /* Ajustez la position pour qu'elle soit sous l'image */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 2vh;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 10;
+        }
+        .main-instruction-message.show {
+            opacity: 1;
+        }
+        
+        /* Message d'instruction du modal pour le zoom */
+        .modal-instruction-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 2.5vh;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 101;
+        }
+        .modal-instruction-message.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -266,7 +319,16 @@
     <main class="main-content">
         <!-- L'image est maintenant cliquable -->
         <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/Plan_site.png" alt="Plan du Vital Sport, cliquez pour agrandir" class="plan-image" id="plan-image">
+        <!-- Message d'instruction pour la page principale -->
+        <div id="main-instruction-message" class="main-instruction-message">
+            <p>Cliquez sur le plan pour l'agrandir</p>
+        </div>
     </main>
+    
+    <!-- Message d'instruction pour l'utilisateur dans le modal -->
+    <div id="modal-instruction-message" class="modal-instruction-message">
+        <p>Utilisez deux doigts pour zoomer et dézoomer</p>
+    </div>
 
     <!-- ===== PIED DE PAGE ===== -->
     <footer class="kiosk-footer">
@@ -297,8 +359,10 @@
     <div id="plan-modal" class="modal modal-plan">
         <div class="modal-content">
             <span class="modal-close-button" id="close-plan-modal">&times;</span>
-            <!-- L'image du plan agrandie sera chargée ici -->
-            <img src="" alt="Plan du Vital Sport agrandi" id="modal-plan-image">
+            <!-- Conteneur pour l'image du plan qui permet le zoom et le déplacement -->
+            <div id="zoomable-container" class="zoomable-container">
+                <img src="" alt="Plan du Vital Sport agrandi" id="modal-plan-image">
+            </div>
         </div>
     </div>
 
@@ -328,25 +392,139 @@
         const planModal = document.getElementById('plan-modal');
         const modalPlanImage = document.getElementById('modal-plan-image');
         const closePlanModalBtn = document.getElementById('close-plan-modal');
+
+        // Gère les messages d'instruction
+        const mainInstructionMessage = document.getElementById('main-instruction-message');
+        const modalInstructionMessage = document.getElementById('modal-instruction-message');
         
-        // Lorsque l'utilisateur clique sur l'image du plan
+        // Variables pour le zoom et le déplacement
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        let lastDistance = null;
+        let isDragging = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+        const zoomableContainer = document.getElementById('zoomable-container');
+        const zoomableImage = document.getElementById('modal-plan-image');
+
+        // Affiche un message d'instruction sur la page principale au chargement
+        function showMainInstruction() {
+            mainInstructionMessage.classList.add('show');
+            setTimeout(() => {
+                mainInstructionMessage.classList.remove('show');
+            }, 5000); // Le message disparaît après 5 secondes
+        }
+
+        // Affiche un message d'instruction dans le modal
+        function showModalInstruction() {
+            modalInstructionMessage.classList.add('show');
+            setTimeout(() => {
+                modalInstructionMessage.classList.remove('show');
+            }, 5000); // Le message disparaît après 5 secondes
+        }
+
+        // Applique les transformations de zoom et de déplacement
+        function applyTransform() {
+            zoomableContainer.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+        
+        // Réinitialise le zoom et la position
+        function resetTransform() {
+            scale = 1;
+            translateX = 0;
+            translateY = 0;
+            applyTransform();
+        }
+
+        // Événement d'ouverture du modal
         planImage.addEventListener('click', () => {
-            // Utilise l'URL de l'image pour le modal
             modalPlanImage.src = planImage.src;
             planModal.classList.add('show');
+            showModalInstruction(); // Affiche l'instruction pour le zoom au chargement du modal
         });
         
-        // Ferme le modal du plan lorsque l'utilisateur clique sur le bouton de fermeture
+        // Événement de fermeture du modal
         closePlanModalBtn.addEventListener('click', () => {
             planModal.classList.remove('show');
+            resetTransform(); // Réinitialise le zoom et la position à la fermeture
         });
         
         // Ferme le modal du plan si l'utilisateur clique en dehors de l'image
         planModal.addEventListener('click', (e) => {
             if (e.target === planModal || e.target === closePlanModalBtn) {
                 planModal.classList.remove('show');
+                resetTransform(); // Réinitialise le zoom et la position à la fermeture
             }
         });
+        
+        // Logique pour le "pinch-to-zoom" et le "pan"
+        zoomableContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                // Si deux doigts, on prépare le zoom
+                lastDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+            } else if (e.touches.length === 1) {
+                // Si un doigt, on prépare le déplacement
+                isDragging = true;
+                lastX = e.touches[0].clientX;
+                lastY = e.touches[0].clientY;
+            }
+        });
+
+        zoomableContainer.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Empêche le défilement par défaut de la page
+            
+            if (e.touches.length === 2) {
+                // Logique de zoom
+                const distance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+                const scaleFactor = distance / lastDistance;
+                scale *= scaleFactor;
+                lastDistance = distance;
+                
+                // Limite le zoom entre 1 et 4
+                scale = Math.max(1, Math.min(scale, 4));
+
+                // Recalcule le centre du zoom pour éviter que l'image ne se déplace brusquement
+                const rect = zoomableContainer.getBoundingClientRect();
+                const center = {
+                    x: (e.touches[0].clientX + e.touches[1].clientX) / 2 - rect.left,
+                    y: (e.touches[0].clientY + e.touches[1].clientY) / 2 - rect.top
+                };
+
+                const oldTranslateX = translateX;
+                const oldTranslateY = translateY;
+
+                translateX += (center.x - translateX) * (1 - scaleFactor);
+                translateY += (center.y - translateY) * (1 - scaleFactor);
+
+                applyTransform();
+
+            } else if (e.touches.length === 1 && isDragging && scale > 1) {
+                // Logique de déplacement (pan) si l'image est zoomée
+                const currentX = e.touches[0].clientX;
+                const currentY = e.touches[0].clientY;
+
+                const dx = currentX - lastX;
+                const dy = currentY - lastY;
+
+                translateX += dx;
+                translateY += dy;
+
+                lastX = currentX;
+                lastY = currentY;
+
+                applyTransform();
+            }
+        });
+
+        zoomableContainer.addEventListener('touchend', () => {
+            lastDistance = null;
+            isDragging = false;
+        });
+
+        // Appelle la fonction d'instruction pour la page principale au chargement
+        window.onload = showMainInstruction;
     </script>
 </body>
 </html>
