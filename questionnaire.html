@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vital Sport - Questionnaire de satisfaction</title>
-    <!-- Importation d'une police Google Fonts pour un meilleur rendu visuel -->
+    <!-- Importation d'une police Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -24,22 +24,14 @@
             animation: gradient-animation 15s ease infinite;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: hidden; /* Empêche le défilement */
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* Définition de l'animation pour le dégradé */
-        @keyframes gradient-animation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        
         /* En-tête de page */
         .page-header {
             width: 100%;
@@ -69,7 +61,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             flex-grow: 1;
             padding: 2vh 4vw;
             overflow-y: auto;
@@ -80,81 +71,210 @@
             display: none;
         }
 
-        /* Style pour l'iframe afin de la centrer et de la rendre responsive */
-        .iframe-container {
-            width: 100%;
-            max-width: 640px; /* Limite la largeur de l'iframe */
-            height: 100%; /* Permet au conteneur de prendre la hauteur disponible */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-grow: 1; /* Permet au conteneur de prendre l'espace disponible */
+        /* Titre de la page */
+        .main-title {
+            font-size: 5vh;
+            font-weight: 900;
+            text-align: center;
+            margin: 2vh 0 5vh;
+            animation: pulse-heartbeat 2s infinite ease-in-out;
+        }
+        @keyframes pulse-heartbeat {
+            0% { transform: scale(1); }
+            20% { transform: scale(1.05); }
+            50% { transform: scale(1); }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%; /* L'iframe s'étend pour remplir son conteneur */
-            border-radius: 15px; /* Coins arrondis */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Ombre légère */
+        /* Conteneur du formulaire */
+        .form-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 4vh 4vw;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            text-align: left;
+            margin-bottom: 2vh;
         }
         
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            padding: 2vh;
-            box-sizing: border-box;
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background-color: #fefefe;
-            color: #333;
+        /* Styles des sections du formulaire (mise à jour pour centrer) */
+        .form-section {
+            background-color: #ffffff; /* Fond blanc */
+            color: #333333; /* Texte noir */
             padding: 3vh 3vw;
             border-radius: 15px;
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            max-height: 85vh;
-            overflow-y: auto;
-            position: relative;
-            text-align: center;
+            margin-bottom: 4vh;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+            text-align: center; /* Centrer le contenu de la section */
         }
-        .modal-close-button {
-            position: absolute;
-            top: 1.5vh;
-            right: 1.5vw;
-            color: #aaa;
-            font-size: 4vh;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 104;
+
+        .form-section-header {
+            display: flex;
+            justify-content: center; /* Centrer l'en-tête de section */
+            align-items: center;
+            gap: 2vh;
+            margin-bottom: 3vh;
         }
-        .modal-close-button:hover,
-        .modal-close-button:focus {
-            color: #000;
-            text-decoration: none;
+
+        .form-section-title {
+            font-size: 3.5vh;
+            font-weight: 900;
+            color: #333333; /* Texte du titre en noir */
+            margin: 0;
         }
-        .modal-content h2 {
-            text-align: center;
+
+        .form-section-icon {
+            font-size: 3.5vh;
+            color: #8dc63f; /* Couleur de l'icône, assortie au fond */
         }
-        .modal-content .editor-logo {
-            max-height: 5vh;
-            margin-bottom: 1vh;
+
+        /* Styles des éléments du formulaire */
+        .form-group {
+            margin-bottom: 3vh;
+            text-align: center; /* Aligner le label au centre */
         }
-        .modal-content .partners-logo {
-            max-width: 100%;
-            height: auto;
+        .form-group label {
+            display: block;
+            font-size: 2.8vh;
+            font-weight: 700;
+            margin-bottom: 1.5vh;
+            color: #333333; /* Labels en noir */
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 2vh;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5vh;
+            background-color: #f8f9fa;
+            color: #333;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center; /* Centrer le texte dans les inputs */
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #8dc63f;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(141, 198, 63, 0.3);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 15vh;
+        }
+        .form-group .checkbox-group,
+        .form-group .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centrer les groupes de cases à cocher/boutons radio */
+            gap: 2vh;
+        }
+        .form-group .checkbox-item,
+        .form-group .radio-item {
+            display: flex;
+            align-items: center;
+        }
+        .form-group .checkbox-item input,
+        .form-group .radio-item input {
+            margin-right: 1.5vh;
+            width: 2.5vh;
+            height: 2.5vh;
+            accent-color: #8dc63f; /* Change la couleur de la coche/bouton radio */
+        }
+        .form-group .checkbox-item label,
+        .form-group .radio-item label {
+            margin: 0;
+            font-weight: 400;
+            font-size: 2.5vh;
+            display: flex;
+            align-items: center;
+            color: #333333; /* Labels en noir */
+        }
+        .form-group .radio-item label span {
+            font-size: 3vh; /* Taille des emojis */
+            margin-left: 1vh;
+        }
+        .form-group .rating-group label {
+            width: auto;
+            margin: 0 1vh;
+            font-size: 3vh;
+        }
+        .form-group .other-input {
+            margin-top: 1.5vh;
+            width: 100%;
+        }
+        small {
+            color: #666;
+        }
+
+        /* Styles de la notation par étoiles */
+        .rating-stars {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center; /* Centrer les étoiles */
             margin-top: 1vh;
         }
-        
+
+        .rating-stars input {
+            display: none;
+        }
+
+        .rating-stars label {
+            cursor: pointer;
+            width: 4vh;
+            height: 4vh;
+            margin: 0 0.5vh;
+            font-size: 4vh;
+            color: #e0e0e0;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .rating-stars input:checked ~ label,
+        .rating-stars input:checked ~ label ~ label,
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label {
+            color: #f58220; /* Couleur des étoiles remplies */
+        }
+
+        /* Bouton de soumission */
+        .submit-button {
+            width: 100%;
+            padding: 2.5vh;
+            border: none;
+            border-radius: 10px;
+            background-color: #f58220;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 3vh;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .submit-button:hover:not(:disabled) {
+            background-color: #e06c00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+        .submit-button:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .submit-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         /* Pied de page */
         .kiosk-footer {
             padding: 1vh;
@@ -172,10 +292,91 @@
             text-decoration: underline;
             cursor: pointer;
         }
+
+        /* Modal Mentions Légales */
+        #legal-modal .modal-content {
+            text-align: center;
+            background-color: #fefefe;
+            color: #333;
+            padding: 3vh 3vw;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        #legal-modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 2vh;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content h2 {
+            text-align: center;
+            color: #333;
+        }
+        .modal-content .editor-logo {
+            max-height: 5vh;
+            margin-bottom: 1vh;
+        }
+        .modal-content .partners-logo {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1vh;
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: #000;
+            font-size: 4vh;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #999;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Modal de confirmation personnalisée */
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            color: #333;
+            padding: 4vh 4vw;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            font-size: 3vh;
+            font-weight: 700;
+            z-index: 200;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
     </style>
 </head>
 <body>
 
+    <!-- En-tête de la page -->
     <header class="page-header">
         <a href="index.html" class="back-button">
             <i class="fas fa-arrow-left"></i>
@@ -183,14 +384,168 @@
         <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/logo_vital_sport_-removebg-preview.png" alt="Logo Vital Sport" class="logo">
     </header>
 
+    <!-- Conteneur principal du contenu -->
     <main class="main-content-wrapper">
-        <h1 class="main-title">Donne ton avis !</h1>
+        <h1 class="main-title">Questionnaire de satisfaction</h1>
         
-        <!-- Conteneur pour l'iframe de Google Forms -->
-        <div class="iframe-container">
-            <iframe id="google-form-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSfFy2Ihurf2hsvhk6xbDgayEc41l_3p-rSqvjbCNYTKdQdK9A/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Chargement…</iframe>
+        <!-- Conteneur du formulaire -->
+        <div class="form-container">
+            <!--
+                ATTENTION : L'URL ci-dessous a été mise à jour avec votre propre endpoint Formspree
+            -->
+            <form id="satisfaction-form">
+                
+                <!-- Section 1 : Vos informations -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <i class="fas fa-user form-section-icon"></i>
+                        <h2 class="form-section-title">Vos informations</h2>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Adresse e-mail *</label>
+                        <input type="email" id="email" name="email" required placeholder="Entrez votre adresse e-mail">
+                    </div>
+                    <div class="form-group">
+                        <label for="code-postal">Votre code postal *</label>
+                        <input type="text" id="code-postal" name="code-postal" required placeholder="Entrez votre code postal">
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="newsletter" name="newsletter" value="Oui">
+                            <label for="newsletter">📩 Souhaitez-vous recevoir notre newsletter ? <br><small>En cochant cette case, vous acceptez de recevoir nos emails d’information. Vous pouvez vous désabonner à tout moment via le lien présent dans chaque message.</small></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2 : Votre expérience -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <i class="fas fa-running form-section-icon"></i>
+                        <h2 class="form-section-title">Votre expérience</h2>
+                    </div>
+                    <div class="form-group">
+                        <label>Quels sports avez-vous fait ? *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="sport-foot" name="sports[]" value="Football"><label for="sport-foot">Football</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="sport-basket" name="sports[]" value="Basketball"><label for="sport-basket">Basketball</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="sport-running" name="sports[]" value="Course à pied"><label for="sport-running">Course à pied</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="sport-petanque" name="sports[]" value="Pétanque"><label for="sport-petanque">Pétanque</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="sport-tennis" name="sports[]" value="Tennis"><label for="sport-tennis">Tennis</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="sport-kayak" name="sports[]" value="Kayak"><label for="sport-kayak">Kayak</label></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Que pensez-vous du stand de l'accueil? *</label>
+                        <div class="radio-group">
+                            <div class="radio-item"><input type="radio" id="accueil-super" name="accueil" value="Super 😊" required><label for="accueil-super">Super <span role="img" aria-label="smiley face">😊</span></label></div>
+                            <div class="radio-item"><input type="radio" id="accueil-ok" name="accueil" value="Rien à redire 😉" required><label for="accueil-ok">Rien à redire <span role="img" aria-label="winking face">😉</span></label></div>
+                            <div class="radio-item"><input type="radio" id="accueil-moyen" name="accueil" value="Moyen 🤔" required><label for="accueil-moyen">Moyen <span role="img" aria-label="thinking face">🤔</span></label></div>
+                            <div class="radio-item"><input type="radio" id="accueil-revoir" name="accueil" value="À revoir 😒" required><label for="accueil-revoir">À revoir <span role="img" aria-label="unamused face">😒</span></label></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Que pensez-vous de l'organisation générale de l'événement? *</label>
+                        <div class="radio-group">
+                            <div class="radio-item"><input type="radio" id="organisation-super" name="organisation" value="Super 😊" required><label for="organisation-super">Super <span role="img" aria-label="smiley face">😊</span></label></div>
+                            <div class="radio-item"><input type="radio" id="organisation-ok" name="organisation" value="Rien à redire 😉" required><label for="organisation-ok">Rien à redire <span role="img" aria-label="winking face">😉</span></label></div>
+                            <div class="radio-item"><input type="radio" id="organisation-moyen" name="organisation" value="Moyen 🤔" required><label for="organisation-moyen">Moyen <span role="img" aria-label="thinking face">🤔</span></label></div>
+                            <div class="radio-item"><input type="radio" id="organisation-revoir" name="organisation" value="À revoir 😒" required><label for="organisation-revoir">À revoir <span role="img" aria-label="unamused face">😒</span></label></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nouvelle section pour la notation par étoiles -->
+                    <div class="form-group">
+                        <label>Comment évalueriez-vous l'ambiance et l'animation de l'événement ? *</label>
+                        <div class="rating-stars">
+                            <input type="radio" name="ambiance" id="star5" value="5" required>
+                            <label for="star5" class="fas fa-star"></label>
+                            <input type="radio" name="ambiance" id="star4" value="4">
+                            <label for="star4" class="fas fa-star"></label>
+                            <input type="radio" name="ambiance" id="star3" value="3">
+                            <label for="star3" class="fas fa-star"></label>
+                            <input type="radio" name="ambiance" id="star2" value="2">
+                            <label for="star2" class="fas fa-star"></label>
+                            <input type="radio" name="ambiance" id="star1" value="1">
+                            <label for="star1" class="fas fa-star"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3 : Activités Office de Tourisme -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <i class="fas fa-map-marked-alt form-section-icon"></i>
+                        <h2 class="form-section-title">Activités Office de Tourisme</h2>
+                    </div>
+                    <div class="form-group">
+                        <label>Avez-vous participé à d'autres activités ? *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="activite-hunter" name="activites[]" value="Area Hunter 'Chasse aux trésors'"><label for="activite-hunter">🏴‍☠️ Area Hunter "Chasse aux trésors"</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="activite-puzzle" name="activites[]" value="Puzzle sur la borne de l'accueil"><label for="activite-puzzle">🧩 Puzzle sur la borne de l'accueil</label></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Que pensez-vous de l'activité réalisée? *</label>
+                        <div class="radio-group">
+                            <div class="radio-item"><input type="radio" id="activite-exceptionnelle" name="avis-activite" value="Exceptionnelle 😊" required><label for="activite-exceptionnelle">Exceptionnelle <span role="img" aria-label="smiley face">😊</span></label></div>
+                            <div class="radio-item"><input type="radio" id="activite-decouverte" name="avis-activite" value="Belle découverte 😉" required><label for="activite-decouverte">Belle découverte <span role="img" aria-label="winking face">😉</span></label></div>
+                            <div class="radio-item"><input type="radio" id="activite-refaire" name="avis-activite" value="À refaire 🤔" required><label for="activite-refaire">À refaire <span role="img" aria-label="thinking face">🤔</span></label></div>
+                            <div class="radio-item"><input type="radio" id="activite-sansinteret" name="avis-activite" value="Sans intérêt 😒" required><label for="activite-sansinteret">Sans intérêt <span role="img" aria-label="unamused face">😒</span></label></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4 : Accessibilité et Communication -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <i class="fas fa-comments form-section-icon"></i>
+                        <h2 class="form-section-title">Accessibilité et Communication</h2>
+                    </div>
+                    <div class="form-group">
+                        <label>Avez-vous rencontré des difficultés? *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="difficulte-parking" name="difficultes[]" value="Accès Parking"><label for="difficulte-parking">Accès Parking</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="difficulte-inscription" name="difficultes[]" value="Inscription aux activités"><label for="difficulte-inscription">Inscription aux activités</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="difficulte-attente" name="difficultes[]" value="Temps d'attente"><label for="difficulte-attente">Temps d'attente</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="difficulte-rien" name="difficultes[]" value="Rien à signaler"><label for="difficulte-rien">Rien à signaler</label></div>
+                        </div>
+                        <label for="difficulte-autre" style="margin-top: 1.5vh;">Autre :</label>
+                        <input type="text" id="difficulte-autre" name="difficultes-autre" class="other-input" placeholder="Précisez votre difficulté ici">
+                    </div>
+                    <div class="form-group">
+                        <label>Comment avez-vous connu l'événement (plusieurs choix possible)? *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="connu-sociaux" name="connu-par[]" value="Réseaux Sociaux"><label for="connu-sociaux">Réseaux Sociaux</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="connu-tiers" name="connu-par[]" value="Par un tiers"><label for="connu-tiers">Par un tiers</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="connu-affiches" name="connu-par[]" value="Affiches publicitaires"><label for="connu-affiches">Affiches publicitaires</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="connu-tourisme" name="connu-par[]" value="Par l'Office de Tourisme"><label for="connu-tourisme">Par l'Office de Tourisme</label></div>
+                        </div>
+                        <label for="connu-autre" style="margin-top: 1.5vh;">Autre :</label>
+                        <input type="text" id="connu-autre" name="connu-par-autre" class="other-input" placeholder="Précisez ici">
+                    </div>
+                </div>
+
+                <!-- Section 5 : Vos suggestions -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <i class="fas fa-pencil-alt form-section-icon"></i>
+                        <h2 class="form-section-title">Vos suggestions</h2>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="suggestions" name="suggestions" placeholder="Vos suggestions pour améliorer l'événement..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button">Envoyer</button>
+            </form>
         </div>
     </main>
+
+    <!-- Pied de page -->
+    <footer class="kiosk-footer">
+        <p>&copy; 2025 Destination Sud Réunion</p>
+        <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
+    </footer>
 
     <!-- Modal Mentions Légales -->
     <div id="legal-modal" class="modal">
@@ -199,7 +554,7 @@
             <h2>Mentions Légales</h2>
             <img src="https://srias.re/wp-content/uploads/2020/12/Destination-Sud-Reunion-png-1-min.png" alt="Logo Destination Sud Réunion" class="editor-logo">
             <p><strong>Éditeur du site :</strong> Destination Sud Réunion</p>
-            <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau - 97410 Saint-Pierre</p>
+            <p><strong>Adresse :</strong> Capitainerie du Port de Plaisance Lislet Geoffroy - place Napoléon Hoareau, 97410 Saint-Pierre</p>
             <p><strong>Contact :</strong><br>Téléphone : 0262353433<br>Email : saintpierre.tourisme@gmail.com</p>
             <p><strong>Hébergement :</strong><br>Google Cloud Platform</p>
             <p><strong>Propriété intellectuelle :</strong><br>Le contenu de ce site (textes, images, etc.) est la propriété exclusive de Decathlon Réunion, sauf mention contraire. Toute reproduction ou utilisation, même partielle, est interdite sans autorisation préalable.</p>
@@ -209,13 +564,7 @@
             <p><strong>Crédits photos :</strong><br>Les images utilisées dans ce jeu proviennent de partenaires de <strong>Destination Sud Réunion</strong>.</p>
         </div>
     </div>
-
-    <!-- Pied de page -->
-    <footer class="kiosk-footer">
-        <p>&copy; 2025 Destination Sud Réunion</p>
-        <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
-    </footer>
-
+    
     <script>
         // Gestion de la modal des mentions légales
         const legalModal = document.getElementById('legal-modal');
@@ -237,7 +586,96 @@
                 legalModal.style.display = 'none';
             }
         });
+
+        // ==========================================================
+        // CODE DE GESTION DU FORMULAIRE
+        // ==========================================================
+        const form = document.getElementById('satisfaction-form');
+        const submitButton = form.querySelector('.submit-button');
+        
+        //
+        // ATTENTION : L'URL a été mise à jour avec votre endpoint Formspree
+        //
+        const formspreeEndpoint = 'https://formspree.io/f/mblkbkqe';
+        const otherInputDifficultes = document.getElementById('difficulte-autre');
+        const otherInputConnu = document.getElementById('connu-autre');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Empêche le rechargement de la page
+
+            // 1. Affiche un état de chargement pour l'utilisateur
+            submitButton.disabled = true;
+            submitButton.textContent = 'Envoi en cours...';
+
+            // 2. Collecte les données du formulaire
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                if (key.endsWith('[]')) {
+                    // Gère les champs à choix multiples (checkboxes)
+                    const arrayKey = key.slice(0, -2);
+                    if (!data[arrayKey]) {
+                        data[arrayKey] = [];
+                    }
+                    data[arrayKey].push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+
+            // Gère les champs "Autre" pour les difficultés et la provenance
+            if (otherInputDifficultes.value) {
+                if (!data.difficultes) { data.difficultes = []; }
+                data.difficultes.push(`Autre: ${otherInputDifficultes.value}`);
+            }
+            if (otherInputConnu.value) {
+                if (!data['connu-par']) { data['connu-par'] = []; }
+                data['connu-par'].push(`Autre: ${otherInputConnu.value}`);
+            }
+
+            try {
+                // 3. Envoie les données à Formspree via une requête asynchrone
+                const response = await fetch(formspreeEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                // 4. Gère la réponse de Formspree
+                if (response.ok) {
+                    showCustomAlert('Merci pour votre participation !');
+                    form.reset(); // Réinitialise les champs du formulaire
+                } else {
+                    // Si la réponse n'est pas OK, affiche un message d'erreur
+                    showCustomAlert("Oups ! Une erreur est survenue lors de l'envoi.");
+                    console.error('Erreur lors de l\'envoi du formulaire:', response.statusText);
+                }
+            } catch (error) {
+                // 5. Gère les erreurs de connexion réseau ou autres
+                showCustomAlert("Erreur de connexion. Veuillez réessayer.");
+                console.error('Erreur de requête:', error);
+            } finally {
+                // 6. Rétablit le bouton après l'opération (succès ou échec)
+                submitButton.disabled = false;
+                submitButton.textContent = 'Envoyer';
+            }
+        });
+        
+        // Fonction pour un modal d'alerte personnalisé (remplace alert())
+        function showCustomAlert(message) {
+            const modal = document.createElement('div');
+            modal.classList.add('custom-alert');
+            modal.textContent = message;
+            
+            document.body.appendChild(modal);
+
+            setTimeout(() => {
+                modal.remove();
+            }, 3000);
+        }
     </script>
 </body>
 </html>
-
