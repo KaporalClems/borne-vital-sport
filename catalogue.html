@@ -126,10 +126,22 @@
             /* Dimensions augmentées pour un effet plus grand */
             width: 250px;
             height: auto; /* La hauteur s'ajuste au contenu */
+            
+            /* Nouvelle animation pour indiquer l'interactivité */
+            animation: pulse-card 3s infinite ease-in-out;
         }
         .catalogue-card:hover {
             transform: translateY(-10px); /* L'effet de survol est plus marqué */
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 10px 10px rgba(0, 0, 0, 0.3);
+            /* Arrête l'animation de pulse au survol */
+            animation-play-state: paused;
+        }
+
+        /* Animation pour faire "pulser" légèrement les cartes */
+        @keyframes pulse-card {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
         /* Image du catalogue */
@@ -438,7 +450,7 @@
             {
                 id: 'sports-catalogue-2',
                 image: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png',
-                title: 'Le Programme',
+                title: 'La course à pied',
                 description: 'Découvrez les équipements essentiels pour la course à pied, des chaussures aux accessoires connectés.',
                 file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/POST%20RS%20VITALSPORT_Plan%20de%20travail%201.png',
                 type: 'image'
@@ -473,7 +485,7 @@
                 id: 'plan-tev',
                 // L'image sera générée dynamiquement par le script ci-dessous
                 image: '',
-                title: 'Plan Tévelave-Les Avirons',
+                title: 'Plan TEV - Sentiers de VTT',
                 description: 'Explorez les sentiers de VTT (Territoire de l\'Est Varois) avec ce plan détaillé.',
                 file: 'https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/c95b1e7db6e3b05323c4ac129595f079a09f9d58/PLAN_TEV_-_FR_ANG-min.pdf',
                 type: 'pdf'
