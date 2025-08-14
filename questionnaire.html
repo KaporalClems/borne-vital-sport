@@ -174,22 +174,21 @@
         }
         .form-group .checkbox-group,
         .form-group .radio-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center; /* Centrer les groupes de cases à cocher/boutons radio */
-            gap: 2vh;
+            display: inline-block;
+            text-align: left;
         }
         .form-group .checkbox-item,
         .form-group .radio-item {
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            margin: 0 1vh 1vh 0;
         }
         .form-group .checkbox-item input,
         .form-group .radio-item input {
             margin-right: 1.5vh;
             width: 2.5vh;
             height: 2.5vh;
-            accent-color: #8dc63f; /* Change la couleur de la coche/bouton radio */
+            accent-color: #8dc63f;
         }
         .form-group .checkbox-item label,
         .form-group .radio-item label {
@@ -198,10 +197,10 @@
             font-size: 2.5vh;
             display: flex;
             align-items: center;
-            color: #333333; /* Labels en noir */
+            color: #333333;
         }
         .form-group .radio-item label span {
-            font-size: 3vh; /* Taille des emojis */
+            font-size: 3vh;
             margin-left: 1vh;
         }
         .form-group .rating-group label {
@@ -221,7 +220,7 @@
         .rating-stars {
             display: flex;
             flex-direction: row-reverse;
-            justify-content: center; /* Centrer les étoiles */
+            justify-content: center;
             margin-top: 1vh;
         }
 
@@ -243,7 +242,7 @@
         .rating-stars input:checked ~ label ~ label,
         .rating-stars label:hover,
         .rating-stars label:hover ~ label {
-            color: #f58220; /* Couleur des étoiles remplies */
+            color: #f58220;
         }
 
         /* Bouton de soumission */
@@ -372,6 +371,46 @@
             from { opacity: 0; transform: translate(-50%, -60%); }
             to { opacity: 1; transform: translate(-50%, -50%); }
         }
+
+        /* NOUVEAU : Styles pour l'indicateur de défilement */
+        .scroll-indicator {
+            position: sticky;
+            bottom: 2vh;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 1.5vh;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: 3vh;
+            animation: bounce 1.5s infinite;
+            z-index: 90;
+            cursor: pointer;
+            width: 6vh;
+            height: 6vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0; /* Caché par défaut */
+            pointer-events: none; /* Ne bloque pas le clic */
+        }
+        .scroll-indicator.visible {
+            opacity: 1; /* Visible lorsque le contenu est défilable */
+            pointer-events: auto; /* Re-active le clic */
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-5px) translateX(-50%);
+            }
+        }
     </style>
 </head>
 <body>
@@ -390,9 +429,6 @@
         
         <!-- Conteneur du formulaire -->
         <div class="form-container">
-            <!--
-                ATTENTION : L'URL ci-dessous a été mise à jour avec votre propre endpoint Formspree
-            -->
             <form id="satisfaction-form">
                 
                 <!-- Section 1 : Vos informations -->
@@ -424,15 +460,8 @@
                         <h2 class="form-section-title">Votre expérience</h2>
                     </div>
                     <div class="form-group">
-                        <label>Quels sports avez-vous fait ? *</label>
-                        <div class="checkbox-group">
-                            <div class="checkbox-item"><input type="checkbox" id="sport-foot" name="sports[]" value="Football"><label for="sport-foot">Football</label></div>
-                            <div class="checkbox-item"><input type="checkbox" id="sport-basket" name="sports[]" value="Basketball"><label for="sport-basket">Basketball</label></div>
-                            <div class="checkbox-item"><input type="checkbox" id="sport-running" name="sports[]" value="Course à pied"><label for="sport-running">Course à pied</label></div>
-                            <div class="checkbox-item"><input type="checkbox" id="sport-petanque" name="sports[]" value="Pétanque"><label for="sport-petanque">Pétanque</label></div>
-                            <div class="checkbox-item"><input type="checkbox" id="sport-tennis" name="sports[]" value="Tennis"><label for="sport-tennis">Tennis</label></div>
-                            <div class="checkbox-item"><input type="checkbox" id="sport-kayak" name="sports[]" value="Kayak"><label for="sport-kayak">Kayak</label></div>
-                        </div>
+                        <label for="sports-pratiques">Quels sports avez-vous fait ? *</label>
+                        <textarea id="sports-pratiques" name="sports-pratiques" required placeholder="Ex: J'ai fait du football, de la course à pied et du tennis."></textarea>
                     </div>
                     <div class="form-group">
                         <label>Que pensez-vous du stand de l'accueil? *</label>
@@ -539,6 +568,12 @@
                 <button type="submit" class="submit-button">Envoyer</button>
             </form>
         </div>
+
+        <!-- NOUVEAU : Indicateur de défilement -->
+        <div class="scroll-indicator" id="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+
     </main>
 
     <!-- Pied de page -->
@@ -586,6 +621,41 @@
                 legalModal.style.display = 'none';
             }
         });
+
+        // ==========================================================
+        // NOUVEAU CODE : Gestion de l'indicateur de défilement
+        // ==========================================================
+        const mainContentWrapper = document.querySelector('.main-content-wrapper');
+        const scrollIndicator = document.getElementById('scroll-indicator');
+        
+        // Fonction pour vérifier si le contenu est défilable
+        const checkScrollable = () => {
+            // Le contenu est défilable si la hauteur totale du contenu est supérieure
+            // à la hauteur visible de la zone de défilement.
+            if (mainContentWrapper.scrollHeight > mainContentWrapper.clientHeight) {
+                scrollIndicator.classList.add('visible');
+            } else {
+                scrollIndicator.classList.remove('visible');
+            }
+        };
+
+        // Écoute l'événement de défilement
+        mainContentWrapper.addEventListener('scroll', () => {
+            // Fait disparaître l'indicateur si l'utilisateur a déjà commencé à défiler
+            if (mainContentWrapper.scrollTop > 0) {
+                scrollIndicator.classList.remove('visible');
+            } else {
+                checkScrollable();
+            }
+        });
+
+        // Écoute l'événement de redimensionnement de la fenêtre
+        window.addEventListener('resize', checkScrollable);
+
+        // Vérifie la possibilité de défilement au chargement de la page
+        window.onload = () => {
+            checkScrollable();
+        };
 
         // ==========================================================
         // CODE DE GESTION DU FORMULAIRE
