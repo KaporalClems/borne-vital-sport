@@ -172,9 +172,8 @@
             margin: 0;
         }
 
-        /* Modal du lecteur d'image */
-        #image-viewer-modal {
-            background-color: rgba(0, 0, 0, 0.9);
+        /* Styles de base pour tous les modaux */
+        .modal {
             display: none;
             position: fixed;
             z-index: 100;
@@ -182,11 +181,110 @@
             top: 0;
             width: 100%;
             height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
             justify-content: center;
             align-items: center;
             padding: 2vh;
             box-sizing: border-box;
             backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            color: #333;
+            padding: 3vh 3vw;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1.5vh;
+            right: 1.5vw;
+            color: #aaa;
+            font-size: 4vh;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 104;
+        }
+
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Modal du QR code */
+        #qr-code-modal .modal-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            /* Ajustement pour le format portrait */
+            width: 90%;
+            max-width: 400px; 
+        }
+        #qr-code-modal .modal-content h2 {
+            color: #f58220;
+            margin-bottom: 0;
+            font-size: 4vh;
+        }
+        #qr-code-modal .modal-content p {
+            color: #333;
+            font-size: 2.5vh;
+            margin-top: 0;
+            text-align: center; /* Assure le centrage du texte */
+        }
+        #qr-code-modal .qr-code-image {
+            width: 50%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        #qr-code-modal .access-library-button {
+            background-color: #f58220;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 2.5vh;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: pulse-button 2s infinite ease-in-out; /* Animation ajoutée */
+        }
+        #qr-code-modal .access-library-button:hover {
+            background-color: #e06c00;
+            transform: translateY(-2px) scale(1.05); /* L'effet de survol est plus marqué */
+            animation-play-state: paused; /* Arrête l'animation au survol */
+        }
+
+        /* Nouvelle animation pour le bouton "Accéder à la bibliothèque" */
+        @keyframes pulse-button {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Modal du lecteur d'image */
+        #image-viewer-modal {
+            background-color: rgba(0, 0, 0, 0.9);
         }
         #image-viewer-modal .modal-content {
             width: 95%;
@@ -198,44 +296,16 @@
             align-items: center;
             background-color: transparent;
             padding: 0;
-            position: relative;
         }
         #image-viewer-modal img {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
         }
-        .modal-close-button {
-            position: absolute;
-            top: 1.5vh;
-            right: 1.5vw;
-            color: #aaa;
-            font-size: 4vh;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 104;
-        }
-        .modal-close-button:hover,
-        .modal-close-button:focus {
-            color: #fff;
-            text-decoration: none;
-        }
 
         /* Modal du lecteur de PDF */
         #pdf-viewer-modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
             background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
-            align-items: center;
-            padding: 2vh;
-            box-sizing: border-box;
-            backdrop-filter: blur(5px);
         }
         #pdf-viewer-modal .modal-content {
             width: 95%;
@@ -342,33 +412,6 @@
             overflow-y: auto;
             position: relative;
         }
-        #legal-modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            padding: 2vh;
-            box-sizing: border-box;
-            backdrop-filter: blur(5px);
-        }
-        .modal-content h2 {
-            text-align: center;
-        }
-        .modal-content .editor-logo {
-            max-height: 5vh;
-            margin-bottom: 1vh;
-        }
-        .modal-content .partners-logo {
-            max-width: 100%;
-            height: auto;
-            margin-top: 1vh;
-        }
     </style>
 </head>
 <body>
@@ -394,6 +437,18 @@
         <p>&copy; 2025 Destination Sud Réunion</p>
         <a href="#" class="legal-link" id="show-legal-modal">Mentions légales</a>
     </footer>
+
+    <!-- Modal pour le QR code - visible au chargement de la page -->
+    <div id="qr-code-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button" id="close-qr-code-modal">&times;</span>
+            <h2>Vital Sport</h2>
+            <p>Scannez le code pour télécharger les catalogues !</p>
+            <!-- L'URL du QR code a été mise à jour avec l'image fournie -->
+            <img src="https://raw.githubusercontent.com/KaporalClems/borne-vital-sport/refs/heads/main/qrcode_sites.google.com%20(4).png" alt="QR Code pour le site Vital Sport" class="qr-code-image">
+            <button id="access-library-button" class="access-library-button">Accéder à la bibliothèque</button>
+        </div>
+    </div>
 
     <!-- Modal pour le lecteur d'image -->
     <div id="image-viewer-modal" class="modal">
@@ -602,21 +657,21 @@
         
         function showImageViewer(imageUrl) {
             imageViewer.src = imageUrl;
-            imageViewerModal.style.display = 'flex';
+            imageViewerModal.classList.add('active'); // Ajout de la classe active
         }
 
         function showPdfViewer(pdfUrl) {
-            pdfViewerModal.style.display = 'flex';
+            pdfViewerModal.classList.add('active'); // Ajout de la classe active
             renderPdf(pdfUrl);
         }
 
         // Fermeture des modaux de visualisation
         document.getElementById('close-image-viewer-modal').addEventListener('click', () => {
-            imageViewerModal.style.display = 'none';
+            imageViewerModal.classList.remove('active'); // Retrait de la classe active
         });
 
         document.getElementById('close-pdf-viewer-modal').addEventListener('click', () => {
-            pdfViewerModal.style.display = 'none';
+            pdfViewerModal.classList.remove('active'); // Retrait de la classe active
             // Arrêter le rendu de la page en cours si nécessaire
             if (currentPageInstance) {
                 currentPageInstance.cancel();
@@ -668,7 +723,7 @@
                 if (loadingTask) {
                     loadingTask.destroy();
                 }
-                pdfViewerModal.style.display = 'none';
+                pdfViewerModal.classList.remove('active'); // Retrait de la classe active en cas d'erreur
             }
         }
 
@@ -705,7 +760,7 @@
                 // Si l'erreur n'est pas une annulation de rendu, afficher une alerte
                 if (error.name !== "RenderingCancelledException") {
                     showCustomAlert("Une erreur est survenue lors du rendu de la page.");
-                    pdfViewerModal.style.display = 'none';
+                    pdfViewerModal.classList.remove('active'); // Retrait de la classe active en cas d'erreur
                 }
             }
         }
@@ -737,20 +792,33 @@
         
         showLegalModalButton.addEventListener('click', (e) => {
             e.preventDefault();
-            legalModal.style.display = 'flex';
+            legalModal.classList.add('active'); // Ajout de la classe active
         });
 
         closeLegalModalButton.addEventListener('click', () => {
-            legalModal.style.display = 'none';
+            legalModal.classList.remove('active'); // Retrait de la classe active
+        });
+        
+        // Gestion de la nouvelle modal du QR code
+        const qrCodeModal = document.getElementById('qr-code-modal');
+        const closeQrCodeModalButton = document.getElementById('close-qr-code-modal');
+        const accessLibraryButton = document.getElementById('access-library-button');
+
+        closeQrCodeModalButton.addEventListener('click', () => {
+            qrCodeModal.classList.remove('active'); // Retrait de la classe active
+        });
+        
+        accessLibraryButton.addEventListener('click', () => {
+            qrCodeModal.classList.remove('active');
         });
 
         // Fermeture des modaux si on clique à l'extérieur
         window.addEventListener('click', (e) => {
             if (e.target === legalModal) {
-                legalModal.style.display = 'none';
+                legalModal.classList.remove('active');
             }
             if (e.target === pdfViewerModal) {
-                pdfViewerModal.style.display = 'none';
+                pdfViewerModal.classList.remove('active');
                 // Annuler le rendu et nettoyer
                 if (currentPageInstance) {
                     currentPageInstance.cancel();
@@ -759,12 +827,23 @@
                 currentPdf = null;
             }
             if (e.target === imageViewerModal) {
-                imageViewerModal.style.display = 'none';
+                imageViewerModal.classList.remove('active');
+            }
+            if (e.target === qrCodeModal) {
+                qrCodeModal.classList.remove('active');
             }
         });
 
-        // Appelle la fonction pour afficher les catalogues au chargement de la page
-        window.onload = renderCatalogues;
+        // Fonction pour afficher la modal du QR code
+        function showQrCodeModal() {
+            qrCodeModal.classList.add('active'); // Ajout de la classe active
+        }
+
+        // Appelle les fonctions pour afficher les catalogues et le modal QR au chargement de la page
+        window.onload = () => {
+            renderCatalogues();
+            showQrCodeModal();
+        };
 
         // Assurez-vous que la variable globale pour pdf.js est bien définie
         pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js`;
